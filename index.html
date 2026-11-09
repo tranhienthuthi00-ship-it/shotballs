@@ -48,7 +48,6 @@
     50% { transform:scale(1.18); background:#ffd166; }
   }
 
-  /* Dãy số — chiếm 42% */
   #targetPanel {
     flex-shrink:0;
     background:linear-gradient(135deg, #fffef8, #fff8e7);
@@ -84,6 +83,7 @@
     flex:0 0 auto;
   }
   .slot-main {
+    width:100%;
     font-size:clamp(20px,5.5vw,26px);
     font-weight:bold;
     color:#2d3142;
@@ -92,8 +92,23 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    width:100%;
+    background:#fffef8;
+    border:2px dashed #ccc;
+    border-radius:5px;
+    text-align:center;
+    font-family:'Comic Sans MS', cursive;
+    -webkit-appearance:none;
+    outline:none;
+    padding:2px 0;
+    cursor:text;
   }
+  .slot-main:focus {
+    border-color:#ef476f;
+    border-style:solid;
+    box-shadow:0 0 0 2px rgba(239,71,111,0.2);
+  }
+  .slot-main::placeholder { color:#ccc; }
+  .slot-main.filled { border-style:solid; border-color:#06d6a0; background:#d4f8e4; }
   .slot-label {
     font-size:clamp(7px,2vw,9px);
     color:#888;
@@ -138,7 +153,6 @@
     flex-shrink:0;
   }
 
-  /* Câu hỏi — chiếm phần còn lại */
   #questionsPanel {
     flex:1; min-height:0;
     background:#fffef8;
@@ -199,55 +213,27 @@
     box-shadow:0.5px 0.5px 0 rgba(45,49,66,0.25);
     background:#ffd166;
   }
-  .q-btn.used {
-    pointer-events:none;
-    transform:none !important;
-  }
-  .q-btn.used.yes {
-    background:#d4f8e4;
-    border-color:#06d6a0;
-    cursor:default;
-  }
-  .q-btn.used.no {
-    background:#ffe4e6;
-    border-color:#ef476f;
-    cursor:default;
-  }
-  .q-num {
-    font-size:0.85em;
-    color:#888;
-    min-width:14px;
-    text-align:right;
-    flex-shrink:0;
-  }
-  .q-dot {
-    width:7px; height:7px;
-    border-radius:50%;
-    flex-shrink:0;
-  }
+  .q-btn.used { pointer-events:none; transform:none !important; }
+  .q-btn.used.yes { background:#d4f8e4; border-color:#06d6a0; cursor:default; }
+  .q-btn.used.no { background:#ffe4e6; border-color:#ef476f; cursor:default; }
+  .q-num { font-size:0.85em; color:#888; min-width:14px; text-align:right; flex-shrink:0; }
+  .q-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
   .q-dot.tier1 { background:#06d6a0; }
   .q-dot.tier2 { background:#ffd166; }
   .q-dot.tier3 { background:#ef476f; }
-  .q-text {
-    flex:1;
-    line-height:1.2;
-  }
+  .q-text { flex:1; line-height:1.2; }
   .q-answer {
-    font-weight:bold;
-    padding:1px 6px;
-    border-radius:5px;
-    font-size:0.85em;
-    white-space:nowrap;
-    flex-shrink:0;
+    font-weight:bold; padding:1px 6px;
+    border-radius:5px; font-size:0.85em;
+    white-space:nowrap; flex-shrink:0;
   }
-  .q-btn.used.yes .q-answer {
-    background:#06d6a0;
-    color:#fff;
+  .q-cost {
+    font-size:0.8em; color:#888;
+    font-weight:normal;
+    margin-left:2px;
   }
-  .q-btn.used.no .q-answer {
-    background:#ef476f;
-    color:#fff;
-  }
+  .q-btn.used.yes .q-answer { background:#06d6a0; color:#fff; }
+  .q-btn.used.no .q-answer { background:#ef476f; color:#fff; }
 
   #guessBtn {
     flex-shrink:0;
@@ -269,11 +255,14 @@
     transform:translate(1.5px,1.5px);
     box-shadow:1px 1px 0 #2d3142;
   }
+  #guessBtn:disabled {
+    background:#ccc; color:#666;
+    cursor:not-allowed;
+    box-shadow:2px 2px 0 #999;
+  }
 
-  /* Toast */
   #toast {
-    position:fixed;
-    top:50%; left:50%;
+    position:fixed; top:50%; left:50%;
     transform:translate(-50%, -50%) scale(0.3);
     background:#fff;
     border:4px solid #2d3142;
@@ -292,7 +281,6 @@
   #toast.yes { background:#06d6a0; color:#fff; }
   #toast.no { background:#ef476f; color:#fff; }
 
-  /* Overlay */
   #overlay {
     position:fixed; inset:0;
     background:rgba(253, 246, 227, 0.97);
@@ -392,50 +380,6 @@
   }
   .name-input:focus { border-color:#ef476f; box-shadow:0 0 0 3px rgba(239,71,111,0.2); }
 
-  .digit-picker {
-    display:grid;
-    grid-template-columns:repeat(5, 1fr);
-    gap:4px;
-    justify-items:center;
-    margin-top:6px;
-    max-width:280px;
-  }
-  .digit-btn {
-    width:100%;
-    max-width:44px;
-    height:40px;
-    background:#fff;
-    border:2.5px solid #2d3142;
-    border-radius:9px 3px 9px 3px / 3px 9px 3px 9px;
-    font-family:inherit;
-    font-size:18px; font-weight:bold;
-    color:#2d3142;
-    cursor:pointer;
-    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
-    -webkit-appearance:none;
-  }
-  .digit-btn:active { transform:translate(1px,1px); box-shadow:1px 1px 0 rgba(45,49,66,0.3); background:#ffd166; }
-  .digit-btn.active { background:#ffd166; }
-
-  .guess-row {
-    display:flex; gap:5px; justify-content:center; margin:6px 0;
-    flex-wrap:wrap;
-  }
-  .guess-digit {
-    width:46px; height:56px;
-    background:#fff;
-    border:3px solid #2d3142;
-    border-radius:11px 3px 11px 3px / 3px 11px 3px 11px;
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    box-shadow:2px 2.5px 0 rgba(45,49,66,0.35);
-    cursor:pointer;
-    position:relative;
-  }
-  .guess-digit .val { font-size:22px; font-weight:bold; color:#2d3142; line-height:1; }
-  .guess-digit .val.empty { color:#ccc; font-size:18px; }
-  .guess-digit .pos { position:absolute; bottom:2px; font-size:7px; color:#888; font-family:sans-serif; }
-
   .leaderboard {
     width:100%; max-width:340px;
     margin:5px auto;
@@ -464,6 +408,97 @@
   .lb-row .rank { width:20px; }
   .lb-row .name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .lb-row .pts { color:#ef476f; font-weight:bold; }
+
+  .start-input-row {
+    display:flex; gap:5px; justify-content:center; margin:10px 0;
+    flex-wrap:wrap;
+  }
+  .start-input {
+    width:46px; height:56px;
+    background:#fff;
+    border:3px solid #2d3142;
+    border-radius:11px 3px 11px 3px / 3px 11px 3px 11px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Comic Sans MS', cursive;
+    font-size:22px; font-weight:bold;
+    color:#2d3142;
+    text-align:center;
+    -webkit-appearance:none;
+    outline:none;
+    box-shadow:2px 2.5px 0 rgba(45,49,66,0.35);
+    padding:0;
+  }
+  .start-input:focus {
+    border-color:#ef476f;
+    box-shadow:0 0 0 3px rgba(239,71,111,0.2);
+  }
+  .start-input::placeholder { color:#ccc; }
+  .start-input.filled { border-color:#06d6a0; background:#d4f8e4; }
+  .hint-box {
+    background:#fff8e7;
+    border:2px dashed #ffd166;
+    border-radius:10px;
+    padding:10px 14px;
+    margin:8px 0;
+    max-width:300px;
+    font-size:clamp(11px,3.2vw,14px);
+    color:#2d3142;
+  }
+  .hint-box b { color:#118ab2; }
+  .penalty-note {
+    font-size:11px;
+    color:#ef476f;
+    font-style:italic;
+    margin-top:4px;
+  }
+  
+  /* Bảng giải thích ở màn hình kết thúc */
+  .explain-box {
+    width:100%; max-width:360px;
+    margin:10px 0;
+    background:#fff;
+    border:2.5px solid #2d3142;
+    border-radius:11px;
+    padding:8px 10px;
+    text-align:left;
+    max-height:200px;
+    overflow-y:auto;
+  }
+  .explain-box h4 {
+    margin:0 0 6px;
+    font-size:12px;
+    color:#118ab2;
+    text-align:center;
+    border-bottom:2px dashed #ffd166;
+    padding-bottom:3px;
+  }
+  .explain-item {
+    font-size:11px;
+    color:#2d3142;
+    padding:4px 6px;
+    border-radius:5px;
+    margin-bottom:3px;
+    line-height:1.35;
+    border-left:3px solid #ccc;
+  }
+  .explain-item.yes {
+    background:#f0fdf8;
+    border-left-color:#06d6a0;
+  }
+  .explain-item.no {
+    background:#fff5f6;
+    border-left-color:#ef476f;
+  }
+  .explain-q { font-weight:bold; }
+  .explain-ans { font-weight:bold; }
+  .explain-item.yes .explain-ans { color:#06d6a0; }
+  .explain-item.no .explain-ans { color:#ef476f; }
+  .explain-reason {
+    color:#666;
+    font-size:0.9em;
+    font-style:italic;
+    margin-top:1px;
+  }
 </style>
 </head>
 <body>
@@ -482,7 +517,7 @@
   <div id="targetPanel">
     <div id="targetTitle">🎯 DÃY SỐ CẦN TÌM</div>
     <div id="slotsRow"></div>
-    <div id="targetHint">💡 Chạm số để gạch bỏ (loại trừ)</div>
+    <div id="targetHint">💡 Gõ đáp án vào ô • Chạm số nhỏ để gạch bỏ</div>
   </div>
 
   <div id="questionsPanel">
@@ -490,7 +525,7 @@
     <div id="questionsList"></div>
   </div>
 
-  <button id="guessBtn" type="button">🎯 ĐOÁN DÃY SỐ</button>
+  <button id="guessBtn" type="button">🎯 XÁC NHẬN ĐOÁN</button>
 </div>
 
 <div id="toast"></div>
@@ -498,7 +533,7 @@
 <div id="overlay">
   <h2>🔧 MÁY TURING CRAYON</h2>
   <p>Tìm dãy số bí ẩn bằng cách đặt câu hỏi Có/Không!</p>
-  <p style="font-size:11px;color:#666">Gạch bỏ số không khả thi trên mini-grid để hỗ trợ suy luận</p>
+  <p style="font-size:11px;color:#666">Gõ đáp án trực tiếp vào ô số để đoán</p>
   <button id="startBtn" type="button">BẮT ĐẦU 🖍️</button>
 </div>
 
@@ -528,11 +563,12 @@ var totalScore = 0;
 var streak = 0;
 var playerName = 'Người chơi';
 var currentGuess = [];
-var currentSelectedVal = null;
 var level = 1;
 var eliminated = [];
 var currentFilter = 'all';
 var allQuestionsCache = [];
+var startBonus = 0;
+var askedLog = []; // {q, answer, reason}
 
 // DOM
 var els = {};
@@ -554,6 +590,7 @@ ready(function() {
   els.toast = document.getElementById('toast');
   els.qStat = document.getElementById('qStat');
   els.slotsRow = document.getElementById('slotsRow');
+  els.scStat = document.getElementById('scStat');
 
   try {
     playerName = localStorage.getItem('turingCrayonName') || 'Người chơi';
@@ -562,7 +599,7 @@ ready(function() {
   els.scoreTotalEl.textContent = totalScore;
 
   document.getElementById('startBtn').onclick = showModeSelect;
-  els.guessBtn.onclick = openGuessPanel;
+  els.guessBtn.onclick = handleGuess;
 });
 
 // ============ TOAST ============
@@ -571,7 +608,7 @@ function showToast(text, type) {
   els.toast.textContent = text;
   els.toast.className = 'show ' + type;
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { els.toast.className = ''; }, 900);
+  toastTimer = setTimeout(function() { els.toast.className = ''; }, 1000);
   try { if (navigator.vibrate) navigator.vibrate(type === 'yes' ? 25 : [25,35,25]); } catch(e) {}
   playBeep(type === 'yes');
 }
@@ -608,6 +645,18 @@ function showOverlay(html) {
   els.overlay.classList.remove('hidden');
 }
 function hideOverlay() { els.overlay.classList.add('hidden'); }
+
+// ============ TÍNH ĐIỂM ============
+function calcBasePoints(lv) {
+  return Math.min(300, 100 + (lv - 1) * 15);
+}
+
+// Trừ điểm: câu dễ trừ nhiều, câu khó trừ ít
+function getQuestionCost(tier) {
+  if (tier === 1) return 15;
+  if (tier === 2) return 10;
+  return 5;
+}
 
 // ============ MODE SELECT ============
 function showModeSelect() {
@@ -648,7 +697,7 @@ function showModeSelect() {
     streak = 0;
     els.scoreTotalEl.textContent = 0;
     els.levelStatEl.textContent = 1;
-    startGame();
+    prepareVan();
   };
 }
 
@@ -662,8 +711,8 @@ function getLevelConfig(lv) {
   return { nums: nums, min: m.min || 0, max: m.max || 9, questions: qs };
 }
 
-// ============ START ============
-function startGame() {
+// ============ PREPARE VÁN ============
+function prepareVan() {
   var cfg = getLevelConfig(level);
   numCount = cfg.nums;
   minVal = cfg.min;
@@ -672,22 +721,183 @@ function startGame() {
   questionsTotal = cfg.questions;
   askedMap = {};
   questionCounter = 0;
+  askedLog = [];
   gameOver = false;
   currentGuess = [];
-  currentSelectedVal = null;
   currentFilter = 'all';
-  for (var i = 0; i < numCount; i++) currentGuess.push(null);
-
   eliminated = [];
-  for (var e = 0; e < numCount; e++) eliminated.push({});
+  startBonus = 0;
+
+  for (var i = 0; i < numCount; i++) {
+    currentGuess.push(null);
+    eliminated.push({});
+  }
 
   secret = [];
   for (var j = 0; j < numCount; j++) {
     secret.push(minVal + Math.floor(Math.random() * (maxVal - minVal + 1)));
   }
 
-  els.qLeftEl.textContent = questionsLeft;
   els.levelStatEl.textContent = level;
+  els.qLeftEl.textContent = questionsLeft;
+
+  showStartScreen();
+}
+
+// ============ MANH MỐI KHỞI ĐỘNG ============
+function generateHint() {
+  var hints = [];
+  var sum = 0;
+  for (var i = 0; i < secret.length; i++) sum += secret[i];
+  var avg = Math.round(sum / secret.length * 10) / 10;
+
+  hints.push('Tổng ' + numCount + ' số = ' + sum + '.');
+  hints.push('Trung bình cộng = ' + avg + '.');
+  hints.push('Số đầu + số cuối = ' + (secret[0] + secret[secret.length-1]) + '.');
+
+  if (numCount >= 3) {
+    hints.push('Tổng 2 số đầu = ' + (secret[0] + secret[1]) + '.');
+    var maxIdx = 0, minIdx = 0;
+    for (var k = 1; k < secret.length; k++) {
+      if (secret[k] > secret[maxIdx]) maxIdx = k;
+      if (secret[k] < secret[minIdx]) minIdx = k;
+    }
+    hints.push('Số lớn nhất - số nhỏ nhất = ' + (secret[maxIdx] - secret[minIdx]) + '.');
+    hints.push('Số lớn nhất = ' + secret[maxIdx] + '.');
+    hints.push('Số nhỏ nhất = ' + secret[minIdx] + '.');
+    hints.push('Số ở giữa = ' + secret[Math.floor(secret.length/2)] + '.');
+  }
+
+  return hints[Math.floor(Math.random() * hints.length)];
+}
+
+// ============ MÀN HÌNH KHỞI ĐỘNG ============
+function showStartScreen() {
+  var hint = generateHint();
+
+  var html = '<h2>🎲 KHỞI ĐỘNG</h2>';
+  html += '<div class="hint-box">';
+  html += '<b>Tìm dãy số sau biết:</b><br>';
+  html += hint;
+  html += '</div>';
+
+  html += '<p style="font-size:12px;color:#666;margin-top:10px">Nếu biết đáp án, nhập luôn:</p>';
+
+  html += '<div class="start-input-row" id="startInputRow">';
+  for (var i = 0; i < numCount; i++) {
+    html += '<input class="start-input" data-pos="' + i + '" type="tel" inputmode="numeric" maxlength="1" placeholder="?" autocomplete="off">';
+  }
+  html += '</div>';
+
+  html += '<p class="penalty-note">⚠️ Đoán sai sẽ bị -10 điểm</p>';
+
+  html += '<div style="margin-top:10px">';
+  html += '<button id="quickGuessBtn" type="button">ĐOÁN NGAY</button>';
+  html += '<button id="startGameBtn" type="button" class="secondary">BẮT ĐẦU ĐI TÌM 🔍</button>';
+  html += '</div>';
+
+  showOverlay(html);
+
+  var startInputs = els.overlay.querySelectorAll('.start-input');
+  var startVals = [];
+  for (var s = 0; s < numCount; s++) startVals.push(null);
+
+  for (var k = 0; k < startInputs.length; k++) {
+    (function(inp, idx) {
+      inp.oninput = function() {
+        var val = inp.value.replace(/[^0-9]/g, '');
+        if (val.length > 1) val = val.slice(-1);
+        inp.value = val;
+        if (val !== '') {
+          startVals[idx] = parseInt(val, 10);
+          inp.classList.add('filled');
+          if (idx < numCount - 1) {
+            var next = els.overlay.querySelector('.start-input[data-pos="' + (idx+1) + '"]');
+            if (next) setTimeout(function() { next.focus(); }, 50);
+          }
+        } else {
+          startVals[idx] = null;
+          inp.classList.remove('filled');
+        }
+      };
+      inp.onkeydown = function(e) {
+        if (e.key === 'Backspace' && inp.value === '' && idx > 0) {
+          var prev = els.overlay.querySelector('.start-input[data-pos="' + (idx-1) + '"]');
+          if (prev) { e.preventDefault(); prev.focus(); prev.select(); }
+        }
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          inp.blur();
+          document.getElementById('quickGuessBtn').click();
+        }
+      };
+      inp.onfocus = function() { setTimeout(function() { inp.select(); }, 0); };
+    })(startInputs[k], k);
+  }
+
+  document.getElementById('quickGuessBtn').onclick = function() {
+    var allFilled = true;
+    for (var i = 0; i < numCount; i++) if (startVals[i] === null) allFilled = false;
+    if (!allFilled) { showToast('Nhập đủ ' + numCount + ' số!', 'no'); return; }
+    quickGuess(startVals);
+  };
+
+  document.getElementById('startGameBtn').onclick = function() {
+    startMainGame();
+  };
+}
+
+function quickGuess(vals) {
+  var correct = true;
+  for (var i = 0; i < numCount; i++) {
+    if (vals[i] !== secret[i]) { correct = false; break; }
+  }
+
+  if (correct) {
+    gameOver = true;
+    var pts = calcBasePoints(level) * 2 + (numCount - 3) * 25 + startBonus;
+    var modeBonus = { easy: 0, normal: 15, hard: 35 }[currentMode] || 0;
+    pts += modeBonus;
+    if (streak >= 3) pts = Math.floor(pts * 1.5);
+    streak++;
+    totalScore += pts;
+    els.scoreTotalEl.textContent = totalScore;
+    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
+    saveToLB(pts);
+    showQuickWin(vals, pts);
+  } else {
+    totalScore = Math.max(0, totalScore - 10);
+    els.scoreTotalEl.textContent = totalScore;
+    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
+    showToast('-10 điểm', 'no');
+    setTimeout(function() { startMainGame(); }, 1000);
+  }
+}
+
+function showQuickWin(vals, pts) {
+  var html = '<h2 class="win">🎉 ĐOÁN ĐÚNG NGAY!</h2>';
+  html += '<p>Bạn đã tìm ra dãy số từ manh mối!</p>';
+  html += '<div class="secret-reveal">';
+  for (var i = 0; i < vals.length; i++) html += '<div class="secret-num">' + vals[i] + '</div>';
+  html += '</div>';
+  html += '<p>+<b>' + pts + '</b> điểm (thưởng đoán nhanh ×2)</p>';
+  html += '<button id="nextLvBtn" type="button" class="tertiary">LEVEL TIẾP ▶</button>';
+  html += '<button id="againBtn" type="button" class="secondary">CHƠI LẠI</button>';
+  showOverlay(html);
+
+  document.getElementById('nextLvBtn').onclick = function() {
+    level++;
+    prepareVan();
+  };
+  document.getElementById('againBtn').onclick = function() {
+    prepareVan();
+  };
+}
+
+// ============ START MAIN GAME ============
+function startMainGame() {
+  els.qLeftEl.textContent = questionsLeft;
+  els.guessBtn.disabled = false;
 
   renderSlots();
   renderFilter();
@@ -700,8 +910,8 @@ function renderSlots() {
   var html = '';
   for (var i = 0; i < numCount; i++) {
     html += '<div class="slot" data-slot="' + i + '">';
-    html += '<div class="slot-main">?</div>';
     html += '<div class="slot-label">Số ' + (i+1) + '</div>';
+    html += '<input class="slot-main" data-slot="' + i + '" type="tel" inputmode="numeric" maxlength="1" placeholder="?" autocomplete="off">';
     html += '<div class="mini-grid" data-slot="' + i + '">';
     for (var v = minVal; v <= maxVal; v++) {
       var elim = eliminated[i] && eliminated[i][v];
@@ -722,6 +932,40 @@ function renderSlots() {
         toggleEliminate(slot, val, cell);
       };
     })(cells[c]);
+  }
+
+  var inputs = els.slotsRow.querySelectorAll('.slot-main');
+  for (var k = 0; k < inputs.length; k++) {
+    (function(inp, idx) {
+      inp.oninput = function() {
+        if (gameOver) { inp.value = ''; return; }
+        var val = inp.value.replace(/[^0-9]/g, '');
+        if (val.length > 1) val = val.slice(-1);
+        inp.value = val;
+
+        if (val !== '') {
+          currentGuess[idx] = parseInt(val, 10);
+          inp.classList.add('filled');
+          if (idx < numCount - 1) {
+            var next = els.slotsRow.querySelector('.slot-main[data-slot="' + (idx+1) + '"]');
+            if (next) setTimeout(function() { next.focus(); }, 50);
+          }
+        } else {
+          currentGuess[idx] = null;
+          inp.classList.remove('filled');
+        }
+      };
+
+      inp.onkeydown = function(e) {
+        if (e.key === 'Backspace' && inp.value === '' && idx > 0) {
+          var prev = els.slotsRow.querySelector('.slot-main[data-slot="' + (idx-1) + '"]');
+          if (prev) { e.preventDefault(); prev.focus(); prev.select(); }
+        }
+        if (e.key === 'Enter') { e.preventDefault(); inp.blur(); handleGuess(); }
+      };
+
+      inp.onfocus = function() { setTimeout(function() { inp.select(); }, 0); };
+    })(inputs[k], k);
   }
 }
 
@@ -766,7 +1010,7 @@ function renderFilter() {
   }
 }
 
-// ============ CÂU HỎI — 50 câu, 10 nhóm ============
+// ============ CÂU HỎI ============
 function isPrime(n) {
   if (n < 2) return false;
   for (var i = 2; i * i <= n; i++) if (n % i === 0) return false;
@@ -778,65 +1022,87 @@ function buildAllQuestions(len) {
   var qs = [];
   var i;
 
-  // NHÓM 1 — Chẵn/lẻ từng vị trí (tier 1)
+  // ===== NHÓM 1: CHẴN/LẺ từng vị trí (tier 1) =====
   for (i = 0; i < len; i++) {
     (function(idx) {
       qs.push({
         id: 'even_' + idx, tier: 1,
         text: 'Số thứ ' + (idx+1) + ' là số chẵn?',
-        fn: function(s) { return s[idx] % 2 === 0; }
+        fn: function(s) { return s[idx] % 2 === 0; },
+        reason: function(s, ans) {
+          return 'Số thứ ' + (idx+1) + ' là ' + s[idx] + ' — ' +
+                 (s[idx] % 2 === 0 ? 'số chẵn' : 'số lẻ') + '.';
+        }
       });
     })(i);
   }
-  // Lớn hơn 5 từng vị trí (tier 1)
+
+  // ===== NHÓM 2: LỚN HƠN 5 từng vị trí (tier 1) =====
   for (i = 0; i < len; i++) {
     (function(idx) {
       qs.push({
         id: 'gt5_' + idx, tier: 1,
         text: 'Số thứ ' + (idx+1) + ' lớn hơn 5?',
-        fn: function(s) { return s[idx] > 5; }
+        fn: function(s) { return s[idx] > 5; },
+        reason: function(s, ans) {
+          return 'Số thứ ' + (idx+1) + ' là ' + s[idx] + ' — ' +
+                 (s[idx] > 5 ? 'lớn hơn 5' : 'không lớn hơn 5') + '.';
+        }
       });
     })(i);
   }
 
-  // NHÓM 2 — So sánh 2 vị trí (tier 2)
+  // ===== NHÓM 3: SO SÁNH 2 VỊ TRÍ (tier 2) =====
   for (i = 0; i < len - 1; i++) {
     (function(idx) {
       qs.push({
         id: 'cmp_' + idx, tier: 2,
         text: 'Số thứ ' + (idx+1) + ' lớn hơn số thứ ' + (idx+2) + '?',
-        fn: function(s) { return s[idx] > s[idx+1]; }
+        fn: function(s) { return s[idx] > s[idx+1]; },
+        reason: function(s, ans) {
+          return s[idx] + ' ' + (s[idx] > s[idx+1] ? '>' : '≤') + ' ' + s[idx+1] + '.';
+        }
       });
     })(i);
   }
+
+  // ===== NHÓM 4: SO SÁNH ĐẦU - CUỐI (tier 2) =====
   if (len >= 3) {
     qs.push({
       id: 'cmp_first_last', tier: 2,
       text: 'Số đầu lớn hơn số cuối?',
-      fn: function(s) { return s[0] > s[len-1]; }
+      fn: function(s) { return s[0] > s[len-1]; },
+      reason: function(s) { return s[0] + ' ' + (s[0] > s[len-1] ? '>' : '≤') + ' ' + s[len-1] + '.'; }
     });
     qs.push({
       id: 'eq_first_last', tier: 2,
       text: 'Số đầu bằng số cuối?',
-      fn: function(s) { return s[0] === s[len-1]; }
+      fn: function(s) { return s[0] === s[len-1]; },
+      reason: function(s) { return s[0] + (s[0] === s[len-1] ? ' = ' : ' ≠ ') + s[len-1] + '.'; }
     });
   }
 
-  // NHÓM 3 — Tổng / Hiệu (tier 2/3)
+  // ===== NHÓM 5: TỔNG/HIỆU (tier 2/3) =====
   qs.push({
     id: 'sum_even', tier: 2,
     text: 'Tổng các số là số chẵn?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%2===0; }
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%2===0; },
+    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      return 'Tổng = ' + t + ' — ' + (t%2===0 ? 'số chẵn' : 'số lẻ') + '.'; }
   });
   qs.push({
     id: 'sum_gt', tier: 2,
     text: 'Tổng các số lớn hơn ' + Math.floor(len * 4.5) + '?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t > Math.floor(len*4.5); }
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t > Math.floor(len*4.5); },
+    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      return 'Tổng = ' + t + ' (> ' + Math.floor(len*4.5) + '? ' + (t > Math.floor(len*4.5) ? 'Đúng' : 'Sai') + ').'; }
   });
   qs.push({
     id: 'sum_div3', tier: 2,
     text: 'Tổng các số chia hết cho 3?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%3===0; }
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%3===0; },
+    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      return 'Tổng = ' + t + ' — ' + (t%3===0 ? 'chia hết cho 3' : 'không chia hết cho 3') + '.'; }
   });
   qs.push({
     id: 'diff_gt5', tier: 3,
@@ -845,99 +1111,143 @@ function buildAllQuestions(len) {
       var mx=s[0], mn=s[0];
       for (var k=1;k<s.length;k++){if(s[k]>mx)mx=s[k];if(s[k]<mn)mn=s[k];}
       return (mx-mn) > 5;
+    },
+    reason: function(s) {
+      var mx=s[0], mn=s[0];
+      for (var k=1;k<s.length;k++){if(s[k]>mx)mx=s[k];if(s[k]<mn)mn=s[k];}
+      return mx + ' - ' + mn + ' = ' + (mx-mn) + ' (' + ((mx-mn) > 5 ? '> 5' : '≤ 5') + ').';
     }
   });
 
-  // NHÓM 4 — Xuất hiện số cụ thể (tier 1)
+  // ===== NHÓM 6: XUẤT HIỆN SỐ CỤ THỂ (tier 1) =====
   var checkNums = [0, 3, 5, 7, 9];
   for (i = 0; i < checkNums.length; i++) {
     (function(n) {
       qs.push({
         id: 'has_' + n, tier: 1,
         text: 'Dãy có chứa số ' + n + '?',
-        fn: function(s) { return s.indexOf(n) !== -1; }
+        fn: function(s) { return s.indexOf(n) !== -1; },
+        reason: function(s) {
+          return s.indexOf(n) !== -1 ? 'Có số ' + n + ' trong dãy.' : 'Không có số ' + n + ' trong dãy.';
+        }
       });
     })(checkNums[i]);
   }
 
-  // NHÓM 5 — Đếm (tier 2)
+  // ===== NHÓM 7: ĐẾM (tier 2) =====
   qs.push({
     id: 'even_more', tier: 2,
     text: 'Có nhiều số chẵn hơn số lẻ?',
-    fn: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++; return e > s.length-e; }
+    fn: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++; return e > s.length-e; },
+    reason: function(s) { var e=0, o=0; for (var k=0;k<s.length;k++) { if(s[k]%2===0)e++; else o++; }
+      return 'Có ' + e + ' chẵn, ' + o + ' lẻ.'; }
   });
   qs.push({
     id: 'cnt_even_2', tier: 2,
     text: 'Có đúng 2 số chẵn?',
-    fn: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++; return e === 2; }
+    fn: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++; return e === 2; },
+    reason: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++;
+      return 'Có ' + e + ' số chẵn.'; }
   });
   qs.push({
     id: 'has_dup', tier: 2,
     text: 'Có 2 số bằng nhau?',
-    fn: function(s) { for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b])return true; return false; }
+    fn: function(s) { for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b])return true; return false; },
+    reason: function(s) {
+      var seen = {};
+      for (var k=0;k<s.length;k++) {
+        if (seen[s[k]]) return 'Có số ' + s[k] + ' lặp lại.';
+        seen[s[k]] = true;
+      }
+      return 'Không có số nào lặp lại.';
+    }
   });
   qs.push({
     id: 'all_diff', tier: 2,
     text: 'Tất cả các số đều khác nhau?',
-    fn: function(s) { for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b])return false; return true; }
-  });
-  qs.push({
-    id: 'has_big', tier: 1,
-    text: 'Có ít nhất 1 số > 7?',
-    fn: function(s) { for (var k=0;k<s.length;k++) if(s[k]>7)return true; return false; }
+    fn: function(s) { for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b])return false; return true; },
+    reason: function(s) {
+      var seen = {};
+      for (var k=0;k<s.length;k++) {
+        if (seen[s[k]]) return 'Số ' + s[k] + ' xuất hiện nhiều lần.';
+        seen[s[k]] = true;
+      }
+      return 'Cả ' + s.length + ' số đều khác nhau.';
+    }
   });
 
-  // NHÓM 6 — Trật tự (tier 2)
+  // ===== NHÓM 8: TRẬT TỰ (tier 2) =====
   qs.push({
     id: 'increasing', tier: 2,
     text: 'Dãy tăng dần?',
-    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]<=s[k-1])return false; return true; }
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]<=s[k-1])return false; return true; },
+    reason: function(s) {
+      for (var k=1;k<s.length;k++) if(s[k]<=s[k-1]) return 'Không tăng: ' + s[k-1] + ' ≥ ' + s[k] + '.';
+      return 'Tăng dần từ đầu đến cuối.';
+    }
   });
   qs.push({
     id: 'decreasing', tier: 2,
     text: 'Dãy giảm dần?',
-    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]>=s[k-1])return false; return true; }
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]>=s[k-1])return false; return true; },
+    reason: function(s) {
+      for (var k=1;k<s.length;k++) if(s[k]>=s[k-1]) return 'Không giảm: ' + s[k-1] + ' ≤ ' + s[k] + '.';
+      return 'Giảm dần từ đầu đến cuối.';
+    }
   });
+
+  // ===== NHÓM 9: MAX/MIN (tier 2/3) =====
   qs.push({
     id: 'max_first', tier: 2,
     text: 'Số đầu là số lớn nhất?',
-    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]>s[0])return false; return true; }
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]>s[0])return false; return true; },
+    reason: function(s) {
+      var mx = Math.max.apply(null, s);
+      return 'Số lớn nhất là ' + mx + (s[0] === mx ? ' (số đầu).' : ', không phải số đầu.');
+    }
   });
   qs.push({
     id: 'min_first', tier: 2,
     text: 'Số đầu là số nhỏ nhất?',
-    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]<s[0])return false; return true; }
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]<s[0])return false; return true; },
+    reason: function(s) {
+      var mn = Math.min.apply(null, s);
+      return 'Số nhỏ nhất là ' + mn + (s[0] === mn ? ' (số đầu).' : ', không phải số đầu.');
+    }
   });
 
-  // NHÓM 7 — Vị trí đặc biệt (tier 2/3)
-  qs.push({
-    id: 'max_half1', tier: 3,
-    text: 'Số lớn nhất ở nửa đầu dãy?',
-    fn: function(s) {
-      var mi=0; for (var k=1;k<s.length;k++) if(s[k]>s[mi]) mi=k;
-      return mi < s.length/2;
-    }
-  });
-  qs.push({
-    id: 'min_half2', tier: 3,
-    text: 'Số nhỏ nhất ở nửa sau dãy?',
-    fn: function(s) {
-      var mi=0; for (var k=1;k<s.length;k++) if(s[k]<s[mi]) mi=k;
-      return mi >= s.length/2;
-    }
-  });
+  // ===== NHÓM 10: ĐẶC BIỆT (tier 2/3) =====
   qs.push({
     id: 'first_zero', tier: 2,
     text: 'Số đầu tiên là số 0?',
-    fn: function(s) { return s[0] === 0; }
+    fn: function(s) { return s[0] === 0; },
+    reason: function(s) { return 'Số đầu là ' + s[0] + '.'; }
   });
   qs.push({
     id: 'no_zero', tier: 1,
     text: 'Dãy không có số 0?',
-    fn: function(s) { return s.indexOf(0) === -1; }
+    fn: function(s) { return s.indexOf(0) === -1; },
+    reason: function(s) {
+      return s.indexOf(0) === -1 ? 'Không có số 0 trong dãy.' : 'Có số 0 trong dãy.';
+    }
+  });
+  qs.push({
+    id: 'is_prime_first', tier: 2,
+    text: 'Số đầu tiên là số nguyên tố?',
+    fn: function(s) { return isPrime(s[0]); },
+    reason: function(s) {
+      return s[0] + (isPrime(s[0]) ? ' là số nguyên tố.' : ' không phải số nguyên tố.');
+    }
+  });
+  qs.push({
+    id: 'sum_prime', tier: 3,
+    text: 'Tổng các số là số nguyên tố?',
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return isPrime(t); },
+    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      return 'Tổng = ' + t + (isPrime(t) ? ' là số nguyên tố.' : ' không phải số nguyên tố.'); }
   });
 
-  // NHÓM 8 — Mẫu số (tier 3)
+  // ===== NHÓM 11: CẤP SỐ CỘNG (tier 3) =====
   qs.push({
     id: 'ap3', tier: 3,
     text: 'Có 3 số tạo cấp số cộng?',
@@ -948,32 +1258,45 @@ function buildAllQuestions(len) {
           for (var z=y+1;z<a.length;z++)
             if (a[y]-a[x] === a[z]-a[y] && a[z]-a[y] > 0) return true;
       return false;
+    },
+    reason: function(s) {
+      var a = s.slice().sort(function(x,y){return x-y;});
+      for (var x=0;x<a.length-2;x++)
+        for (var y=x+1;y<a.length-1;y++)
+          for (var z=y+1;z<a.length;z++)
+            if (a[y]-a[x] === a[z]-a[y] && a[z]-a[y] > 0)
+              return 'Có: ' + a[x] + ', ' + a[y] + ', ' + a[z] + '.';
+      return 'Không có 3 số tạo cấp số cộng.';
     }
   });
+
+  // ===== NHÓM 12: TỔNG CẶP =====
   qs.push({
     id: 'sum_pair_10', tier: 3,
     text: 'Có 2 số cộng lại bằng 10?',
     fn: function(s) {
       for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]+s[b]===10)return true;
       return false;
+    },
+    reason: function(s) {
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]+s[b]===10)
+        return s[a] + ' + ' + s[b] + ' = 10.';
+      return 'Không có cặp nào cộng lại bằng 10.';
     }
   });
-  qs.push({
-    id: 'one_equals_sum_other', tier: 3,
-    text: 'Có số nào bằng tổng 2 số còn lại?',
-    fn: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=0;b<s.length;b++) for (var c=0;c<s.length;c++) {
-        if (a!==b && b!==c && a!==c && s[a] === s[b]+s[c]) return true;
-      }
-      return false;
-    }
-  });
+
+  // ===== NHÓM 13: CHÊNH LỆCH (tier 3) =====
   qs.push({
     id: 'consec_diff1', tier: 3,
     text: 'Có 2 số chênh lệch đúng 1?',
     fn: function(s) {
       for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])===1)return true;
       return false;
+    },
+    reason: function(s) {
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])===1)
+        return s[a] + ' và ' + s[b] + ' chênh 1.';
+      return 'Không có cặp nào chênh đúng 1.';
     }
   });
   qs.push({
@@ -982,72 +1305,198 @@ function buildAllQuestions(len) {
     fn: function(s) {
       for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])>=5)return true;
       return false;
+    },
+    reason: function(s) {
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])>=5)
+        return s[a] + ' và ' + s[b] + ' chênh ' + Math.abs(s[a]-s[b]) + '.';
+      return 'Không có cặp nào chênh ≥ 5.';
     }
   });
 
-  // NHÓM 9 — Tính chất đặc biệt (tier 2/3)
+  // ===== NHÓM 14: CÂU HỎI MỚI — SỐ HỌC =====
   qs.push({
-    id: 'is_prime_first', tier: 2,
-    text: 'Số đầu tiên là số nguyên tố?',
-    fn: function(s) { return isPrime(s[0]); }
+    id: 'has_square', tier: 2,
+    text: 'Có số nào là số chính phương? (0,1,4,9)',
+    fn: function(s) {
+      for (var k=0;k<s.length;k++) if([0,1,4,9].indexOf(s[k])!==-1) return true;
+      return false;
+    },
+    reason: function(s) {
+      var found = [];
+      for (var k=0;k<s.length;k++) if([0,1,4,9].indexOf(s[k])!==-1) found.push(s[k]);
+      return found.length ? 'Có số chính phương: ' + found.join(', ') + '.' : 'Không có số chính phương.';
+    }
   });
   qs.push({
-    id: 'prime_more', tier: 3,
-    text: 'Có nhiều số nguyên tố hơn hợp số?',
+    id: 'has_mult4', tier: 2,
+    text: 'Có số nào là bội của 4? (0,4,8)',
     fn: function(s) {
-      var p=0, c=0;
-      for (var k=0;k<s.length;k++) {
-        if (isPrime(s[k])) p++;
-        else if (s[k] > 1) c++;
+      for (var k=0;k<s.length;k++) if(s[k] % 4 === 0) return true;
+      return false;
+    },
+    reason: function(s) {
+      var found = [];
+      for (var k=0;k<s.length;k++) if(s[k]%4===0) found.push(s[k]);
+      return found.length ? 'Có bội của 4: ' + found.join(', ') + '.' : 'Không có bội của 4.';
+    }
+  });
+  qs.push({
+    id: 'has_mult5', tier: 2,
+    text: 'Có số nào chia hết cho 5? (0,5)',
+    fn: function(s) {
+      for (var k=0;k<s.length;k++) if(s[k] % 5 === 0) return true;
+      return false;
+    },
+    reason: function(s) {
+      var found = [];
+      for (var k=0;k<s.length;k++) if(s[k]%5===0) found.push(s[k]);
+      return found.length ? 'Có số chia hết cho 5: ' + found.join(', ') + '.' : 'Không có số chia hết cho 5.';
+    }
+  });
+  qs.push({
+    id: 'max_prime', tier: 3,
+    text: 'Số lớn nhất là số nguyên tố?',
+    fn: function(s) {
+      var mx = Math.max.apply(null, s);
+      return isPrime(mx);
+    },
+    reason: function(s) {
+      var mx = Math.max.apply(null, s);
+      return 'Số lớn nhất là ' + mx + (isPrime(mx) ? ' — số nguyên tố.' : ' — không phải số nguyên tố.');
+    }
+  });
+
+  // ===== NHÓM 15: CÂU HỎI MỚI — VỊ TRÍ =====
+  qs.push({
+    id: 'middle_gt_avg', tier: 3,
+    text: 'Số ở giữa lớn hơn trung bình cộng?',
+    fn: function(s) {
+      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      var avg = t / s.length;
+      var mid = s[Math.floor(s.length/2)];
+      return mid > avg;
+    },
+    reason: function(s) {
+      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      var avg = (t / s.length).toFixed(1);
+      var mid = s[Math.floor(s.length/2)];
+      return 'Số giữa = ' + mid + ', TB = ' + avg + '.';
+    }
+  });
+  qs.push({
+    id: 'first_last_diff_gt3', tier: 3,
+    text: 'Số đầu và số cuối chênh lệch > 3?',
+    fn: function(s) {
+      return Math.abs(s[0] - s[s.length-1]) > 3;
+    },
+    reason: function(s) {
+      var d = Math.abs(s[0] - s[s.length-1]);
+      return '|' + s[0] + ' - ' + s[s.length-1] + '| = ' + d + ' (' + (d > 3 ? '> 3' : '≤ 3') + ').';
+    }
+  });
+
+  // ===== NHÓM 16: CÂU HỎI MỚI — TỔNG/HIỆU =====
+  qs.push({
+    id: 'sum_first_gt_last', tier: 3,
+    text: 'Tổng 2 số đầu > tổng 2 số cuối?',
+    fn: function(s) {
+      if (s.length < 4) {
+        return (s[0] + s[1]) > (s[s.length-2] + s[s.length-1]);
       }
-      return p > c;
+      return (s[0] + s[1]) > (s[s.length-2] + s[s.length-1]);
+    },
+    reason: function(s) {
+      var a = s[0] + s[1];
+      var b = s[s.length-2] + s[s.length-1];
+      return a + ' vs ' + b + ' (' + (a > b ? '>' : '≤') + ').';
     }
   });
   qs.push({
-    id: 'sum_prime', tier: 3,
-    text: 'Tổng các số là số nguyên tố?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return isPrime(t); }
-  });
-  qs.push({
-    id: 'prod_even', tier: 2,
-    text: 'Tích 2 số đầu là số chẵn?',
-    fn: function(s) { return (s[0]*s[1]) % 2 === 0; }
-  });
-  qs.push({
-    id: 'last_div3', tier: 2,
-    text: 'Số cuối chia hết cho 3?',
-    fn: function(s) { return s[s.length-1] % 3 === 0; }
+    id: 'avg_gt5', tier: 2,
+    text: 'Trung bình cộng > 5?',
+    fn: function(s) {
+      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      return (t / s.length) > 5;
+    },
+    reason: function(s) {
+      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      var avg = (t / s.length).toFixed(1);
+      return 'TB = ' + avg + ' (' + (avg > 5 ? '> 5' : '≤ 5') + ').';
+    }
   });
 
-  // NHÓM 10 — Meta-logic (tier 3)
+  // ===== NHÓM 17: CÂU HỎI MỚI — MẪU =====
   qs.push({
-    id: 'plus1_10', tier: 3,
-    text: 'Nếu cộng 1 vào mỗi số, có số bằng 10?',
-    fn: function(s) { for (var k=0;k<s.length;k++) if(s[k]+1===10)return true; return false; }
-  });
-  qs.push({
-    id: 'reverse_first_even', tier: 3,
-    text: 'Nếu đảo ngược dãy, số đầu vẫn chẵn?',
-    fn: function(s) { return s[s.length-1] % 2 === 0; }
-  });
-  qs.push({
-    id: 'sort_first_orig', tier: 3,
-    text: 'Nếu sắp tăng dần, số ban đầu ở vị trí 1 vẫn đứng đầu?',
+    id: 'has_3_consec', tier: 3,
+    text: 'Có 3 số liên tiếp trong dãy? (VD: 2,3,4)',
     fn: function(s) {
-      var m = 0;
-      for (var k=1;k<s.length;k++) if(s[k] < s[m]) m = k;
-      return m === 0;
+      var a = s.slice().sort(function(x,y){return x-y;});
+      for (var x=0;x<a.length-2;x++)
+        if (a[x+1] === a[x]+1 && a[x+2] === a[x]+2) return true;
+      return false;
+    },
+    reason: function(s) {
+      var a = s.slice().sort(function(x,y){return x-y;});
+      for (var x=0;x<a.length-2;x++)
+        if (a[x+1] === a[x]+1 && a[x+2] === a[x]+2)
+          return 'Có: ' + a[x] + ', ' + a[x+1] + ', ' + a[x+2] + '.';
+      return 'Không có 3 số liên tiếp.';
     }
   });
   qs.push({
-    id: 'double_lt20', tier: 1,
-    text: 'Nếu nhân đôi mỗi số, tất cả đều < 20?',
-    fn: function(s) { for (var k=0;k<s.length;k++) if(s[k]*2>=20)return false; return true; }
+    id: 'symmetric', tier: 3,
+    text: 'Dãy đối xứng? (số đầu = số cuối, số 2 = số áp cuối...)',
+    fn: function(s) {
+      for (var k=0;k<Math.floor(s.length/2);k++)
+        if(s[k] !== s[s.length-1-k]) return false;
+      return true;
+    },
+    reason: function(s) {
+      for (var k=0;k<Math.floor(s.length/2);k++)
+        if(s[k] !== s[s.length-1-k]) return 'Không đối xứng: ' + s[k] + ' ≠ ' + s[s.length-1-k] + '.';
+      return 'Dãy đối xứng.';
+    }
+  });
+
+  // ===== NHÓM 18: CÂU HỎI MỚI — LOGIC =====
+  qs.push({
+    id: 'sum_div4', tier: 3,
+    text: 'Tổng các số chia hết cho 4?',
+    fn: function(s) {
+      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      return t % 4 === 0;
+    },
+    reason: function(s) {
+      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
+      return 'Tổng = ' + t + ' — ' + (t%4===0 ? 'chia hết cho 4' : 'không chia hết cho 4') + '.';
+    }
   });
   qs.push({
-    id: 'abs_diff_first_gt3', tier: 3,
-    text: 'Trị tuyệt đối hiệu 2 số đầu > 3?',
-    fn: function(s) { return Math.abs(s[0]-s[1]) > 3; }
+    id: 'max_minus_min_even', tier: 3,
+    text: 'Hiệu số lớn nhất - số nhỏ nhất là số chẵn?',
+    fn: function(s) {
+      var mx = Math.max.apply(null, s);
+      var mn = Math.min.apply(null, s);
+      return (mx - mn) % 2 === 0;
+    },
+    reason: function(s) {
+      var mx = Math.max.apply(null, s);
+      var mn = Math.min.apply(null, s);
+      return 'Hiệu = ' + (mx-mn) + ' — ' + ((mx-mn)%2===0 ? 'số chẵn' : 'số lẻ') + '.';
+    }
+  });
+  qs.push({
+    id: 'at_least_one_odd', tier: 1,
+    text: 'Có ít nhất 1 số lẻ?',
+    fn: function(s) {
+      for (var k=0;k<s.length;k++) if(s[k]%2===1) return true;
+      return false;
+    },
+    reason: function(s) {
+      for (var k=0;k<s.length;k++) if(s[k]%2===1)
+        return 'Có số lẻ: ' + s[k] + '.';
+      return 'Không có số lẻ (tất cả đều chẵn).';
+    }
   });
 
   return qs;
@@ -1058,7 +1507,6 @@ function buildQuestionsList() {
   numCount = Math.max(3, Math.min(7, parseInt(numCount, 10) || 3));
   allQuestionsCache = buildAllQuestions(numCount);
 
-  // Shuffle
   for (var i = allQuestionsCache.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = allQuestionsCache[i];
@@ -1085,11 +1533,8 @@ function renderQuestions() {
       btn.setAttribute('data-qid', q.id);
 
       var status = askedMap[q.id];
-      if (status) {
-        btn.classList.add('used', status);
-      }
+      if (status) btn.classList.add('used', status);
 
-      // Số thứ tự (nếu đã hỏi)
       if (status && q.askOrder) {
         var numSpan = document.createElement('span');
         numSpan.className = 'q-num';
@@ -1097,23 +1542,26 @@ function renderQuestions() {
         btn.appendChild(numSpan);
       }
 
-      // Dot tier
       var dot = document.createElement('span');
       dot.className = 'q-dot tier' + q.tier;
       btn.appendChild(dot);
 
-      // Text
       var txt = document.createElement('span');
       txt.className = 'q-text';
       txt.textContent = q.text;
       btn.appendChild(txt);
 
-      // Đáp án (nếu đã hỏi)
       if (status) {
         var ansSpan = document.createElement('span');
         ansSpan.className = 'q-answer';
         ansSpan.textContent = status === 'yes' ? '= CÓ' : '= KHÔNG';
         btn.appendChild(ansSpan);
+      } else {
+        var cost = getQuestionCost(q.tier);
+        var costSpan = document.createElement('span');
+        costSpan.className = 'q-cost';
+        costSpan.textContent = '(-' + cost + 'đ)';
+        btn.appendChild(costSpan);
       }
 
       btn.onclick = function(e) {
@@ -1140,7 +1588,19 @@ function handleQuestionClick(q, btn) {
 
   questionsLeft--;
 
-  // Cập nhật nút hiện tại
+  // Lưu log để giải thích sau
+  var reason = '';
+  if (q.reason) {
+    try { reason = q.reason(secret, answer); } catch(e) {}
+  }
+  askedLog.push({
+    order: questionCounter,
+    text: q.text,
+    answer: answer,
+    tier: q.tier,
+    reason: reason
+  });
+
   btn.classList.add('used', status);
   btn.innerHTML = '';
 
@@ -1163,85 +1623,28 @@ function handleQuestionClick(q, btn) {
   ansSpan.textContent = answer ? '= CÓ' : '= KHÔNG';
   btn.appendChild(ansSpan);
 
-  // Toast + sound
   showToast(answer ? 'CÓ ✓' : 'KHÔNG ✗', status);
 
-  // HUD
   els.qLeftEl.textContent = questionsLeft;
   pulseStat(els.qStat);
 
-  // Hết câu → mở đoán
   if (questionsLeft === 0) {
-    setTimeout(openGuessPanel, 1200);
+    showToast('Hết câu hỏi!', 'no');
   }
 }
 
-// ============ GUESS ============
-function openGuessPanel() {
-  if (gameOver) return;
-  currentGuess = [];
-  for (var i = 0; i < numCount; i++) currentGuess.push(null);
-  currentSelectedVal = null;
-  renderGuessPanel();
-}
+// ============ HANDLE GUESS ============
+function handleGuess() {
+  if (gameOver) { showToast('Ván đã kết thúc!', 'no'); return; }
 
-function renderGuessPanel() {
-  var html = '<h2>🎯 ĐOÁN DÃY SỐ</h2>';
-  html += '<p>Dãy có <b>' + numCount + '</b> số (' + minVal + '–' + maxVal + '):</p>';
-  html += '<div class="guess-row">';
   for (var i = 0; i < numCount; i++) {
-    var val = currentGuess[i];
-    html += '<div class="guess-digit" data-pos="' + i + '">';
-    html += '<div class="val' + (val === null ? ' empty' : '') + '" id="gval_' + i + '">' + (val === null ? '?' : val) + '</div>';
-    html += '<div class="pos">Số ' + (i+1) + '</div>';
-    html += '</div>';
-  }
-  html += '</div>';
-  html += '<div class="digit-picker">';
-  for (var v = minVal; v <= maxVal; v++) {
-    html += '<button class="digit-btn" data-val="' + v + '" type="button">' + v + '</button>';
-  }
-  html += '</div>';
-  html += '<div style="font-size:10px;color:#666;margin-top:6px">👆 Chọn số, rồi chạm ô để điền</div>';
-  html += '<div style="margin-top:8px">';
-  html += '<button id="confirmGuess" type="button">XÁC NHẬN ✅</button>';
-  html += '<button id="backToGame" type="button" class="secondary">QUAY LẠI</button>';
-  html += '</div>';
-
-  showOverlay(html);
-
-  var digitBtns = els.overlay.querySelectorAll('.digit-btn');
-  for (var d = 0; d < digitBtns.length; d++) {
-    (function(b) {
-      b.onclick = function() {
-        var all = els.overlay.querySelectorAll('.digit-btn');
-        for (var k = 0; k < all.length; k++) all[k].classList.remove('active');
-        b.classList.add('active');
-        currentSelectedVal = parseInt(b.getAttribute('data-val'), 10);
-      };
-    })(digitBtns[d]);
-  }
-
-  var cells = els.overlay.querySelectorAll('.guess-digit');
-  for (var c = 0; c < cells.length; c++) {
-    (function(cell, idx) {
-      cell.onclick = function() {
-        if (currentSelectedVal === null) { showToast('Chọn số trước!', 'no'); return; }
-        currentGuess[idx] = currentSelectedVal;
-        var vd = document.getElementById('gval_' + idx);
-        vd.textContent = currentSelectedVal;
-        vd.classList.remove('empty');
-      };
-    })(cells[c], c);
-  }
-
-  document.getElementById('confirmGuess').onclick = function() {
-    for (var i = 0; i < numCount; i++) {
-      if (currentGuess[i] === null) { showToast('Chọn đủ ' + numCount + ' số!', 'no'); return; }
+    if (currentGuess[i] === null || currentGuess[i] === undefined) {
+      showToast('Nhập đủ ' + numCount + ' số!', 'no');
+      return;
     }
-    checkGuess();
-  };
-  document.getElementById('backToGame').onclick = hideOverlay;
+  }
+
+  checkGuess();
 }
 
 // ============ CHECK ============
@@ -1252,32 +1655,40 @@ function checkGuess() {
   }
 
   gameOver = true;
+  els.guessBtn.disabled = true;
+
   var questionsUsed = questionsTotal - questionsLeft;
   var points = 0;
 
   if (correct) {
-    if (questionsUsed <= 2) points = 100;
-    else if (questionsUsed === 3) points = 70;
-    else if (questionsUsed === 4) points = 50;
-    else if (questionsUsed === 5) points = 35;
-    else if (questionsUsed === 6) points = 25;
-    else points = 15;
+    // Điểm cơ bản
+    var base = calcBasePoints(level);
+    var modeBonus = { easy: 0, normal: 15, hard: 35 }[currentMode] || 0;
+    var lengthBonus = (numCount - 3) * 25;
 
-    points += (numCount - 3) * 25;
-    var modeBonus = { easy: 0, normal: 15, hard: 35 };
-    points += modeBonus[currentMode] || 0;
+    // Trừ điểm câu hỏi
+    var cost = 0;
+    for (var k = 0; k < askedLog.length; k++) {
+      cost += getQuestionCost(askedLog[k].tier);
+    }
+
+    points = base + modeBonus + lengthBonus - cost;
+    points = Math.max(0, points);
 
     streak++;
     if (streak >= 3) points = Math.floor(points * 1.5);
+
+    totalScore += points;
+    els.scoreTotalEl.textContent = totalScore;
+    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
+    saveToLB(points);
   } else {
     streak = 0;
+    totalScore = Math.max(0, totalScore - 10);
+    els.scoreTotalEl.textContent = totalScore;
+    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
   }
 
-  totalScore += points;
-  els.scoreTotalEl.textContent = totalScore;
-  try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
-
-  if (correct) saveToLB(points);
   showResult(correct, points, questionsUsed);
 }
 
@@ -1291,7 +1702,7 @@ function saveToLB(points) {
   } catch(e) {}
 }
 
-// ============ RESULT ============
+// ============ RESULT + GIẢI THÍCH ============
 function showResult(correct, points, questionsUsed) {
   var html = '';
   if (correct) {
@@ -1310,23 +1721,48 @@ function showResult(correct, points, questionsUsed) {
 
   if (correct) {
     html += '<p>+<b>' + points + '</b> điểm' + (streak > 1 ? ' 🔥 Chuỗi ' + streak : '') + '</p>';
-    html += '<button id="nextLvBtn" type="button" class="tertiary">LEVEL TIẾP ▶</button>';
-    html += '<button id="againBtn" type="button" class="secondary">CHƠI LẠI</button>';
   } else {
     html += '<p>Bạn đoán: ' + currentGuess.slice(0, numCount).join(' - ') + '</p>';
-    html += '<button id="againBtn" type="button">THỬ LẠI 🔁</button>';
-    html += '<button id="changeModeBtn" type="button" class="secondary">Đổi chế độ</button>';
+    html += '<p style="font-size:11px;color:#ef476f">-10 điểm</p>';
   }
 
+  // ===== BẢNG GIẢI THÍCH =====
+  if (askedLog.length > 0) {
+    html += '<div class="explain-box">';
+    html += '<h4>📖 GIẢI THÍCH CÁC CÂU HỎI</h4>';
+    for (var k = 0; k < askedLog.length; k++) {
+      var item = askedLog[k];
+      var cls = item.answer ? 'yes' : 'no';
+      var ansText = item.answer ? 'CÓ' : 'KHÔNG';
+      html += '<div class="explain-item ' + cls + '">';
+      html += '<div class="explain-q">' + item.order + '. ' + escapeHtml(item.text) + '</div>';
+      html += '<div class="explain-ans">→ ' + ansText + '</div>';
+      if (item.reason) {
+        html += '<div class="explain-reason">' + escapeHtml(item.reason) + '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  // Leaderboard
   var lb = [];
   try { lb = JSON.parse(localStorage.getItem('turingCrayonLB') || '[]'); } catch(e) {}
   if (lb.length > 0) {
     html += '<div class="leaderboard"><h3>🏆 TOP 10</h3>';
-    for (var k = 0; k < Math.min(lb.length, 10); k++) {
-      var medal = k===0?'🥇':k===1?'🥈':k===2?'🥉':(k+1)+'.';
-      html += '<div class="lb-row"><span class="rank">'+medal+'</span><span class="name">'+escapeHtml(lb[k].name)+'</span><span class="pts">'+lb[k].score+'</span></div>';
+    for (var m = 0; m < Math.min(lb.length, 10); m++) {
+      var medal = m===0?'🥇':m===1?'🥈':m===2?'🥉':(m+1)+'.';
+      html += '<div class="lb-row"><span class="rank">'+medal+'</span><span class="name">'+escapeHtml(lb[m].name)+'</span><span class="pts">'+lb[m].score+'</span></div>';
     }
     html += '</div>';
+  }
+
+  if (correct) {
+    html += '<button id="nextLvBtn" type="button" class="tertiary">LEVEL TIẾP ▶</button>';
+    html += '<button id="againBtn" type="button" class="secondary">CHƠI LẠI</button>';
+  } else {
+    html += '<button id="againBtn" type="button">THỬ LẠI 🔁</button>';
+    html += '<button id="changeModeBtn" type="button" class="secondary">Đổi chế độ</button>';
   }
 
   showOverlay(html);
@@ -1335,11 +1771,11 @@ function showResult(correct, points, questionsUsed) {
     document.getElementById('nextLvBtn').onclick = function() {
       level++;
       els.levelStatEl.textContent = level;
-      startGame();
+      prepareVan();
     };
-    document.getElementById('againBtn').onclick = function() { startGame(); };
+    document.getElementById('againBtn').onclick = function() { prepareVan(); };
   } else {
-    document.getElementById('againBtn').onclick = function() { startGame(); };
+    document.getElementById('againBtn').onclick = function() { prepareVan(); };
     document.getElementById('changeModeBtn').onclick = function() { level = 1; showModeSelect(); };
   }
 }
