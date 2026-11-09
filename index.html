@@ -3,1099 +3,1231 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🖍️ Bắn Gạch Crayon</title>
+<title>🔧 Máy Turing Crayon</title>
 <style>
-  * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-    -webkit-user-select: none;
-  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
   html, body {
-    margin: 0; padding: 0;
-    width: 100%; height: 100%;
-    overflow: hidden;
-    background: #fdf6e3;
-    font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
-    touch-action: manipulation;
-  }
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(0,0,0,0.025) 0px, rgba(0,0,0,0.025) 1px, transparent 1px, transparent 26px),
-      repeating-linear-gradient(90deg, rgba(0,0,0,0.025) 0px, rgba(0,0,0,0.025) 1px, transparent 1px, transparent 26px);
-    pointer-events: none; z-index: 0;
+    margin:0; padding:0; width:100%; height:100%;
+    overflow:hidden; background:#fdf6e3;
+    font-family:'Comic Sans MS','Chalkboard SE','Segoe Print',cursive;
+    touch-action:manipulation;
   }
   #app {
-    position: relative; z-index: 1;
-    width: 100%; height: 100%;
-    display: flex; flex-direction: column;
-    padding: 8px; gap: 6px;
+    width:100%; height:100%;
+    display:flex; flex-direction:column;
+    padding:6px; gap:4px;
+    max-width:520px; margin:0 auto;
   }
+  header { flex-shrink:0; text-align:center; }
   h1 {
-    margin: 0; text-align: center;
-    font-size: clamp(16px, 4.5vw, 22px);
-    color: #2d3142;
-    text-shadow: 2px 2px 0 #ffd166, -1px -1px 0 #ef476f;
-    letter-spacing: 1px;
-    transform: rotate(-1deg);
+    margin:0; font-size:clamp(15px,4.5vw,20px);
+    color:#2d3142;
+    text-shadow:2px 2px 0 #ffd166, -1px -1px 0 #ef476f;
+    transform:rotate(-0.5deg);
+  }
+  .subtitle {
+    font-size:clamp(9px,2.6vw,11px);
+    color:#666; font-style:italic;
   }
   #hud {
-    display: flex; justify-content: center;
-    gap: 6px; flex-shrink: 0; flex-wrap: wrap;
+    display:flex; justify-content:center; gap:4px;
+    flex-shrink:0; flex-wrap:wrap;
   }
   .stat {
-    background: #fff;
-    border: 2.5px solid #2d3142;
-    border-radius: 14px 6px 16px 8px / 8px 16px 6px 14px;
-    padding: 3px 8px;
-    font-size: clamp(10px, 3vw, 13px);
-    color: #2d3142; font-weight: bold;
-    box-shadow: 2px 3px 0 rgba(45,49,66,0.4);
-    white-space: nowrap;
+    background:#fff;
+    border:2px solid #2d3142;
+    border-radius:10px 4px 12px 5px / 5px 12px 4px 10px;
+    padding:2px 8px;
+    font-size:clamp(10px,2.9vw,12px);
+    color:#2d3142; font-weight:bold;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.35);
+    white-space:nowrap;
   }
-  .stat span { color: #ef476f; }
-  .stat:nth-child(2) span { color: #06d6a0; }
-  .stat:nth-child(3) span { color: #118ab2; }
-  .stat:nth-child(4) span { color: #8367c7; }
-  #gameWrap {
-    flex: 1; display: flex;
-    align-items: center; justify-content: center;
-    min-height: 0; padding: 4px;
+  .stat span { color:#ef476f; }
+  .stat:nth-child(2) span { color:#06d6a0; }
+  .stat:nth-child(3) span { color:#118ab2; }
+  .stat.highlight { animation:pulseStat 0.3s; }
+  @keyframes pulseStat {
+    0% { transform:scale(1); }
+    50% { transform:scale(1.15); background:#ffd166; }
+    100% { transform:scale(1); }
   }
-  #gameContainer {
-    position: relative;
-    border: 3px solid #2d3142;
-    border-radius: 18px 6px 20px 8px / 8px 20px 6px 18px;
-    background: #fffef8;
-    box-shadow: 4px 5px 0 rgba(45,49,66,0.35);
-    overflow: hidden;
-    max-width: 100%; max-height: 100%;
-    touch-action: none;
+
+  #main {
+    flex:1; min-height:0;
+    display:flex; flex-direction:column;
+    gap:4px;
   }
-  canvas {
-    display: block; width: 100%; height: 100%;
-    touch-action: none;
+
+  #historyPanel {
+    background:#fffef8;
+    border:2.5px solid #2d3142;
+    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
+    box-shadow:3px 3px 0 rgba(45,49,66,0.35);
+    padding:5px 7px;
+    display:flex; flex-direction:column;
+    height:32%;
+    min-height:70px;
   }
+  .panel-title {
+    font-size:clamp(10px,2.8vw,12px);
+    color:#2d3142; font-weight:bold;
+    margin-bottom:3px;
+    display:flex; justify-content:space-between; align-items:center;
+    border-bottom:2px dashed #ffd166;
+    padding-bottom:2px;
+  }
+  .panel-title small { font-weight:normal; color:#666; font-size:0.85em; }
+  #historyList {
+    flex:1; overflow-y:auto;
+    display:flex; flex-direction:column; gap:3px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .history-item {
+    display:flex; align-items:center; gap:6px;
+    padding:4px 7px;
+    background:#f0f8ff;
+    border:1.5px solid #ccc;
+    border-radius:7px;
+    font-size:clamp(10px,2.8vw,12px);
+    color:#2d3142;
+    animation:slideIn 0.25s ease-out;
+    flex-shrink:0;
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform:translateY(-8px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  .history-item.yes { background:#d4f8e4; border-color:#06d6a0; }
+  .history-item.no { background:#ffe4e6; border-color:#ef476f; }
+  .history-q { flex:1; }
+  .history-a {
+    font-weight:bold; padding:2px 8px;
+    border-radius:5px; font-size:0.95em;
+    white-space:nowrap;
+  }
+  .yes .history-a { background:#06d6a0; color:#fff; }
+  .no .history-a { background:#ef476f; color:#fff; }
+  .history-empty {
+    color:#999; font-style:italic; text-align:center;
+    font-size:clamp(10px,2.8vw,12px); padding:6px;
+  }
+
+  #questionsPanel {
+    background:#fffef8;
+    border:2.5px solid #2d3142;
+    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
+    box-shadow:3px 3px 0 rgba(45,49,66,0.35);
+    padding:5px 7px;
+    display:flex; flex-direction:column;
+    flex:1; min-height:0;
+  }
+  #questionsList {
+    flex:1; overflow-y:auto;
+    display:flex; flex-direction:column; gap:3px;
+    -webkit-overflow-scrolling:touch;
+    padding-right:2px;
+  }
+  .q-btn {
+    padding:9px 8px;
+    background:#fff;
+    border:2.5px solid #2d3142;
+    border-radius:9px 4px 11px 5px / 5px 11px 4px 9px;
+    font-family:inherit;
+    font-size:clamp(10px,2.7vw,12px);
+    color:#2d3142;
+    font-weight:bold;
+    text-align:center;
+    cursor:pointer;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
+    -webkit-appearance:none;
+    line-height:1.2;
+    width:100%;
+    min-height:38px;
+    flex-shrink:0;
+    position:relative;
+    transition:all 0.15s;
+  }
+  .q-btn:active {
+    transform:translate(1px,1px);
+    box-shadow:1px 1px 0 rgba(45,49,66,0.3);
+    background:#ffd166;
+  }
+  .q-btn.used-yes {
+    background:#06d6a0 !important;
+    color:#fff !important;
+    border-color:#2d3142 !important;
+    opacity:1;
+    pointer-events:none;
+    transform:none !important;
+  }
+  .q-btn.used-no {
+    background:#ef476f !important;
+    color:#fff !important;
+    border-color:#2d3142 !important;
+    opacity:1;
+    pointer-events:none;
+    transform:none !important;
+  }
+  .q-btn.used-yes::after {
+    content:' = CÓ';
+    font-size:0.9em;
+    margin-left:4px;
+  }
+  .q-btn.used-no::after {
+    content:' = KHÔNG';
+    font-size:0.9em;
+    margin-left:4px;
+  }
+
+  #guessBtn {
+    flex-shrink:0;
+    padding:11px;
+    background:#ef476f;
+    color:#fff;
+    border:3px solid #2d3142;
+    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
+    font-family:inherit;
+    font-weight:bold;
+    font-size:clamp(13px,3.5vw,16px);
+    cursor:pointer;
+    box-shadow:3px 3px 0 #2d3142;
+    -webkit-appearance:none;
+    letter-spacing:1px;
+    width:100%;
+  }
+  #guessBtn:active {
+    transform:translate(2px,2px);
+    box-shadow:1px 1px 0 #2d3142;
+  }
+
+  /* Toast — popup kết quả lớn */
+  #toast {
+    position:fixed;
+    top:50%; left:50%;
+    transform:translate(-50%, -50%) scale(0.3);
+    background:#fff;
+    border:4px solid #2d3142;
+    border-radius:20px;
+    padding:20px 36px;
+    font-family:'Comic Sans MS', cursive;
+    font-size:clamp(28px,8vw,40px);
+    font-weight:bold;
+    box-shadow:5px 5px 0 rgba(45,49,66,0.5);
+    z-index:1000;
+    pointer-events:none;
+    opacity:0;
+    transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #toast.show {
+    opacity:1;
+    transform:translate(-50%, -50%) scale(1);
+  }
+  #toast.yes {
+    background:#06d6a0;
+    color:#fff;
+  }
+  #toast.no {
+    background:#ef476f;
+    color:#fff;
+  }
+
+  /* Overlay */
   #overlay {
-    position: absolute; inset: 0;
-    background: rgba(253, 246, 227, 0.97);
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    text-align: center; padding: 16px;
-    z-index: 10;
-    overflow-y: auto;
+    position:fixed; inset:0;
+    background:rgba(253, 246, 227, 0.97);
+    display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    text-align:center; padding:20px;
+    z-index:100;
+    overflow-y:auto;
   }
-  #overlay.hidden { display: none; }
+  #overlay.hidden { display:none; }
   #overlay h2 {
-    font-size: clamp(18px, 5.5vw, 26px);
-    color: #ef476f; margin: 0 0 8px;
-    text-shadow: 2px 2px 0 #ffd166;
-    transform: rotate(-2deg);
+    font-size:clamp(20px,6vw,28px);
+    color:#ef476f;
+    margin:0 0 8px;
+    text-shadow:2px 2px 0 #ffd166;
+    transform:rotate(-2deg);
   }
+  #overlay h2.win { color:#06d6a0; }
   #overlay p {
-    font-size: clamp(12px, 3.4vw, 14px);
-    color: #2d3142; margin: 4px 0;
-    line-height: 1.4; max-width: 95%;
+    font-size:clamp(12px,3.4vw,15px);
+    color:#2d3142;
+    margin:4px 0;
+    line-height:1.45;
+    max-width:340px;
   }
-  #overlay b { color: #06d6a0; }
+  #overlay b { color:#06d6a0; }
+  .secret-reveal {
+    display:flex; gap:5px; margin:10px 0;
+    justify-content:center; flex-wrap:wrap;
+  }
+  .secret-num {
+    width:40px; height:40px;
+    background:#ffd166;
+    border:3px solid #2d3142;
+    border-radius:11px 4px 11px 4px / 4px 11px 4px 11px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:19px; font-weight:bold; color:#2d3142;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.4);
+  }
   #overlay button {
-    margin-top: 12px;
-    padding: 12px 30px;
-    font-size: clamp(14px, 4.2vw, 17px);
-    font-weight: bold; font-family: inherit;
-    color: #fff; background: #ef476f;
-    border: 3px solid #2d3142;
-    border-radius: 16px 6px 18px 8px / 8px 18px 6px 16px;
-    box-shadow: 3px 4px 0 #2d3142;
-    cursor: pointer;
-    transform: rotate(-1deg);
-    -webkit-appearance: none;
-    appearance: none;
-    touch-action: manipulation;
+    margin-top:8px;
+    padding:11px 26px;
+    font-size:clamp(13px,3.8vw,16px);
+    font-weight:bold;
+    font-family:inherit;
+    color:#fff;
+    background:#ef476f;
+    border:3px solid #2d3142;
+    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
+    box-shadow:3px 3px 0 #2d3142;
+    cursor:pointer;
+    -webkit-appearance:none;
+    touch-action:manipulation;
   }
   #overlay button:active {
-    transform: translate(2px, 3px) rotate(-1deg);
-    box-shadow: 1px 1px 0 #2d3142;
+    transform:translate(2px,2px);
+    box-shadow:1px 1px 0 #2d3142;
   }
-  #overlay input {
-    margin: 10px 0 0;
-    padding: 10px 14px;
-    font-size: clamp(14px, 4vw, 16px);
-    font-family: inherit;
-    border: 2.5px solid #2d3142;
-    border-radius: 12px;
-    background: #fff;
-    text-align: center;
-    width: 220px; max-width: 90%;
-    color: #2d3142;
-    outline: none;
+  #overlay button.secondary { background:#118ab2; margin-left:6px; }
+  #overlay button.tertiary { background:#06d6a0; }
+
+  .mode-btn {
+    display:block;
+    width:100%; max-width:280px;
+    margin:5px auto;
+    padding:11px;
+    font-family:inherit;
+    font-size:clamp(13px,3.8vw,15px);
+    font-weight:bold;
+    color:#2d3142;
+    background:#fff;
+    border:3px solid #2d3142;
+    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
+    box-shadow:3px 3px 0 rgba(45,49,66,0.4);
+    cursor:pointer;
+    text-align:left;
+    -webkit-appearance:none;
   }
-  #overlay input:focus {
-    border-color: #ef476f;
-    box-shadow: 0 0 0 3px rgba(239,71,111,0.2);
+  .mode-btn:active {
+    transform:translate(2px,2px);
+    box-shadow:1px 1px 0 rgba(45,49,66,0.4);
   }
-  .hint {
-    font-size: clamp(10px, 3vw, 12px);
-    color: #118ab2; font-style: italic;
-    margin-top: 6px;
+  .mode-btn .desc {
+    display:block;
+    font-size:0.8em;
+    font-weight:normal;
+    color:#666;
+    margin-top:2px;
   }
+  .mode-btn.active { background:#ffd166; }
+
+  .name-input {
+    padding:10px 14px;
+    font-size:15px;
+    font-family:inherit;
+    border:2.5px solid #2d3142;
+    border-radius:12px;
+    background:#fff;
+    text-align:center;
+    width:220px; max-width:85%;
+    color:#2d3142;
+    outline:none;
+    margin:6px 0;
+  }
+  .name-input:focus {
+    border-color:#ef476f;
+    box-shadow:0 0 0 3px rgba(239,71,111,0.2);
+  }
+
+  .guess-row {
+    display:flex; gap:6px; justify-content:center; margin:8px 0;
+    flex-wrap:wrap;
+  }
+  .guess-digit {
+    width:52px; height:62px;
+    background:#fff;
+    border:3px solid #2d3142;
+    border-radius:12px 4px 12px 4px / 4px 12px 4px 12px;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    box-shadow:2px 3px 0 rgba(45,49,66,0.35);
+    cursor:pointer;
+    position:relative;
+  }
+  .guess-digit .val {
+    font-size:24px; font-weight:bold;
+    color:#2d3142;
+    line-height:1;
+  }
+  .guess-digit .val.empty { color:#ccc; font-size:20px; }
+  .guess-digit .pos {
+    position:absolute; bottom:3px;
+    font-size:8px; color:#888;
+    font-family:sans-serif;
+  }
+  .digit-picker {
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:5px;
+    justify-items:center;
+    margin-top:6px;
+    max-width:280px;
+  }
+  .digit-btn {
+    width:100%;
+    max-width:48px;
+    height:44px;
+    background:#fff;
+    border:2.5px solid #2d3142;
+    border-radius:10px 4px 10px 4px / 4px 10px 4px 10px;
+    font-family:inherit;
+    font-size:20px; font-weight:bold;
+    color:#2d3142;
+    cursor:pointer;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
+    -webkit-appearance:none;
+  }
+  .digit-btn:active {
+    transform:translate(1px,1px);
+    box-shadow:1px 1px 0 rgba(45,49,66,0.3);
+    background:#ffd166;
+  }
+  .digit-btn.active { background:#ffd166; }
+
   .leaderboard {
-    width: 100%; max-width: 280px;
-    margin: 8px auto 0;
-    background: #fff;
-    border: 2.5px solid #2d3142;
-    border-radius: 14px 6px 16px 8px / 8px 16px 6px 14px;
-    padding: 8px 10px;
-    text-align: left;
+    width:100%; max-width:340px;
+    margin:6px auto;
+    background:#fff;
+    border:2.5px solid #2d3142;
+    border-radius:12px;
+    padding:6px 9px;
+    text-align:left;
   }
   .leaderboard h3 {
-    margin: 0 0 6px;
-    font-size: clamp(13px, 3.8vw, 15px);
-    color: #2d3142;
-    text-align: center;
-    border-bottom: 2px dashed #ffd166;
-    padding-bottom: 4px;
+    margin:0 0 5px;
+    font-size:13px;
+    color:#2d3142;
+    text-align:center;
+    border-bottom:2px dashed #ffd166;
+    padding-bottom:3px;
   }
   .lb-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 3px 4px;
-    font-size: clamp(11px, 3.2vw, 13px);
-    color: #2d3142;
-    border-radius: 6px;
+    display:flex; justify-content:space-between;
+    padding:2px 4px;
+    font-size:11px;
+    color:#2d3142;
+    border-radius:4px;
   }
-  .lb-row:first-child { background: #ffd166; font-weight: bold; }
-  .lb-row .rank { width: 22px; }
-  .lb-row .name { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .lb-row .score { color: #ef476f; font-weight: bold; }
-  .lb-empty {
-    text-align: center;
-    color: #999;
-    font-style: italic;
-    padding: 8px;
-    font-size: 12px;
-  }
-  #controls {
-    flex-shrink: 0;
-    text-align: center;
-    font-size: clamp(10px, 2.8vw, 12px);
-    color: #2d3142; opacity: 0.7;
-    padding-bottom: env(safe-area-inset-bottom, 4px);
-  }
-  .btn-secondary {
-    background: #118ab2 !important;
-    margin-left: 8px;
-  }
+  .lb-row:first-child { background:#ffd166; font-weight:bold; }
+  .lb-row .rank { width:20px; }
+  .lb-row .name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .lb-row .pts { color:#ef476f; font-weight:bold; }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <h1>🖍️ BẮN GẠCH CRAYON</h1>
+  <header>
+    <h1>🔧 MÁY TURING CRAYON</h1>
+    <div class="subtitle">Đặt câu hỏi • Suy luận • Tìm mã</div>
+  </header>
 
   <div id="hud">
-    <div class="stat">⭐ <span id="score">0</span></div>
-    <div class="stat">🏆 <span id="highscore">0</span></div>
-    <div class="stat">❤️ <span id="lives">3</span></div>
-    <div class="stat">📦 <span id="level">1</span></div>
+    <div class="stat" id="lvStat">Lv <span id="levelStat">1</span></div>
+    <div class="stat" id="qStat">❓ <span id="qLeft">6</span></div>
+    <div class="stat" id="scStat">🏆 <span id="scoreTotal">0</span></div>
   </div>
 
-  <div id="gameWrap">
-    <div id="gameContainer">
-      <canvas id="game"></canvas>
-      <div id="overlay">
-        <h2>🖍️ SẴN SÀNG?</h2>
-        <p>Kéo ngang để di chuyển thanh đỡ</p>
-        <p>Chạm để bắn bóng phá gạch!</p>
-        <p class="hint">👆 Chạm và kéo trên màn hình</p>
-        <button id="startBtn" type="button">BẮT ĐẦU 🖍️</button>
+  <div id="main">
+    <div id="historyPanel">
+      <div class="panel-title">
+        📝 Nhật ký
+        <small id="secretDisplay">???</small>
+      </div>
+      <div id="historyList">
+        <div class="history-empty">Chạm câu hỏi bên dưới 👇</div>
       </div>
     </div>
-  </div>
 
-  <div id="controls">
-    👆 Kéo ngang di chuyển • Chạm để bắn
+    <div id="questionsPanel">
+      <div class="panel-title">
+        🔍 Câu hỏi
+        <small id="qCount"></small>
+      </div>
+      <div id="questionsList"></div>
+    </div>
+
+    <button id="guessBtn" type="button">🎯 ĐOÁN DÃY SỐ</button>
   </div>
 </div>
 
+<div id="toast"></div>
+
+<div id="overlay">
+  <h2>🔧 MÁY TURING CRAYON</h2>
+  <p>Tìm dãy số bí ẩn bằng cách đặt câu hỏi Có/Không!</p>
+  <button id="startBtn" type="button">BẮT ĐẦU 🖍️</button>
+</div>
+
 <script>
-// ================= CẤU HÌNH =================
-var COLS = 8;
-var PADDLE_W_RATIO = 0.22;
-var PADDLE_H_RATIO = 0.035;
-var BALL_R_RATIO = 0.016;
+(function() {
+'use strict';
 
-var canvas, ctx, container, overlay;
-var scoreEl, highEl, livesEl, levelEl;
+// ============ MODES ============
+var MODES = {
+  easy:   { name:'Dễ',     startNums:3, min:0, max:9 },
+  normal: { name:'Thường', startNums:4, min:0, max:9 },
+  hard:   { name:'Khó',    startNums:5, min:0, max:9 }
+};
 
-var W = 400, H = 500;
-
-// Trạng thái
-var paddle, balls, bricks, particles;
-var score = 0, lives = 3, level = 1;
-var highScore = 0;
-var playerName = 'Người chơi';
-var running = false;
-var paused = false;
+// ============ STATE ============
+var currentMode = 'normal';
+var secret = [];
+var numCount = 3;
+var minVal = 0; var maxVal = 9;
+var questionsLeft = 6;
+var questionsTotal = 6;
+var history = [];
+var askedMap = {};
 var gameOver = false;
-var ballLaunched = false;
-var rafId = null;
-var lastTime = 0;
-var levelBanner = null; // hiệu ứng chữ khi lên level
+var totalScore = 0;
+var streak = 0;
+var playerName = 'Người chơi';
+var currentGuess = [];
+var currentSelectedVal = null;
+var level = 1;
 
-var INK = '#2d3142';
-var PAPER = '#fffef8';
-var BRICK_COLORS = ['#ef476f', '#f78c6b', '#ffd166', '#06d6a0', '#118ab2', '#8367c7'];
-var PADDLE_COLOR = '#118ab2';
-var BALL_COLOR = '#ef476f';
+// DOM
+var els = {};
 
-// ================= CẤU HÌNH LEVEL =================
-// Mỗi level: số hàng, màu đặc biệt, mẫu bố cục
-var LEVELS = [
-  { rows: 4, pattern: 'full',     special: 0,    ballSpeed: 3.5 },
-  { rows: 5, pattern: 'full',     special: 0.05, ballSpeed: 3.7 },
-  { rows: 5, pattern: 'checker',  special: 0.08, ballSpeed: 3.9 },
-  { rows: 6, pattern: 'pyramid',  special: 0.1,  ballSpeed: 4.1 },
-  { rows: 6, pattern: 'zigzag',   special: 0.12, ballSpeed: 4.3 },
-  { rows: 6, pattern: 'diamond',  special: 0.15, ballSpeed: 4.5 },
-  { rows: 7, pattern: 'checker',  special: 0.18, ballSpeed: 4.7 },
-  { rows: 7, pattern: 'pyramid',  special: 0.2,  ballSpeed: 5.0 }
-];
-
-function getLevelConfig(lv) {
-  if (lv <= LEVELS.length) return LEVELS[lv - 1];
-  // Level vô hạn sau khi hết cấu hình
-  var base = LEVELS[LEVELS.length - 1];
-  return {
-    rows: Math.min(8, base.rows + Math.floor((lv - LEVELS.length) / 2)),
-    pattern: ['full', 'checker', 'pyramid', 'zigzag', 'diamond'][lv % 5],
-    special: Math.min(0.3, base.special + (lv - LEVELS.length) * 0.03),
-    ballSpeed: Math.min(7, base.ballSpeed + (lv - LEVELS.length) * 0.2)
-  };
-}
-
-// ================= DOM READY =================
+// ============ READY ============
 function ready(fn) {
   if (document.readyState !== 'loading') fn();
   else document.addEventListener('DOMContentLoaded', fn);
 }
 
-ready(function () {
-  canvas = document.getElementById('game');
-  ctx = canvas.getContext('2d');
-  container = document.getElementById('gameContainer');
-  overlay = document.getElementById('overlay');
-  scoreEl = document.getElementById('score');
-  highEl = document.getElementById('highscore');
-  livesEl = document.getElementById('lives');
-  levelEl = document.getElementById('level');
+ready(function() {
+  els.qLeftEl = document.getElementById('qLeft');
+  els.scoreTotalEl = document.getElementById('scoreTotal');
+  els.levelStatEl = document.getElementById('levelStat');
+  els.historyListEl = document.getElementById('historyList');
+  els.questionsListEl = document.getElementById('questionsList');
+  els.secretDisplayEl = document.getElementById('secretDisplay');
+  els.qCountEl = document.getElementById('qCount');
+  els.overlay = document.getElementById('overlay');
+  els.guessBtn = document.getElementById('guessBtn');
+  els.toast = document.getElementById('toast');
+  els.qStat = document.getElementById('qStat');
+  els.scStat = document.getElementById('scStat');
 
-  // Load
   try {
-    highScore = parseInt(localStorage.getItem('breakoutCrayonHigh')) || 0;
-    playerName = localStorage.getItem('breakoutCrayonName') || 'Người chơi';
-  } catch (e) {}
-  highEl.textContent = highScore;
+    playerName = localStorage.getItem('turingCrayonName') || 'Người chơi';
+    totalScore = parseInt(localStorage.getItem('turingCrayonScore')) || 0;
+  } catch(e) {}
+  els.scoreTotalEl.textContent = totalScore;
 
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  window.addEventListener('orientationchange', function () {
-    setTimeout(resizeCanvas, 250);
-  });
-
-  bindTap(document.getElementById('startBtn'), askNameThenStart);
-  bindPaddleControl();
-  document.addEventListener('keydown', onKeyDown);
-
-  resetState();
-  drawInitialScreen();
+  document.getElementById('startBtn').onclick = showModeSelect;
+  els.guessBtn.onclick = openGuessPanel;
 });
 
-// ================= BẢNG XẾP HẠNG =================
-function getLeaderboard() {
+// ============ TOAST (phản hồi lớn) ============
+var toastTimer = null;
+function showToast(text, type) {
+  els.toast.textContent = text;
+  els.toast.className = 'show ' + type;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() {
+    els.toast.className = '';
+  }, 900);
+
+  // Rung máy nếu có
   try {
-    var raw = localStorage.getItem('breakoutCrayonLeaderboard');
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) { return []; }
+    if (navigator.vibrate) navigator.vibrate(type === 'yes' ? 30 : [30, 40, 30]);
+  } catch(e) {}
+
+  // Âm thanh
+  playBeep(type === 'yes');
 }
 
-function saveLeaderboard(list) {
+// ============ SOUND ============
+var audioCtx = null;
+function playBeep(high) {
   try {
-    localStorage.setItem('breakoutCrayonLeaderboard', JSON.stringify(list));
-  } catch (e) {}
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    var now = audioCtx.currentTime;
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(high ? 880 : 440, now);
+    osc.frequency.exponentialRampToValueAtTime(high ? 1100 : 300, now + 0.1);
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    osc.start(now);
+    osc.stop(now + 0.15);
+  } catch(e) {}
 }
 
-function addToLeaderboard(name, sc) {
-  var list = getLeaderboard();
-  list.push({ name: name, score: sc, date: Date.now() });
-  list.sort(function (a, b) { return b.score - a.score; });
-  list = list.slice(0, 5); // top 5
-  saveLeaderboard(list);
-  return list;
-}
-
-function renderLeaderboardHTML() {
-  var list = getLeaderboard();
-  var html = '<div class="leaderboard">';
-  html += '<h3>🏆 BẢNG XẾP HẠNG</h3>';
-  if (list.length === 0) {
-    html += '<div class="lb-empty">Chưa có ai! Hãy là người đầu tiên 🎉</div>';
-  } else {
-    for (var i = 0; i < list.length; i++) {
-      var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
-      html += '<div class="lb-row">';
-      html += '<span class="rank">' + medal + '</span>';
-      html += '<span class="name">' + escapeHtml(list[i].name) + '</span>';
-      html += '<span class="score">' + list[i].score + '</span>';
-      html += '</div>';
-    }
-  }
-  html += '</div>';
-  return html;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, function (c) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-  });
-}
-
-// ================= TAP CHUẨN =================
-function bindTap(el, fn) {
+// ============ PULSE STAT ============
+function pulseStat(el) {
   if (!el) return;
-  var fired = false;
-  function fire(e) {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
-    if (fired) return;
-    fired = true;
-    setTimeout(function () { fired = false; }, 300);
-    fn();
-  }
-  el.addEventListener('touchend', fire, { passive: false });
-  el.addEventListener('click', fire);
+  el.classList.remove('highlight');
+  void el.offsetWidth; // reflow
+  el.classList.add('highlight');
 }
 
-// ================= RESIZE =================
-function resizeCanvas() {
-  var wrap = document.getElementById('gameWrap');
-  var availW = wrap.clientWidth;
-  var availH = wrap.clientHeight;
-  var ratio = 4 / 5;
-  var w, h;
-  if (availW / availH > ratio) {
-    h = availH; w = h * ratio;
-  } else {
-    w = availW; h = w / ratio;
-  }
-  w = Math.max(150, Math.floor(w));
-  h = Math.max(180, Math.floor(h));
-
-  var dpr = window.devicePixelRatio || 1;
-  container.style.width = w + 'px';
-  container.style.height = h + 'px';
-  canvas.width = Math.round(w * dpr);
-  canvas.height = Math.round(h * dpr);
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  W = w; H = h;
-
-  if (paddle) {
-    paddle.w = W * PADDLE_W_RATIO;
-    paddle.h = Math.max(8, H * PADDLE_H_RATIO);
-    paddle.y = H - paddle.h - 10;
-    paddle.x = Math.min(Math.max(0, paddle.x), W - paddle.w);
-  }
-  if (balls && !ballLaunched && paddle) {
-    for (var i = 0; i < balls.length; i++) {
-      balls[i].x = paddle.x + paddle.w / 2;
-      balls[i].y = paddle.y - balls[i].r - 1;
-    }
-  }
-  if (bricks) layoutBricks();
-  if (running) draw();
+// ============ OVERLAY ============
+function showOverlay(html) {
+  els.overlay.innerHTML = html;
+  els.overlay.classList.remove('hidden');
+}
+function hideOverlay() {
+  els.overlay.classList.add('hidden');
 }
 
-// ================= STATE =================
-function resetState() {
-  score = 0;
-  lives = 3;
-  level = 1;
-  gameOver = false;
-  paused = false;
-  ballLaunched = false;
-  levelBanner = null;
-  scoreEl.textContent = '0';
-  livesEl.textContent = '3';
-  levelEl.textContent = '1';
-
-  paddle = {
-    w: W * PADDLE_W_RATIO,
-    h: Math.max(8, H * PADDLE_H_RATIO),
-    x: (W - W * PADDLE_W_RATIO) / 2,
-    y: H - Math.max(8, H * PADDLE_H_RATIO) - 10,
-    speed: 6
-  };
-
-  var ballR = Math.max(4, W * BALL_R_RATIO);
-  balls = [{
-    x: paddle.x + paddle.w / 2,
-    y: paddle.y - ballR - 1,
-    r: ballR, vx: 0, vy: 0,
-    speed: 3.5
-  }];
-
-  particles = [];
-  buildBricks();
-}
-
-// ================= GẠCH THEO PATTERN =================
-function buildBricks() {
-  bricks = [];
-  var cfg = getLevelConfig(level);
-  var padX = W * 0.02;
-  var startY = H * 0.08;
-  var brickW = (W - padX * 2 - (COLS - 1) * 3) / COLS;
-  var brickH = H * 0.045;
-  var rows = cfg.rows;
-
-  for (var r = 0; r < rows; r++) {
-    for (var c = 0; c < COLS; c++) {
-      var include = true;
-      switch (cfg.pattern) {
-        case 'checker':
-          include = (r + c) % 2 === 0;
-          break;
-        case 'pyramid':
-          include = c >= Math.floor((COLS - rows + r) / 2) &&
-                    c < COLS - Math.floor((COLS - rows + r) / 2);
-          if (r > 0) {
-            var pad = Math.floor(r * (COLS / 2) / rows);
-            include = c >= pad && c < COLS - pad;
-          }
-          break;
-        case 'zigzag':
-          include = true;
-          break;
-        case 'diamond':
-          var mid = Math.floor(COLS / 2);
-          var dist = Math.abs(c - mid);
-          var maxDist = Math.floor(rows / 2);
-          include = dist <= maxDist && (r >= dist) && (r <= rows - 1 - Math.max(0, dist - maxDist + 1));
-          include = dist + Math.abs(r - Math.floor(rows / 2)) <= Math.floor((rows + COLS) / 4);
-          break;
-        case 'full':
-        default:
-          include = true;
-      }
-      if (!include) continue;
-
-      var isSpecial = Math.random() < cfg.special;
-      bricks.push({
-        x: padX + c * (brickW + 3),
-        y: startY + r * (brickH + 3),
-        w: brickW, h: brickH,
-        color: BRICK_COLORS[r % BRICK_COLORS.length],
-        alive: true,
-        special: isSpecial,
-        hits: isSpecial ? 2 : 1,
-        maxHits: isSpecial ? 2 : 1,
-        points: (rows - r) * 5 + 5
-      });
-    }
+// ============ MODE SELECT ============
+function showModeSelect() {
+  var html = '<h2>🔧 CHỌN CHẾ ĐỘ</h2>';
+  html += '<p>Tên của bạn:</p>';
+  html += '<input id="nameInput" class="name-input" type="text" maxlength="16" placeholder="Nhập tên..." value="' + escapeHtml(playerName) + '">';
+  html += '<p style="margin-top:8px;font-size:12px;color:#666">Chọn độ khó:</p>';
+  for (var key in MODES) {
+    var m = MODES[key];
+    html += '<button class="mode-btn' + (key === currentMode ? ' active' : '') + '" data-mode="' + key + '" type="button">';
+    html += '📚 ' + m.name;
+    html += '<span class="desc">Bắt đầu ' + m.startNums + ' số (1-' + m.max + ')</span>';
+    html += '</button>';
   }
-}
+  html += '<button id="goBtn" type="button" style="margin-top:12px">VÀO GAME 🖍️</button>';
+  showOverlay(html);
 
-function layoutBricks() {
-  if (!bricks) return;
-  var padX = W * 0.02;
-  var startY = H * 0.08;
-  var brickW = (W - padX * 2 - (COLS - 1) * 3) / COLS;
-  var brickH = H * 0.045;
-  var cfg = getLevelConfig(level);
-  var rows = cfg.rows;
-  var idx = 0;
-  // layoutBricks chỉ cập nhật các gạch đang tồn tại, không tạo lại
-  for (var r = 0; r < rows; r++) {
-    for (var c = 0; c < COLS; c++) {
-      if (idx < bricks.length) {
-        bricks[idx].x = padX + c * (brickW + 3);
-        bricks[idx].y = startY + r * (brickH + 3);
-        bricks[idx].w = brickW;
-        bricks[idx].h = brickH;
-        idx++;
-      }
-    }
-  }
-}
-
-// ================= VẼ =================
-function drawInitialScreen() {
-  if (!ctx) return;
-  var w = canvas.clientWidth || 200;
-  var h = canvas.clientHeight || 250;
-  ctx.fillStyle = PAPER;
-  ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = 'rgba(45,49,66,0.1)';
-  for (var y = 0; y < h; y += 26) {
-    for (var x = 0; x < w; x += 26) {
-      ctx.beginPath();
-      ctx.arc(x, y, 0.9, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-}
-
-function crayonRectFill(x, y, w, h, color, strokeW) {
-  if (strokeW == null) strokeW = 2;
-  ctx.fillStyle = color;
-  var r = Math.min(w, h) * 0.25;
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = INK;
-  ctx.lineWidth = strokeW;
-  ctx.stroke();
-}
-
-function draw() {
-  if (!ctx) return;
-  var w = W, h = H;
-
-  ctx.fillStyle = PAPER;
-  ctx.fillRect(0, 0, w, h);
-
-  ctx.fillStyle = 'rgba(45,49,66,0.08)';
-  for (var y = 0; y < h; y += 26) {
-    for (var x = 0; x < w; x += 26) {
-      ctx.beginPath();
-      ctx.arc(x, y, 0.9, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  var btns = els.overlay.querySelectorAll('.mode-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.onclick = function() {
+        var all = els.overlay.querySelectorAll('.mode-btn');
+        for (var j = 0; j < all.length; j++) all[j].classList.remove('active');
+        btn.classList.add('active');
+        currentMode = btn.getAttribute('data-mode');
+      };
+    })(btns[i]);
   }
 
-  // Gạch
-  if (bricks) {
-    for (var i = 0; i < bricks.length; i++) {
-      var b = bricks[i];
-      if (!b.alive) continue;
-      var col = b.color;
-      if (b.special && b.hits < b.maxHits) {
-        // gạch đặc biệt đã bị đập 1 lần → mờ
-        col = shadeColor(b.color, -0.3);
-      }
-      crayonRectFill(b.x, b.y, b.w, b.h, col, 1.8);
-
-      // highlight
-      ctx.fillStyle = 'rgba(255,255,255,0.4)';
-      ctx.beginPath();
-      ctx.ellipse(b.x + b.w * 0.3, b.y + b.h * 0.3, b.w * 0.15, b.h * 0.15, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // đánh dấu gạch đặc biệt (2 hit)
-      if (b.special) {
-        ctx.fillStyle = INK;
-        ctx.font = 'bold ' + Math.max(9, b.h * 0.55) + 'px Comic Sans MS, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('★', b.x + b.w / 2, b.y + b.h / 2);
-      }
-    }
-  }
-
-  // Paddle
-  if (paddle) {
-    crayonRectFill(paddle.x, paddle.y, paddle.w, paddle.h, PADDLE_COLOR, 2.2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(paddle.x + 6, paddle.y + paddle.h / 2);
-    ctx.lineTo(paddle.x + paddle.w - 6, paddle.y + paddle.h / 2);
-    ctx.stroke();
-  }
-
-  // Bóng
-  if (balls) {
-    for (var j = 0; j < balls.length; j++) {
-      var ball = balls[j];
-      ctx.fillStyle = 'rgba(239,71,111,0.2)';
-      ctx.beginPath();
-      ctx.arc(ball.x, ball.y, ball.r * 2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = BALL_COLOR;
-      ctx.beginPath();
-      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
-      ctx.beginPath();
-      ctx.arc(ball.x - ball.r * 0.35, ball.y - ball.r * 0.35, ball.r * 0.3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  // Hạt
-  if (particles) {
-    for (var p = 0; p < particles.length; p++) {
-      var pt = particles[p];
-      ctx.globalAlpha = pt.life / pt.maxLife;
-      ctx.fillStyle = pt.color;
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-  }
-
-  // Banner lên level
-  if (levelBanner) {
-    var elapsed = Date.now() - levelBanner.start;
-    var dur = 1500;
-    if (elapsed < dur) {
-      var alpha = elapsed < 400 ? elapsed / 400 : (elapsed > dur - 400 ? (dur - elapsed) / 400 : 1);
-      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-      ctx.fillStyle = 'rgba(253,246,227,0.85)';
-      ctx.fillRect(0, h * 0.35, w, h * 0.2);
-      ctx.fillStyle = '#ef476f';
-      ctx.font = 'bold ' + Math.max(18, W * 0.06) + 'px Comic Sans MS, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('📦 LEVEL ' + levelBanner.level, w / 2, h * 0.45);
-      ctx.globalAlpha = 1;
-    } else {
-      levelBanner = null;
-    }
-  }
-
-  // Gợi ý chạm để bắn
-  if (running && !ballLaunched && !gameOver) {
-    var pulse2 = 0.6 + Math.sin(Date.now() / 300) * 0.4;
-    ctx.globalAlpha = pulse2;
-    ctx.fillStyle = INK;
-    ctx.font = 'bold ' + Math.max(11, W * 0.035) + 'px Comic Sans MS, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('👆 Chạm để bắn!', w / 2, h * 0.65);
-    ctx.globalAlpha = 1;
-  }
-}
-
-function shadeColor(hex, amt) {
-  var c = hex.replace('#', '');
-  var num = parseInt(c, 16);
-  var r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
-  r = Math.max(0, Math.min(255, r + amt * 255));
-  g = Math.max(0, Math.min(255, g + amt * 255));
-  b = Math.max(0, Math.min(255, b + amt * 255));
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-
-// ================= LOGIC =================
-function step() {
-  for (var i = balls.length - 1; i >= 0; i--) {
-    var ball = balls[i];
-
-    if (!ballLaunched) {
-      ball.x = paddle.x + paddle.w / 2;
-      ball.y = paddle.y - ball.r - 1;
-      continue;
-    }
-
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-
-    if (ball.x - ball.r < 0) {
-      ball.x = ball.r;
-      ball.vx = Math.abs(ball.vx);
-      spawnHitParticles(ball.x, ball.y, '#118ab2');
-    }
-    if (ball.x + ball.r > W) {
-      ball.x = W - ball.r;
-      ball.vx = -Math.abs(ball.vx);
-      spawnHitParticles(ball.x, ball.y, '#118ab2');
-    }
-    if (ball.y - ball.r < 0) {
-      ball.y = ball.r;
-      ball.vy = Math.abs(ball.vy);
-      spawnHitParticles(ball.x, ball.y, '#118ab2');
-    }
-
-    // Va chạm paddle
-    if (ball.y + ball.r >= paddle.y &&
-        ball.y - ball.r <= paddle.y + paddle.h &&
-        ball.x >= paddle.x - ball.r &&
-        ball.x <= paddle.x + paddle.w + ball.r &&
-        ball.vy > 0) {
-
-      var rel = (ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
-      rel = Math.max(-1, Math.min(1, rel));
-      var angle = rel * Math.PI * 0.42;
-      var sp = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
-      ball.vx = sp * Math.sin(angle);
-      ball.vy = -sp * Math.cos(angle);
-      ball.y = paddle.y - ball.r - 0.5;
-      spawnHitParticles(ball.x, ball.y, '#06d6a0');
-    }
-
-    // Va chạm gạch
-    if (bricks) {
-      for (var b = 0; b < bricks.length; b++) {
-        var brick = bricks[b];
-        if (!brick.alive) continue;
-
-        if (ball.x + ball.r > brick.x &&
-            ball.x - ball.r < brick.x + brick.w &&
-            ball.y + ball.r > brick.y &&
-            ball.y - ball.r < brick.y + brick.h) {
-
-          var dx = ball.x - Math.max(brick.x, Math.min(ball.x, brick.x + brick.w));
-          var dy = ball.y - Math.max(brick.y, Math.min(ball.y, brick.y + brick.h));
-
-          if (Math.abs(dx) > Math.abs(dy)) {
-            ball.vx = -ball.vx;
-            ball.x += ball.vx > 0 ? 1 : -1;
-          } else {
-            ball.vy = -ball.vy;
-            ball.y += ball.vy > 0 ? 1 : -1;
-          }
-
-          brick.hits--;
-          if (brick.hits <= 0) {
-            brick.alive = false;
-            score += brick.points;
-            scoreEl.textContent = score;
-            spawnBrickParticles(brick);
-          } else {
-            spawnHitParticles(ball.x, ball.y, brick.color);
-          }
-          break;
-        }
-      }
-    }
-
-    if (ball.y - ball.r > H) {
-      balls.splice(i, 1);
-    }
-  }
-
-  // Hết bóng → mất mạng
-  if (balls.length === 0) {
-    lives--;
-    livesEl.textContent = lives;
-    if (lives <= 0) {
-      endGame();
-      return;
-    }
-    ballLaunched = false;
-    var ballR = Math.max(4, W * BALL_R_RATIO);
-    var cfg = getLevelConfig(level);
-    balls = [{
-      x: paddle.x + paddle.w / 2,
-      y: paddle.y - ballR - 1,
-      r: ballR, vx: 0, vy: 0,
-      speed: cfg.ballSpeed
-    }];
-    return;
-  }
-
-  // Thắng màn
-  if (bricks) {
-    var anyAlive = false;
-    for (var k = 0; k < bricks.length; k++) {
-      if (bricks[k].alive) { anyAlive = true; break; }
-    }
-    if (!anyAlive) {
-      nextLevel();
-    }
-  }
-}
-
-function nextLevel() {
-  level++;
-  levelEl.textContent = level;
-  levelBanner = { level: level, start: Date.now() };
-
-  ballLaunched = false;
-  var cfg = getLevelConfig(level);
-  var ballR = Math.max(4, W * BALL_R_RATIO);
-  balls = [{
-    x: paddle.x + paddle.w / 2,
-    y: paddle.y - ballR - 1,
-    r: ballR, vx: 0, vy: 0,
-    speed: cfg.ballSpeed
-  }];
-
-  buildBricks();
-}
-
-// ================= PARTICLES =================
-function spawnHitParticles(x, y, color) {
-  for (var i = 0; i < 4; i++) {
-    var angle = Math.random() * Math.PI * 2;
-    particles.push({
-      x: x, y: y,
-      vx: Math.cos(angle) * 2,
-      vy: Math.sin(angle) * 2,
-      size: 1.5 + Math.random() * 2,
-      life: 15, maxLife: 15,
-      color: color
-    });
-  }
-}
-
-function spawnBrickParticles(brick) {
-  for (var i = 0; i < 8; i++) {
-    var angle = Math.random() * Math.PI * 2;
-    var sp = 1 + Math.random() * 3;
-    particles.push({
-      x: brick.x + brick.w / 2,
-      y: brick.y + brick.h / 2,
-      vx: Math.cos(angle) * sp,
-      vy: Math.sin(angle) * sp,
-      size: 1.5 + Math.random() * 3,
-      life: 22, maxLife: 22,
-      color: brick.color
-    });
-  }
-}
-
-function updateParticles() {
-  for (var i = particles.length - 1; i >= 0; i--) {
-    var p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.1;
-    p.life--;
-    if (p.life <= 0) particles.splice(i, 1);
-  }
-}
-
-// ================= LOOP =================
-function loop(ts) {
-  if (!running) return;
-  rafId = requestAnimationFrame(loop);
-  var dt = ts - lastTime;
-  if (dt > 100) dt = 100;
-  lastTime = ts;
-
-  if (!paused && !gameOver) {
-    var steps = Math.min(3, Math.max(1, Math.round(dt / 16.67)));
-    for (var s = 0; s < steps; s++) {
-      step();
-      if (gameOver) break;
-    }
-    updateParticles();
-  }
-  draw();
-}
-
-// ================= START/END =================
-function askNameThenStart() {
-  // Hiển thị form nhập tên + bảng xếp hạng
-  var lbHTML = renderLeaderboardHTML();
-  overlay.innerHTML =
-    '<h2>🖍️ NHẬP TÊN</h2>' +
-    '<p>Tên của bạn sẽ lưu vào bảng xếp hạng</p>' +
-    '<input id="nameInput" type="text" maxlength="16" placeholder="Nhập tên..." value="' + escapeHtml(playerName) + '">' +
-    '<button id="goBtn" type="button">VÀO GAME 🖍️</button>' +
-    lbHTML;
-  overlay.classList.remove('hidden');
-
-  var input = document.getElementById('nameInput');
-  var goBtn = document.getElementById('goBtn');
-
-  var doStart = function () {
-    var name = input.value.trim();
-    if (!name) name = 'Ẩn danh';
+  document.getElementById('goBtn').onclick = function() {
+    var input = document.getElementById('nameInput');
+    var name = (input.value || '').trim() || 'Ẩn danh';
     if (name.length > 16) name = name.slice(0, 16);
     playerName = name;
-    try { localStorage.setItem('breakoutCrayonName', name); } catch (e) {}
+    try { localStorage.setItem('turingCrayonName', name); } catch(e) {}
+    level = 1;
+    totalScore = 0;
+    streak = 0;
+    els.scoreTotalEl.textContent = 0;
+    els.levelStatEl.textContent = 1;
     startGame();
   };
-
-  bindTap(goBtn, doStart);
-  input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); doStart(); }
-  });
 }
 
+// ============ LEVEL CONFIG ============
+function getLevelConfig(lv) {
+  lv = Math.max(1, parseInt(lv, 10) || 1);
+  var m = MODES[currentMode] || MODES.normal;
+
+  // Dãy số dài dần: level 1 = startNums, +1 số mỗi 3 level, tối đa 7
+  var nums = Math.min(7, m.startNums + Math.floor((lv - 1) / 3));
+  nums = Math.max(3, nums); // không bao giờ < 3
+
+  // Số câu hỏi
+  var qs = 8 + (nums - 3) * 2 + Math.min(4, lv - 1);
+
+  var cfg = { nums: nums, min: m.min || 0, max: m.max || 9, questions: qs };
+  console.log('[getLevelConfig] lv=', lv, '→', cfg);
+  return cfg;
+}
+
+// ============ START ============
 function startGame() {
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  resetState();
-  resizeCanvas();
-  overlay.classList.add('hidden');
-  running = true;
-  lastTime = performance.now();
-  rafId = requestAnimationFrame(loop);
-}
+  var cfg = getLevelConfig(level);
+  numCount = cfg.nums;
+  minVal = cfg.min;
+  maxVal = cfg.max;
+  questionsLeft = cfg.questions;
+  questionsTotal = cfg.questions;
 
-function endGame() {
-  gameOver = true;
-  running = false;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  console.log('[startGame] level=', level, 'numCount=', numCount, 'min=', minVal, 'max=', maxVal, 'questions=', questionsLeft);
+  history = [];
+  askedMap = {};
+  gameOver = false;
+  currentGuess = [];
+  currentSelectedVal = null;
+  for (var i = 0; i < numCount; i++) currentGuess.push(null);
 
-  if (score > highScore) {
-    highScore = score;
-    try { localStorage.setItem('breakoutCrayonHigh', highScore); } catch (e) {}
-    highEl.textContent = highScore;
+  // Sinh secret: số từ 0 đến 9
+  secret = [];
+  for (var j = 0; j < numCount; j++) {
+    secret.push(minVal + Math.floor(Math.random() * (maxVal - minVal + 1)));
   }
 
-  // Lưu vào bảng xếp hạng
-  addToLeaderboard(playerName, score);
+  // Update HUD
+  els.qLeftEl.textContent = questionsLeft;
+  els.levelStatEl.textContent = level;
+  var displayParts = [];   for (var d = 0; d < numCount; d++) displayParts.push('?');   els.secretDisplayEl.textContent = '[' + displayParts.join(' ') + ']';
 
-  draw();
+  els.historyListEl.innerHTML = '<div class="history-empty">Chạm câu hỏi bên dưới 👇</div>';
 
-  var lbHTML = renderLeaderboardHTML();
-  var isNewRecord = score === highScore && score > 0;
+  // 🛡️ GUARD: log để debug
+  console.log('[startGame] level=', level, 'numCount=', numCount, 'secret=', secret);
 
-  showOverlay(
-    isNewRecord ? '🎉 KỶ LỤC MỚI!' : '💀 THUA RỒI!',
-    'Người chơi: <b>' + escapeHtml(playerName) + '</b><br>' +
-    'Điểm: <b>' + score + '</b> • Level: ' + level + '<br>' +
-    'Kỷ lục: ' + highScore,
-    'CHƠI LẠI 🖍️',
-    lbHTML
-  );
+  buildQuestionsList();
+  hideOverlay();
 }
 
-function showOverlay(title, html, btnText, extraHTML) {
-  overlay.innerHTML =
-    '<h2>' + title + '</h2>' +
-    '<p>' + html + '</p>' +
-    (extraHTML || '') +
-    '<button id="overlayBtn" type="button">' + btnText + '</button>' +
-    '<button id="changeNameBtn" class="btn-secondary" type="button">Đổi tên</button>';
-  overlay.classList.remove('hidden');
+function repeatStr(s, n) {
+  var arr = [];
+  for (var i = 0; i < n; i++) arr.push(s);
+  return arr;
+}
 
-  bindTap(document.getElementById('overlayBtn'), function () {
-    // Nếu đã có tên → chơi lại luôn
-    startGame();
+// ============ BUILD QUESTIONS ============
+function buildQuestionsForLen(len) {
+  // 🛡️ GUARD: đảm bảo len hợp lệ (3-7)
+  len = Math.max(3, Math.min(7, parseInt(len, 10) || 3));
+  console.log('[buildQuestions] len =', len);
+
+  var qs = [];
+  var i;
+
+  // ===== NHÓM 1: CHẴN/LẺ từng vị trí =====
+  for (i = 0; i < len; i++) {
+    (function(idx) {
+      qs.push({
+        id: 'even_' + idx,
+        text: 'Số thứ ' + (idx+1) + ' là số chẵn?',
+        fn: function(s) { return s[idx] % 2 === 0; }
+      });
+    })(i);
+  }
+
+  // ===== NHÓM 2: SO SÁNH với hằng số =====
+  for (i = 0; i < len; i++) {
+    (function(idx) {
+      qs.push({
+        id: 'gt5_' + idx,
+        text: 'Số thứ ' + (idx+1) + ' lớn hơn 5?',
+        fn: function(s) { return s[idx] > 5; }
+      });
+    })(i);
+  }
+  for (i = 0; i < len; i++) {
+    (function(idx) {
+      qs.push({
+        id: 'lt4_' + idx,
+        text: 'Số thứ ' + (idx+1) + ' nhỏ hơn 4?',
+        fn: function(s) { return s[idx] < 4; }
+      });
+    })(i);
+  }
+
+  // ===== NHÓM 3: SO SÁNH giữa các vị trí =====
+  for (i = 0; i < len - 1; i++) {
+    (function(idx) {
+      qs.push({
+        id: 'cmp_' + idx,
+        text: 'Số thứ ' + (idx+1) + ' lớn hơn số thứ ' + (idx+2) + '?',
+        fn: function(s) { return s[idx] > s[idx+1]; }
+      });
+    })(i);
+  }
+  // So sánh vị trí 1 với vị trí cuối
+  if (len >= 3) {
+    qs.push({
+      id: 'cmp_first_last',
+      text: 'Số đầu tiên lớn hơn số cuối cùng?',
+      fn: function(s) { return s[0] > s[len-1]; }
+    });
+    qs.push({
+      id: 'eq_first_last',
+      text: 'Số đầu tiên bằng số cuối cùng?',
+      fn: function(s) { return s[0] === s[len-1]; }
+    });
+  }
+
+  // ===== NHÓM 4: VỀ TỔNG =====
+  qs.push({
+    id: 'sum_even',
+    text: 'Tổng các số là số chẵn?',
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%2===0; }
   });
-  bindTap(document.getElementById('changeNameBtn'), askNameThenStart);
+  // Tổng > trung bình (len * 4.5)
+  qs.push({
+    id: 'sum_gt_avg',
+    text: 'Tổng các số lớn hơn ' + Math.floor(len * 4.5) + '?',
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t > Math.floor(len*4.5); }
+  });
+  // Tổng chia hết cho 3
+  qs.push({
+    id: 'sum_div3',
+    text: 'Tổng các số chia hết cho 3?',
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%3===0; }
+  });
+
+  // ===== NHÓM 5: VỀ XUẤT HIỆN SỐ CỤ THỂ =====
+  // Hỏi có các số 0, 3, 5, 7, 9 (đại diện)
+  var checkNums = [0, 3, 5, 7, 9];
+  for (i = 0; i < checkNums.length; i++) {
+    (function(n) {
+      qs.push({
+        id: 'has_' + n,
+        text: 'Dãy có chứa số ' + n + '?',
+        fn: function(s) { return s.indexOf(n) !== -1; }
+      });
+    })(checkNums[i]);
+  }
+
+  // ===== NHÓM 6: VỀ ĐẾM =====
+  qs.push({
+    id: 'even_more',
+    text: 'Có nhiều số chẵn hơn số lẻ?',
+    fn: function(s) {
+      var e=0; for (var k=0;k<s.length;k++) if (s[k]%2===0) e++;
+      return e > s.length - e;
+    }
+  });
+  qs.push({
+    id: 'cnt_even_2',
+    text: 'Có đúng 2 số chẵn?',
+    fn: function(s) {
+      var e=0; for (var k=0;k<s.length;k++) if (s[k]%2===0) e++;
+      return e === 2;
+    }
+  });
+
+  // ===== NHÓM 7: VỀ TRẬT TỰ DÃY =====
+  qs.push({
+    id: 'increasing',
+    text: 'Dãy tăng dần (mỗi số lớn hơn số trước)?',
+    fn: function(s) {
+      for (var k=1;k<s.length;k++) if (s[k] <= s[k-1]) return false;
+      return true;
+    }
+  });
+  qs.push({
+    id: 'decreasing',
+    text: 'Dãy giảm dần (mỗi số nhỏ hơn số trước)?',
+    fn: function(s) {
+      for (var k=1;k<s.length;k++) if (s[k] >= s[k-1]) return false;
+      return true;
+    }
+  });
+
+  // ===== NHÓM 8: VỀ TRÙNG LẶP =====
+  qs.push({
+    id: 'has_dup',
+    text: 'Có 2 số bằng nhau trong dãy?',
+    fn: function(s) {
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if (s[a]===s[b]) return true;
+      return false;
+    }
+  });
+  qs.push({
+    id: 'all_diff',
+    text: 'Tất cả các số đều khác nhau?',
+    fn: function(s) {
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if (s[a]===s[b]) return false;
+      return true;
+    }
+  });
+
+  // ===== NHÓM 9: VỀ VỊ TRÍ MAX/MIN =====
+  qs.push({
+    id: 'max_first_half',
+    text: 'Số lớn nhất nằm ở nửa đầu dãy?',
+    fn: function(s) {
+      var maxIdx=0;
+      for (var k=1;k<s.length;k++) if (s[k] > s[maxIdx]) maxIdx = k;
+      return maxIdx < s.length / 2;
+    }
+  });
+  qs.push({
+    id: 'min_first_half',
+    text: 'Số nhỏ nhất nằm ở nửa đầu dãy?',
+    fn: function(s) {
+      var minIdx=0;
+      for (var k=1;k<s.length;k++) if (s[k] < s[minIdx]) minIdx = k;
+      return minIdx < s.length / 2;
+    }
+  });
+  qs.push({
+    id: 'max_is_first',
+    text: 'Số đầu tiên là số lớn nhất?',
+    fn: function(s) {
+      for (var k=1;k<s.length;k++) if (s[k] > s[0]) return false;
+      return true;
+    }
+  });
+  qs.push({
+    id: 'min_is_last',
+    text: 'Số cuối cùng là số nhỏ nhất?',
+    fn: function(s) {
+      for (var k=0;k<s.length-1;k++) if (s[k] < s[s.length-1]) return false;
+      return true;
+    }
+  });
+
+  // ===== NHÓM 10: ĐẶC BIỆT =====
+  // Có số 0 đứng đầu?
+  qs.push({
+    id: 'first_zero',
+    text: 'Số đầu tiên là số 0?',
+    fn: function(s) { return s[0] === 0; }
+  });
+  // Không có số 0?
+  qs.push({
+    id: 'no_zero',
+    text: 'Dãy không có số 0?',
+    fn: function(s) { return s.indexOf(0) === -1; }
+  });
+  // Có số >= 8?
+  qs.push({
+    id: 'has_big',
+    text: 'Có số nào lớn hơn hoặc bằng 8?',
+    fn: function(s) {
+      for (var k=0;k<s.length;k++) if (s[k] >= 8) return true;
+      return false;
+    }
+  });
+  // Có số <= 1?
+  qs.push({
+    id: 'has_small',
+    text: 'Có số nào nhỏ hơn hoặc bằng 1?',
+    fn: function(s) {
+      for (var k=0;k<s.length;k++) if (s[k] <= 1) return true;
+      return false;
+    }
+  });
+  // Tổng chữ số đơn vị chẵn?
+  qs.push({
+    id: 'all_digits_in',
+    text: 'Tất cả các số đều nằm trong khoảng 2-7?',
+    fn: function(s) {
+      for (var k=0;k<s.length;k++) if (s[k] < 2 || s[k] > 7) return false;
+      return true;
+    }
+  });
+
+  return qs;
 }
 
-// ================= ĐIỀU KHIỂN =================
-function launchBall() {
-  if (!running || paused || gameOver || ballLaunched) return;
-  if (!balls || balls.length === 0) return;
-  ballLaunched = true;
-  for (var i = 0; i < balls.length; i++) {
-    var angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.6;
-    balls[i].vx = Math.cos(angle) * balls[i].speed;
-    balls[i].vy = Math.sin(angle) * balls[i].speed;
+function buildQuestionsList() {
+  // 🛡️ GUARD: ép numCount là số nguyên 3-7
+  numCount = Math.max(3, Math.min(7, parseInt(numCount, 10) || 3));
+  console.log('[buildQuestionsList] numCount =', numCount);
+
+  var all = buildQuestionsForLen(numCount);
+
+  // Shuffle
+  for (var i = all.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = all[i]; all[i] = all[j]; all[j] = tmp;
+  }
+
+  // Hiển thị tất cả câu hỏi (thường 30-50 câu) để người chơi chọn
+  var maxShow = Math.min(all.length, 40);
+  var shown = all.slice(0, maxShow);
+
+  els.questionsListEl.innerHTML = '';
+  els.qCountEl.textContent = shown.length + ' câu';
+
+  for (var k = 0; k < shown.length; k++) {
+    (function(q) {
+      var btn = document.createElement('button');
+      btn.className = 'q-btn';
+      btn.type = 'button';
+      btn.textContent = q.text;
+      btn.setAttribute('data-qid', q.id);
+
+      // QUAN TRỌNG: dùng onclick trực tiếp — đơn giản nhất
+      btn.onclick = function(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        handleQuestionClick(q, btn);
+      };
+
+      els.questionsListEl.appendChild(btn);
+    })(shown[k]);
   }
 }
 
-function bindPaddleControl() {
-  var activeTouchId = null;
+// ============ HANDLE CLICK ============
+function handleQuestionClick(q, btn) {
+  // Debug rõ ràng
+  console.log('[Q] Click:', q.id, 'qLeft=', questionsLeft, 'gameOver=', gameOver);
 
-  function movePaddleTo(clientX) {
-    if (!paddle) return;
-    var rect = canvas.getBoundingClientRect();
-    var scaleX = W / rect.width;
-    var x = (clientX - rect.left) * scaleX;
-    var newX = x - paddle.w / 2;
-    paddle.x = Math.max(0, Math.min(W - paddle.w, newX));
-    if (!ballLaunched && balls && balls.length > 0) {
-      balls[0].x = paddle.x + paddle.w / 2;
-      balls[0].y = paddle.y - balls[0].r - 1;
-    }
-  }
-
-  container.addEventListener('touchstart', function (e) {
-    if (!running || paused || gameOver) return;
-    e.preventDefault();
-    if (activeTouchId === null && e.touches.length > 0) {
-      activeTouchId = e.touches[0].identifier;
-      movePaddleTo(e.touches[0].clientX);
-    }
-    if (!ballLaunched) launchBall();
-  }, { passive: false });
-
-  container.addEventListener('touchmove', function (e) {
-    if (!running || paused || gameOver) return;
-    e.preventDefault();
-    for (var i = 0; i < e.touches.length; i++) {
-      if (e.touches[i].identifier === activeTouchId) {
-        movePaddleTo(e.touches[i].clientX);
-        break;
-      }
-    }
-  }, { passive: false });
-
-  container.addEventListener('touchend', function (e) {
-    if (activeTouchId !== null) {
-      for (var i = 0; i < e.changedTouches.length; i++) {
-        if (e.changedTouches[i].identifier === activeTouchId) {
-          activeTouchId = null;
-          break;
-        }
-      }
-    }
-    if (e.touches.length === 0) activeTouchId = null;
-  }, { passive: true });
-
-  container.addEventListener('mousemove', function (e) {
-    if (!running || paused || gameOver) return;
-    movePaddleTo(e.clientX);
-  });
-  container.addEventListener('mousedown', function () {
-    if (!running || paused || gameOver) return;
-    launchBall();
-  });
-  container.addEventListener('click', function () {
-    if (!running || paused || gameOver) return;
-    launchBall();
-  });
-}
-
-function onKeyDown(e) {
-  var k = e.key.toLowerCase();
-  if (k === ' ' || k === 'spacebar') {
-    e.preventDefault();
-    if (!running) return;
-    if (!ballLaunched) launchBall();
-    else {
-      paused = !paused;
-      if (paused) {
-        showOverlay('⏸️ TẠM DỪNG', 'Nhấn Space để tiếp tục', 'TIẾP TỤC ▶', '');
-        // Ghi đè nút chơi lại → tiếp tục
-        var btn = document.getElementById('overlayBtn');
-        var clone = btn.cloneNode(true);
-        btn.parentNode.replaceChild(clone, btn);
-        bindTap(clone, function () {
-          paused = false;
-          overlay.classList.add('hidden');
-        });
-      } else {
-        overlay.classList.add('hidden');
-      }
-    }
+  if (gameOver) {
+    showToast('Game đã kết thúc!', 'no');
     return;
   }
-  if (!running || paused || gameOver || !paddle) return;
-  if (k === 'arrowleft' || k === 'a') {
-    paddle.x = Math.max(0, paddle.x - 20);
-    if (!ballLaunched && balls[0]) balls[0].x = paddle.x + paddle.w / 2;
+  if (questionsLeft <= 0) {
+    showToast('Hết câu hỏi rồi!', 'no');
+    return;
   }
-  if (k === 'arrowright' || k === 'd') {
-    paddle.x = Math.min(W - paddle.w, paddle.x + 20);
-    if (!ballLaunched && balls[0]) balls[0].x = paddle.x + paddle.w / 2;
+  if (askedMap[q.id]) {
+    showToast('Đã hỏi rồi!', 'no');
+    return;
+  }
+
+  askedMap[q.id] = true;
+  questionsLeft--;
+
+  var answer = !!q.fn(secret);
+  var ansText = answer ? 'CÓ' : 'KHÔNG';
+
+  history.push({ q: q.text, a: ansText });
+
+  // 1. Đổi style nút — RÕ RÀNG
+  btn.classList.add(answer ? 'used-yes' : 'used-no');
+  btn.textContent = q.text; // reset text (vì ::after thêm CÓ/KHÔNG)
+
+  // 2. Toast lớn giữa màn hình
+  showToast(answer ? 'CÓ ✓' : 'KHÔNG ✗', answer ? 'yes' : 'no');
+
+  // 3. Update HUD + pulse
+  els.qLeftEl.textContent = questionsLeft;
+  pulseStat(els.qStat);
+
+  // 4. Update history
+  renderHistory();
+
+  // 5. Hết câu → tự mở đoán
+  if (questionsLeft === 0) {
+    setTimeout(openGuessPanel, 1000);
   }
 }
 
-document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
-document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
+// ============ RENDER HISTORY ============
+function renderHistory() {
+  if (history.length === 0) {
+    els.historyListEl.innerHTML = '<div class="history-empty">Chạm câu hỏi bên dưới 👇</div>';
+    return;
+  }
+  var html = '';
+  for (var i = history.length - 1; i >= 0; i--) {
+    var h = history[i];
+    var cls = h.a === 'CÓ' ? 'yes' : 'no';
+    html += '<div class="history-item ' + cls + '">';
+    html += '<span class="history-q">' + escapeHtml(h.q) + '</span>';
+    html += '<span class="history-a">' + h.a + '</span>';
+    html += '</div>';
+  }
+  els.historyListEl.innerHTML = html;
+  els.historyListEl.scrollTop = 0;
+}
+
+// ============ GUESS PANEL ============
+function openGuessPanel() {
+  if (gameOver) return;
+  currentGuess = [];
+  for (var i = 0; i < numCount; i++) currentGuess.push(null);
+  currentSelectedVal = null;
+  renderGuessPanel();
+}
+
+function renderGuessPanel() {
+  // 🛡️ GUARD: đảm bảo numCount đúng
+  numCount = Math.max(3, Math.min(7, parseInt(numCount, 10) || 3));
+  console.log('[renderGuessPanel] numCount =', numCount);
+
+  var html = '<h2>🎯 ĐOÁN DÃY SỐ</h2>';
+  html += '<p>Dãy có <b>' + numCount + '</b> số (0–' + maxVal + '):</p>';
+  html += '<div class="guess-row" id="guessRow">';
+  for (var i = 0; i < numCount; i++) {
+    var val = currentGuess[i];
+    html += '<div class="guess-digit" data-pos="' + i + '">';
+    html += '<div class="val' + (val === null ? ' empty' : '') + '" id="gval_' + i + '">' + (val === null ? '?' : val) + '</div>';
+    html += '<div class="pos">Số ' + (i + 1) + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="digit-picker" style="display:flex;justify-content:center">';
+  html += '<div style="display:grid;grid-template-columns:repeat(5,48px);gap:5px">';
+  for (var v = minVal; v <= maxVal; v++) {
+    html += '<button class="digit-btn" data-val="' + v + '" type="button">' + v + '</button>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div style="font-size:11px;color:#666;margin-top:8px">👆 Chọn số, rồi chạm ô để điền</div>';
+  html += '<div style="margin-top:10px">';
+  html += '<button id="confirmGuess" type="button">XÁC NHẬN ✅</button>';
+  html += '<button id="backToGame" type="button" class="secondary">QUAY LẠI</button>';
+  html += '</div>';
+
+  showOverlay(html);
+
+  // Digit picker
+  var digitBtns = els.overlay.querySelectorAll('.digit-btn');
+  for (var d = 0; d < digitBtns.length; d++) {
+    (function(btn) {
+      btn.onclick = function() {
+        var all = els.overlay.querySelectorAll('.digit-btn');
+        for (var k = 0; k < all.length; k++) all[k].classList.remove('active');
+        btn.classList.add('active');
+        currentSelectedVal = parseInt(btn.getAttribute('data-val'), 10);
+      };
+    })(digitBtns[d]);
+  }
+
+  // Digit cells
+  var cells = els.overlay.querySelectorAll('.guess-digit');
+  for (var c = 0; c < cells.length; c++) {
+    (function(cell, idx) {
+      cell.onclick = function() {
+        if (currentSelectedVal === null) {
+          showToast('Chọn số trước!', 'no');
+          return;
+        }
+        currentGuess[idx] = currentSelectedVal;
+        var valDiv = document.getElementById('gval_' + idx);
+        valDiv.textContent = currentSelectedVal;
+        valDiv.classList.remove('empty');
+      };
+    })(cells[c], c);
+  }
+
+  document.getElementById('confirmGuess').onclick = function() {
+    for (var i = 0; i < numCount; i++) {
+      if (currentGuess[i] === null) {
+        showToast('Chọn đủ ' + numCount + ' số!', 'no');
+        return;
+      }
+    }
+    checkGuess();
+  };
+
+  document.getElementById('backToGame').onclick = hideOverlay;
+}
+
+// ============ CHECK ============
+function checkGuess() {
+  var correct = true;
+  for (var i = 0; i < numCount; i++) {
+    if (currentGuess[i] !== secret[i]) { correct = false; break; }
+  }
+
+  gameOver = true;
+
+  var questionsUsed = questionsTotal - questionsLeft;
+  var points = 0;
+  if (correct) {
+    if (questionsUsed <= 2) points = 100;
+    else if (questionsUsed === 3) points = 70;
+    else if (questionsUsed === 4) points = 50;
+    else if (questionsUsed === 5) points = 35;
+    else if (questionsUsed === 6) points = 25;
+    else points = 15;
+
+    // Bonus theo độ dài dãy (dãy càng dài càng khó)
+    points += (numCount - 3) * 25;
+    // Bonus theo chế độ
+    var modeBonus = { easy: 0, normal: 15, hard: 35 };
+    points += modeBonus[currentMode] || 0;
+
+    streak++;
+    if (streak >= 3) points = Math.floor(points * 1.5);
+  } else {
+    streak = 0;
+  }
+
+  totalScore += points;
+  els.scoreTotalEl.textContent = totalScore;
+  try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
+
+  if (correct) saveToLB(points);
+  showResult(correct, points, questionsUsed);
+}
+
+function saveToLB(points) {
+  try {
+    var lb = JSON.parse(localStorage.getItem('turingCrayonLB') || '[]');
+    lb.push({ name: playerName, score: points, level: level, mode: currentMode, date: Date.now() });
+    lb.sort(function(a, b) { return b.score - a.score; });
+    lb = lb.slice(0, 10);
+    localStorage.setItem('turingCrayonLB', JSON.stringify(lb));
+  } catch(e) {}
+}
+
+// ============ RESULT ============
+function showResult(correct, points, questionsUsed) {
+  var html = '';
+  if (correct) {
+    html += '<h2 class="win">🎉 PHÁ MÃ THÀNH CÔNG!</h2>';
+    html += '<p>Sau <b>' + questionsUsed + '</b> câu hỏi, bạn đã tìm ra:</p>';
+  } else {
+    html += '<h2>😅 CHƯA ĐÚNG</h2>';
+    html += '<p>Dãy đúng là:</p>';
+  }
+
+  html += '<div class="secret-reveal">';
+  for (var i = 0; i < secret.length; i++) {
+    html += '<div class="secret-num">' + secret[i] + '</div>';
+  }
+  html += '</div>';
+
+  if (correct) {
+    html += '<p>+<b>' + points + '</b> điểm' + (streak > 1 ? ' 🔥 Chuỗi ' + streak : '') + '</p>';
+    html += '<button id="nextLvBtn" type="button" class="tertiary">LEVEL TIẾP ▶</button>';
+    html += '<button id="againBtn" type="button" class="secondary">CHƠI LẠI</button>';
+  } else {
+    html += '<p>Bạn đoán: ' + currentGuess.slice(0, numCount).join(' - ') + '</p>';
+    html += '<button id="againBtn" type="button">THỬ LẠI 🔁</button>';
+    html += '<button id="changeModeBtn" type="button" class="secondary">Đổi chế độ</button>';
+  }
+
+  var lb = [];
+  try { lb = JSON.parse(localStorage.getItem('turingCrayonLB') || '[]'); } catch(e) {}
+  if (lb.length > 0) {
+    html += '<div class="leaderboard"><h3>🏆 TOP 10</h3>';
+    for (var k = 0; k < Math.min(lb.length, 10); k++) {
+      var medal = k===0?'🥇':k===1?'🥈':k===2?'🥉':(k+1)+'.';
+      html += '<div class="lb-row"><span class="rank">'+medal+'</span><span class="name">'+escapeHtml(lb[k].name)+'</span><span class="pts">'+lb[k].score+'</span></div>';
+    }
+    html += '</div>';
+  }
+
+  showOverlay(html);
+
+  if (correct) {
+    document.getElementById('nextLvBtn').onclick = function() {
+      level++;
+      els.levelStatEl.textContent = level;
+      startGame();
+    };
+    document.getElementById('againBtn').onclick = function() {
+      startGame();
+    };
+  } else {
+    document.getElementById('againBtn').onclick = function() {
+      startGame();
+    };
+    document.getElementById('changeModeBtn').onclick = function() {
+      level = 1;
+      showModeSelect();
+    };
+  }
+}
+
+// ============ UTILS ============
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function(c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+})();
 </script>
 </body>
 </html>
