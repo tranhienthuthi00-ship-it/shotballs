@@ -15,19 +15,15 @@
   #app {
     width:100%; height:100%;
     display:flex; flex-direction:column;
-    padding:6px; gap:4px;
+    padding:4px; gap:3px;
     max-width:520px; margin:0 auto;
   }
-  header { flex-shrink:0; text-align:center; }
+  header { flex-shrink:0; text-align:center; padding:1px 0; }
   h1 {
-    margin:0; font-size:clamp(15px,4.5vw,20px);
+    margin:0; font-size:clamp(14px,4.2vw,18px);
     color:#2d3142;
     text-shadow:2px 2px 0 #ffd166, -1px -1px 0 #ef476f;
     transform:rotate(-0.5deg);
-  }
-  .subtitle {
-    font-size:clamp(9px,2.6vw,11px);
-    color:#666; font-style:italic;
   }
   #hud {
     display:flex; justify-content:center; gap:4px;
@@ -46,172 +42,245 @@
   .stat span { color:#ef476f; }
   .stat:nth-child(2) span { color:#06d6a0; }
   .stat:nth-child(3) span { color:#118ab2; }
-  .stat.highlight { animation:pulseStat 0.3s; }
+  .stat.pulse { animation:pulseStat 0.35s; }
   @keyframes pulseStat {
-    0% { transform:scale(1); }
-    50% { transform:scale(1.15); background:#ffd166; }
-    100% { transform:scale(1); }
+    0%,100% { transform:scale(1); }
+    50% { transform:scale(1.18); background:#ffd166; }
   }
 
-  #main {
-    flex:1; min-height:0;
-    display:flex; flex-direction:column;
-    gap:4px;
-  }
-
-  #historyPanel {
-    background:#fffef8;
-    border:2.5px solid #2d3142;
+  /* Dãy số — chiếm 42% */
+  #targetPanel {
+    flex-shrink:0;
+    background:linear-gradient(135deg, #fffef8, #fff8e7);
+    border:3px solid #2d3142;
     border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
     box-shadow:3px 3px 0 rgba(45,49,66,0.35);
-    padding:5px 7px;
+    padding:5px 4px;
     display:flex; flex-direction:column;
-    height:32%;
-    min-height:70px;
   }
-  .panel-title {
-    font-size:clamp(10px,2.8vw,12px);
+  #targetTitle {
+    text-align:center;
+    font-size:clamp(10px,2.9vw,12px);
     color:#2d3142; font-weight:bold;
     margin-bottom:3px;
-    display:flex; justify-content:space-between; align-items:center;
-    border-bottom:2px dashed #ffd166;
-    padding-bottom:2px;
-  }
-  .panel-title small { font-weight:normal; color:#666; font-size:0.85em; }
-  #historyList {
-    flex:1; overflow-y:auto;
-    display:flex; flex-direction:column; gap:3px;
-    -webkit-overflow-scrolling:touch;
-  }
-  .history-item {
-    display:flex; align-items:center; gap:6px;
-    padding:4px 7px;
-    background:#f0f8ff;
-    border:1.5px solid #ccc;
-    border-radius:7px;
-    font-size:clamp(10px,2.8vw,12px);
-    color:#2d3142;
-    animation:slideIn 0.25s ease-out;
     flex-shrink:0;
   }
-  @keyframes slideIn {
-    from { opacity:0; transform:translateY(-8px); }
-    to { opacity:1; transform:translateY(0); }
+  #slotsRow {
+    display:flex;
+    justify-content:center;
+    gap:4px;
+    flex-wrap:wrap;
   }
-  .history-item.yes { background:#d4f8e4; border-color:#06d6a0; }
-  .history-item.no { background:#ffe4e6; border-color:#ef476f; }
-  .history-q { flex:1; }
-  .history-a {
-    font-weight:bold; padding:2px 8px;
-    border-radius:5px; font-size:0.95em;
-    white-space:nowrap;
+  .slot {
+    display:flex; flex-direction:column;
+    align-items:center;
+    background:#fff;
+    border:2.5px solid #2d3142;
+    border-radius:9px 4px 9px 4px / 4px 9px 4px 9px;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
+    padding:3px;
+    min-width:52px;
+    max-width:64px;
+    flex:0 0 auto;
   }
-  .yes .history-a { background:#06d6a0; color:#fff; }
-  .no .history-a { background:#ef476f; color:#fff; }
-  .history-empty {
-    color:#999; font-style:italic; text-align:center;
-    font-size:clamp(10px,2.8vw,12px); padding:6px;
+  .slot-main {
+    font-size:clamp(20px,5.5vw,26px);
+    font-weight:bold;
+    color:#2d3142;
+    line-height:1.1;
+    min-height:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+  }
+  .slot-label {
+    font-size:clamp(7px,2vw,9px);
+    color:#888;
+    font-family:sans-serif;
+    margin-bottom:2px;
+  }
+  .mini-grid {
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:1px;
+    width:100%;
+    margin-top:2px;
+  }
+  .mini-cell {
+    font-size:clamp(8px,2.4vw,10px);
+    font-family:sans-serif;
+    font-weight:bold;
+    color:#2d3142;
+    background:#e8f4ff;
+    border:1px solid #99c9e8;
+    border-radius:3px;
+    text-align:center;
+    padding:1px 0;
+    cursor:pointer;
+    transition:all 0.1s;
+    -webkit-appearance:none;
+    line-height:1;
+  }
+  .mini-cell:active { transform:scale(0.9); }
+  .mini-cell.eliminated {
+    background:#ddd;
+    color:#aaa;
+    text-decoration:line-through;
+    border-color:#bbb;
+  }
+  #targetHint {
+    text-align:center;
+    font-size:clamp(8px,2.4vw,10px);
+    color:#118ab2;
+    font-style:italic;
+    margin-top:3px;
+    flex-shrink:0;
   }
 
+  /* Câu hỏi — chiếm phần còn lại */
   #questionsPanel {
-    background:#fffef8;
-    border:2.5px solid #2d3142;
-    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
-    box-shadow:3px 3px 0 rgba(45,49,66,0.35);
-    padding:5px 7px;
-    display:flex; flex-direction:column;
     flex:1; min-height:0;
+    background:#fffef8;
+    border:2px solid #2d3142;
+    border-radius:11px 4px 13px 6px / 6px 13px 4px 11px;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
+    padding:4px 6px;
+    display:flex; flex-direction:column;
+    overflow:hidden;
   }
+  #qFilter {
+    display:flex; gap:3px; margin-bottom:3px;
+    flex-shrink:0;
+    overflow-x:auto;
+    padding-bottom:2px;
+  }
+  .filter-btn {
+    font-family:inherit;
+    font-size:clamp(8px,2.3vw,10px);
+    padding:2px 6px;
+    border:1.5px solid #2d3142;
+    border-radius:7px;
+    background:#fff;
+    color:#2d3142;
+    cursor:pointer;
+    white-space:nowrap;
+    -webkit-appearance:none;
+    flex-shrink:0;
+  }
+  .filter-btn.active { background:#ffd166; font-weight:bold; }
   #questionsList {
     flex:1; overflow-y:auto;
-    display:flex; flex-direction:column; gap:3px;
+    display:flex; flex-direction:column; gap:2px;
     -webkit-overflow-scrolling:touch;
     padding-right:2px;
   }
   .q-btn {
-    padding:9px 8px;
+    padding:6px 8px;
     background:#fff;
-    border:2.5px solid #2d3142;
-    border-radius:9px 4px 11px 5px / 5px 11px 4px 9px;
+    border:1.5px solid #2d3142;
+    border-radius:8px 3px 9px 4px / 4px 9px 3px 8px;
     font-family:inherit;
-    font-size:clamp(10px,2.7vw,12px);
+    font-size:clamp(9px,2.6vw,11px);
     color:#2d3142;
     font-weight:bold;
-    text-align:center;
+    text-align:left;
     cursor:pointer;
-    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
+    box-shadow:1.5px 1.5px 0 rgba(45,49,66,0.25);
     -webkit-appearance:none;
     line-height:1.2;
     width:100%;
-    min-height:38px;
     flex-shrink:0;
-    position:relative;
-    transition:all 0.15s;
+    display:flex; align-items:center; gap:4px;
+    transition:all 0.1s;
   }
   .q-btn:active {
     transform:translate(1px,1px);
-    box-shadow:1px 1px 0 rgba(45,49,66,0.3);
+    box-shadow:0.5px 0.5px 0 rgba(45,49,66,0.25);
     background:#ffd166;
   }
-  .q-btn.used-yes {
-    background:#06d6a0 !important;
-    color:#fff !important;
-    border-color:#2d3142 !important;
-    opacity:1;
+  .q-btn.used {
     pointer-events:none;
     transform:none !important;
   }
-  .q-btn.used-no {
-    background:#ef476f !important;
-    color:#fff !important;
-    border-color:#2d3142 !important;
-    opacity:1;
-    pointer-events:none;
-    transform:none !important;
+  .q-btn.used.yes {
+    background:#d4f8e4;
+    border-color:#06d6a0;
+    cursor:default;
   }
-  .q-btn.used-yes::after {
-    content:' = CÓ';
-    font-size:0.9em;
-    margin-left:4px;
+  .q-btn.used.no {
+    background:#ffe4e6;
+    border-color:#ef476f;
+    cursor:default;
   }
-  .q-btn.used-no::after {
-    content:' = KHÔNG';
-    font-size:0.9em;
-    margin-left:4px;
+  .q-num {
+    font-size:0.85em;
+    color:#888;
+    min-width:14px;
+    text-align:right;
+    flex-shrink:0;
+  }
+  .q-dot {
+    width:7px; height:7px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+  .q-dot.tier1 { background:#06d6a0; }
+  .q-dot.tier2 { background:#ffd166; }
+  .q-dot.tier3 { background:#ef476f; }
+  .q-text {
+    flex:1;
+    line-height:1.2;
+  }
+  .q-answer {
+    font-weight:bold;
+    padding:1px 6px;
+    border-radius:5px;
+    font-size:0.85em;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .q-btn.used.yes .q-answer {
+    background:#06d6a0;
+    color:#fff;
+  }
+  .q-btn.used.no .q-answer {
+    background:#ef476f;
+    color:#fff;
   }
 
   #guessBtn {
     flex-shrink:0;
-    padding:11px;
+    padding:9px;
     background:#ef476f;
     color:#fff;
     border:3px solid #2d3142;
-    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
+    border-radius:12px 4px 14px 6px / 6px 14px 4px 12px;
     font-family:inherit;
     font-weight:bold;
-    font-size:clamp(13px,3.5vw,16px);
+    font-size:clamp(12px,3.3vw,15px);
     cursor:pointer;
-    box-shadow:3px 3px 0 #2d3142;
+    box-shadow:2.5px 2.5px 0 #2d3142;
     -webkit-appearance:none;
     letter-spacing:1px;
     width:100%;
   }
   #guessBtn:active {
-    transform:translate(2px,2px);
+    transform:translate(1.5px,1.5px);
     box-shadow:1px 1px 0 #2d3142;
   }
 
-  /* Toast — popup kết quả lớn */
+  /* Toast */
   #toast {
     position:fixed;
     top:50%; left:50%;
     transform:translate(-50%, -50%) scale(0.3);
     background:#fff;
     border:4px solid #2d3142;
-    border-radius:20px;
-    padding:20px 36px;
+    border-radius:18px;
+    padding:14px 30px;
     font-family:'Comic Sans MS', cursive;
-    font-size:clamp(28px,8vw,40px);
+    font-size:clamp(24px,7vw,34px);
     font-weight:bold;
     box-shadow:5px 5px 0 rgba(45,49,66,0.5);
     z-index:1000;
@@ -219,18 +288,9 @@
     opacity:0;
     transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  #toast.show {
-    opacity:1;
-    transform:translate(-50%, -50%) scale(1);
-  }
-  #toast.yes {
-    background:#06d6a0;
-    color:#fff;
-  }
-  #toast.no {
-    background:#ef476f;
-    color:#fff;
-  }
+  #toast.show { opacity:1; transform:translate(-50%, -50%) scale(1); }
+  #toast.yes { background:#06d6a0; color:#fff; }
+  #toast.no { background:#ef476f; color:#fff; }
 
   /* Overlay */
   #overlay {
@@ -238,13 +298,13 @@
     background:rgba(253, 246, 227, 0.97);
     display:flex; flex-direction:column;
     justify-content:center; align-items:center;
-    text-align:center; padding:20px;
+    text-align:center; padding:16px;
     z-index:100;
     overflow-y:auto;
   }
   #overlay.hidden { display:none; }
   #overlay h2 {
-    font-size:clamp(20px,6vw,28px);
+    font-size:clamp(18px,5.5vw,26px);
     color:#ef476f;
     margin:0 0 8px;
     text-shadow:2px 2px 0 #ffd166;
@@ -252,69 +312,62 @@
   }
   #overlay h2.win { color:#06d6a0; }
   #overlay p {
-    font-size:clamp(12px,3.4vw,15px);
+    font-size:clamp(11px,3.2vw,14px);
     color:#2d3142;
     margin:4px 0;
-    line-height:1.45;
+    line-height:1.4;
     max-width:340px;
   }
   #overlay b { color:#06d6a0; }
   .secret-reveal {
-    display:flex; gap:5px; margin:10px 0;
+    display:flex; gap:5px; margin:8px 0;
     justify-content:center; flex-wrap:wrap;
   }
   .secret-num {
-    width:40px; height:40px;
+    width:36px; height:36px;
     background:#ffd166;
     border:3px solid #2d3142;
-    border-radius:11px 4px 11px 4px / 4px 11px 4px 11px;
+    border-radius:10px 3px 10px 3px / 3px 10px 3px 10px;
     display:flex; align-items:center; justify-content:center;
-    font-size:19px; font-weight:bold; color:#2d3142;
+    font-size:17px; font-weight:bold; color:#2d3142;
     box-shadow:2px 2px 0 rgba(45,49,66,0.4);
   }
   #overlay button {
     margin-top:8px;
-    padding:11px 26px;
-    font-size:clamp(13px,3.8vw,16px);
+    padding:10px 24px;
+    font-size:clamp(12px,3.6vw,15px);
     font-weight:bold;
     font-family:inherit;
     color:#fff;
     background:#ef476f;
     border:3px solid #2d3142;
-    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
-    box-shadow:3px 3px 0 #2d3142;
+    border-radius:12px 4px 14px 6px / 6px 14px 4px 12px;
+    box-shadow:2.5px 2.5px 0 #2d3142;
     cursor:pointer;
     -webkit-appearance:none;
-    touch-action:manipulation;
   }
-  #overlay button:active {
-    transform:translate(2px,2px);
-    box-shadow:1px 1px 0 #2d3142;
-  }
-  #overlay button.secondary { background:#118ab2; margin-left:6px; }
+  #overlay button:active { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0 #2d3142; }
+  #overlay button.secondary { background:#118ab2; margin-left:5px; }
   #overlay button.tertiary { background:#06d6a0; }
 
   .mode-btn {
     display:block;
     width:100%; max-width:280px;
     margin:5px auto;
-    padding:11px;
+    padding:10px;
     font-family:inherit;
-    font-size:clamp(13px,3.8vw,15px);
+    font-size:clamp(12px,3.6vw,14px);
     font-weight:bold;
     color:#2d3142;
     background:#fff;
     border:3px solid #2d3142;
-    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
-    box-shadow:3px 3px 0 rgba(45,49,66,0.4);
+    border-radius:12px 4px 14px 6px / 6px 14px 4px 12px;
+    box-shadow:2.5px 2.5px 0 rgba(45,49,66,0.4);
     cursor:pointer;
     text-align:left;
     -webkit-appearance:none;
   }
-  .mode-btn:active {
-    transform:translate(2px,2px);
-    box-shadow:1px 1px 0 rgba(45,49,66,0.4);
-  }
+  .mode-btn:active { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0 rgba(45,49,66,0.4); }
   .mode-btn .desc {
     display:block;
     font-size:0.8em;
@@ -325,90 +378,76 @@
   .mode-btn.active { background:#ffd166; }
 
   .name-input {
-    padding:10px 14px;
-    font-size:15px;
+    padding:9px 12px;
+    font-size:14px;
     font-family:inherit;
     border:2.5px solid #2d3142;
-    border-radius:12px;
+    border-radius:11px;
     background:#fff;
     text-align:center;
-    width:220px; max-width:85%;
+    width:200px; max-width:85%;
     color:#2d3142;
     outline:none;
-    margin:6px 0;
+    margin:5px 0;
   }
-  .name-input:focus {
-    border-color:#ef476f;
-    box-shadow:0 0 0 3px rgba(239,71,111,0.2);
-  }
+  .name-input:focus { border-color:#ef476f; box-shadow:0 0 0 3px rgba(239,71,111,0.2); }
 
-  .guess-row {
-    display:flex; gap:6px; justify-content:center; margin:8px 0;
-    flex-wrap:wrap;
-  }
-  .guess-digit {
-    width:52px; height:62px;
-    background:#fff;
-    border:3px solid #2d3142;
-    border-radius:12px 4px 12px 4px / 4px 12px 4px 12px;
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    box-shadow:2px 3px 0 rgba(45,49,66,0.35);
-    cursor:pointer;
-    position:relative;
-  }
-  .guess-digit .val {
-    font-size:24px; font-weight:bold;
-    color:#2d3142;
-    line-height:1;
-  }
-  .guess-digit .val.empty { color:#ccc; font-size:20px; }
-  .guess-digit .pos {
-    position:absolute; bottom:3px;
-    font-size:8px; color:#888;
-    font-family:sans-serif;
-  }
   .digit-picker {
     display:grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap:5px;
+    grid-template-columns:repeat(5, 1fr);
+    gap:4px;
     justify-items:center;
     margin-top:6px;
     max-width:280px;
   }
   .digit-btn {
     width:100%;
-    max-width:48px;
-    height:44px;
+    max-width:44px;
+    height:40px;
     background:#fff;
     border:2.5px solid #2d3142;
-    border-radius:10px 4px 10px 4px / 4px 10px 4px 10px;
+    border-radius:9px 3px 9px 3px / 3px 9px 3px 9px;
     font-family:inherit;
-    font-size:20px; font-weight:bold;
+    font-size:18px; font-weight:bold;
     color:#2d3142;
     cursor:pointer;
     box-shadow:2px 2px 0 rgba(45,49,66,0.3);
     -webkit-appearance:none;
   }
-  .digit-btn:active {
-    transform:translate(1px,1px);
-    box-shadow:1px 1px 0 rgba(45,49,66,0.3);
-    background:#ffd166;
-  }
+  .digit-btn:active { transform:translate(1px,1px); box-shadow:1px 1px 0 rgba(45,49,66,0.3); background:#ffd166; }
   .digit-btn.active { background:#ffd166; }
+
+  .guess-row {
+    display:flex; gap:5px; justify-content:center; margin:6px 0;
+    flex-wrap:wrap;
+  }
+  .guess-digit {
+    width:46px; height:56px;
+    background:#fff;
+    border:3px solid #2d3142;
+    border-radius:11px 3px 11px 3px / 3px 11px 3px 11px;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    box-shadow:2px 2.5px 0 rgba(45,49,66,0.35);
+    cursor:pointer;
+    position:relative;
+  }
+  .guess-digit .val { font-size:22px; font-weight:bold; color:#2d3142; line-height:1; }
+  .guess-digit .val.empty { color:#ccc; font-size:18px; }
+  .guess-digit .pos { position:absolute; bottom:2px; font-size:7px; color:#888; font-family:sans-serif; }
 
   .leaderboard {
     width:100%; max-width:340px;
-    margin:6px auto;
+    margin:5px auto;
     background:#fff;
     border:2.5px solid #2d3142;
-    border-radius:12px;
-    padding:6px 9px;
+    border-radius:11px;
+    padding:5px 8px;
     text-align:left;
   }
   .leaderboard h3 {
-    margin:0 0 5px;
-    font-size:13px;
+    margin:0 0 4px;
+    font-size:12px;
     color:#2d3142;
     text-align:center;
     border-bottom:2px dashed #ffd166;
@@ -416,7 +455,7 @@
   }
   .lb-row {
     display:flex; justify-content:space-between;
-    padding:2px 4px;
+    padding:2px 3px;
     font-size:11px;
     color:#2d3142;
     border-radius:4px;
@@ -432,36 +471,26 @@
 <div id="app">
   <header>
     <h1>🔧 MÁY TURING CRAYON</h1>
-    <div class="subtitle">Đặt câu hỏi • Suy luận • Tìm mã</div>
   </header>
 
   <div id="hud">
     <div class="stat" id="lvStat">Lv <span id="levelStat">1</span></div>
-    <div class="stat" id="qStat">❓ <span id="qLeft">6</span></div>
+    <div class="stat" id="qStat">❓ <span id="qLeft">8</span></div>
     <div class="stat" id="scStat">🏆 <span id="scoreTotal">0</span></div>
   </div>
 
-  <div id="main">
-    <div id="historyPanel">
-      <div class="panel-title">
-        📝 Nhật ký
-        <small id="secretDisplay">???</small>
-      </div>
-      <div id="historyList">
-        <div class="history-empty">Chạm câu hỏi bên dưới 👇</div>
-      </div>
-    </div>
-
-    <div id="questionsPanel">
-      <div class="panel-title">
-        🔍 Câu hỏi
-        <small id="qCount"></small>
-      </div>
-      <div id="questionsList"></div>
-    </div>
-
-    <button id="guessBtn" type="button">🎯 ĐOÁN DÃY SỐ</button>
+  <div id="targetPanel">
+    <div id="targetTitle">🎯 DÃY SỐ CẦN TÌM</div>
+    <div id="slotsRow"></div>
+    <div id="targetHint">💡 Chạm số để gạch bỏ (loại trừ)</div>
   </div>
+
+  <div id="questionsPanel">
+    <div id="qFilter"></div>
+    <div id="questionsList"></div>
+  </div>
+
+  <button id="guessBtn" type="button">🎯 ĐOÁN DÃY SỐ</button>
 </div>
 
 <div id="toast"></div>
@@ -469,6 +498,7 @@
 <div id="overlay">
   <h2>🔧 MÁY TURING CRAYON</h2>
   <p>Tìm dãy số bí ẩn bằng cách đặt câu hỏi Có/Không!</p>
+  <p style="font-size:11px;color:#666">Gạch bỏ số không khả thi trên mini-grid để hỗ trợ suy luận</p>
   <button id="startBtn" type="button">BẮT ĐẦU 🖍️</button>
 </div>
 
@@ -487,11 +517,12 @@ var MODES = {
 var currentMode = 'normal';
 var secret = [];
 var numCount = 3;
-var minVal = 0; var maxVal = 9;
-var questionsLeft = 6;
-var questionsTotal = 6;
-var history = [];
+var minVal = 0;
+var maxVal = 9;
+var questionsLeft = 8;
+var questionsTotal = 8;
 var askedMap = {};
+var questionCounter = 0;
 var gameOver = false;
 var totalScore = 0;
 var streak = 0;
@@ -499,6 +530,9 @@ var playerName = 'Người chơi';
 var currentGuess = [];
 var currentSelectedVal = null;
 var level = 1;
+var eliminated = [];
+var currentFilter = 'all';
+var allQuestionsCache = [];
 
 // DOM
 var els = {};
@@ -513,15 +547,13 @@ ready(function() {
   els.qLeftEl = document.getElementById('qLeft');
   els.scoreTotalEl = document.getElementById('scoreTotal');
   els.levelStatEl = document.getElementById('levelStat');
-  els.historyListEl = document.getElementById('historyList');
   els.questionsListEl = document.getElementById('questionsList');
-  els.secretDisplayEl = document.getElementById('secretDisplay');
-  els.qCountEl = document.getElementById('qCount');
+  els.qFilterEl = document.getElementById('qFilter');
   els.overlay = document.getElementById('overlay');
   els.guessBtn = document.getElementById('guessBtn');
   els.toast = document.getElementById('toast');
   els.qStat = document.getElementById('qStat');
-  els.scStat = document.getElementById('scStat');
+  els.slotsRow = document.getElementById('slotsRow');
 
   try {
     playerName = localStorage.getItem('turingCrayonName') || 'Người chơi';
@@ -533,22 +565,14 @@ ready(function() {
   els.guessBtn.onclick = openGuessPanel;
 });
 
-// ============ TOAST (phản hồi lớn) ============
+// ============ TOAST ============
 var toastTimer = null;
 function showToast(text, type) {
   els.toast.textContent = text;
   els.toast.className = 'show ' + type;
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() {
-    els.toast.className = '';
-  }, 900);
-
-  // Rung máy nếu có
-  try {
-    if (navigator.vibrate) navigator.vibrate(type === 'yes' ? 30 : [30, 40, 30]);
-  } catch(e) {}
-
-  // Âm thanh
+  toastTimer = setTimeout(function() { els.toast.className = ''; }, 900);
+  try { if (navigator.vibrate) navigator.vibrate(type === 'yes' ? 25 : [25,35,25]); } catch(e) {}
   playBeep(type === 'yes');
 }
 
@@ -559,25 +583,23 @@ function playBeep(high) {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     var osc = audioCtx.createOscillator();
     var gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    osc.connect(gain); gain.connect(audioCtx.destination);
     var now = audioCtx.currentTime;
     osc.type = 'sine';
     osc.frequency.setValueAtTime(high ? 880 : 440, now);
     osc.frequency.exponentialRampToValueAtTime(high ? 1100 : 300, now + 0.1);
     gain.gain.setValueAtTime(0.08, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-    osc.start(now);
-    osc.stop(now + 0.15);
+    osc.start(now); osc.stop(now + 0.15);
   } catch(e) {}
 }
 
-// ============ PULSE STAT ============
+// ============ PULSE ============
 function pulseStat(el) {
   if (!el) return;
-  el.classList.remove('highlight');
-  void el.offsetWidth; // reflow
-  el.classList.add('highlight');
+  el.classList.remove('pulse');
+  void el.offsetWidth;
+  el.classList.add('pulse');
 }
 
 // ============ OVERLAY ============
@@ -585,24 +607,22 @@ function showOverlay(html) {
   els.overlay.innerHTML = html;
   els.overlay.classList.remove('hidden');
 }
-function hideOverlay() {
-  els.overlay.classList.add('hidden');
-}
+function hideOverlay() { els.overlay.classList.add('hidden'); }
 
 // ============ MODE SELECT ============
 function showModeSelect() {
   var html = '<h2>🔧 CHỌN CHẾ ĐỘ</h2>';
   html += '<p>Tên của bạn:</p>';
   html += '<input id="nameInput" class="name-input" type="text" maxlength="16" placeholder="Nhập tên..." value="' + escapeHtml(playerName) + '">';
-  html += '<p style="margin-top:8px;font-size:12px;color:#666">Chọn độ khó:</p>';
+  html += '<p style="margin-top:6px;font-size:11px;color:#666">Chọn độ khó:</p>';
   for (var key in MODES) {
     var m = MODES[key];
     html += '<button class="mode-btn' + (key === currentMode ? ' active' : '') + '" data-mode="' + key + '" type="button">';
     html += '📚 ' + m.name;
-    html += '<span class="desc">Bắt đầu ' + m.startNums + ' số (1-' + m.max + ')</span>';
+    html += '<span class="desc">Bắt đầu ' + m.startNums + ' số (0-9)</span>';
     html += '</button>';
   }
-  html += '<button id="goBtn" type="button" style="margin-top:12px">VÀO GAME 🖍️</button>';
+  html += '<button id="goBtn" type="button" style="margin-top:10px">VÀO GAME 🖍️</button>';
   showOverlay(html);
 
   var btns = els.overlay.querySelectorAll('.mode-btn');
@@ -636,17 +656,10 @@ function showModeSelect() {
 function getLevelConfig(lv) {
   lv = Math.max(1, parseInt(lv, 10) || 1);
   var m = MODES[currentMode] || MODES.normal;
-
-  // Dãy số dài dần: level 1 = startNums, +1 số mỗi 3 level, tối đa 7
   var nums = Math.min(7, m.startNums + Math.floor((lv - 1) / 3));
-  nums = Math.max(3, nums); // không bao giờ < 3
-
-  // Số câu hỏi
+  nums = Math.max(3, nums);
   var qs = 8 + (nums - 3) * 2 + Math.min(4, lv - 1);
-
-  var cfg = { nums: nums, min: m.min || 0, max: m.max || 9, questions: qs };
-  console.log('[getLevelConfig] lv=', lv, '→', cfg);
-  return cfg;
+  return { nums: nums, min: m.min || 0, max: m.max || 9, questions: qs };
 }
 
 // ============ START ============
@@ -657,376 +670,513 @@ function startGame() {
   maxVal = cfg.max;
   questionsLeft = cfg.questions;
   questionsTotal = cfg.questions;
-
-  console.log('[startGame] level=', level, 'numCount=', numCount, 'min=', minVal, 'max=', maxVal, 'questions=', questionsLeft);
-  history = [];
   askedMap = {};
+  questionCounter = 0;
   gameOver = false;
   currentGuess = [];
   currentSelectedVal = null;
+  currentFilter = 'all';
   for (var i = 0; i < numCount; i++) currentGuess.push(null);
 
-  // Sinh secret: số từ 0 đến 9
+  eliminated = [];
+  for (var e = 0; e < numCount; e++) eliminated.push({});
+
   secret = [];
   for (var j = 0; j < numCount; j++) {
     secret.push(minVal + Math.floor(Math.random() * (maxVal - minVal + 1)));
   }
 
-  // Update HUD
   els.qLeftEl.textContent = questionsLeft;
   els.levelStatEl.textContent = level;
-  var displayParts = [];   for (var d = 0; d < numCount; d++) displayParts.push('?');   els.secretDisplayEl.textContent = '[' + displayParts.join(' ') + ']';
 
-  els.historyListEl.innerHTML = '<div class="history-empty">Chạm câu hỏi bên dưới 👇</div>';
-
-  // 🛡️ GUARD: log để debug
-  console.log('[startGame] level=', level, 'numCount=', numCount, 'secret=', secret);
-
+  renderSlots();
+  renderFilter();
   buildQuestionsList();
   hideOverlay();
 }
 
-function repeatStr(s, n) {
-  var arr = [];
-  for (var i = 0; i < n; i++) arr.push(s);
-  return arr;
+// ============ RENDER SLOTS ============
+function renderSlots() {
+  var html = '';
+  for (var i = 0; i < numCount; i++) {
+    html += '<div class="slot" data-slot="' + i + '">';
+    html += '<div class="slot-main">?</div>';
+    html += '<div class="slot-label">Số ' + (i+1) + '</div>';
+    html += '<div class="mini-grid" data-slot="' + i + '">';
+    for (var v = minVal; v <= maxVal; v++) {
+      var elim = eliminated[i] && eliminated[i][v];
+      html += '<button class="mini-cell' + (elim ? ' eliminated' : '') + '" data-slot="' + i + '" data-val="' + v + '" type="button">' + v + '</button>';
+    }
+    html += '</div>';
+    html += '</div>';
+  }
+  els.slotsRow.innerHTML = html;
+
+  var cells = els.slotsRow.querySelectorAll('.mini-cell');
+  for (var c = 0; c < cells.length; c++) {
+    (function(cell) {
+      cell.onclick = function(e) {
+        if (e) e.stopPropagation();
+        var slot = parseInt(cell.getAttribute('data-slot'), 10);
+        var val = parseInt(cell.getAttribute('data-val'), 10);
+        toggleEliminate(slot, val, cell);
+      };
+    })(cells[c]);
+  }
 }
 
-// ============ BUILD QUESTIONS ============
-function buildQuestionsForLen(len) {
-  // 🛡️ GUARD: đảm bảo len hợp lệ (3-7)
-  len = Math.max(3, Math.min(7, parseInt(len, 10) || 3));
-  console.log('[buildQuestions] len =', len);
+function toggleEliminate(slot, val, cell) {
+  if (gameOver) return;
+  if (!eliminated[slot]) eliminated[slot] = {};
+  if (eliminated[slot][val]) {
+    delete eliminated[slot][val];
+    cell.classList.remove('eliminated');
+  } else {
+    eliminated[slot][val] = true;
+    cell.classList.add('eliminated');
+    try { if (navigator.vibrate) navigator.vibrate(10); } catch(e) {}
+  }
+}
 
+// ============ FILTER ============
+var FILTERS = [
+  { id:'all',  name:'Tất cả' },
+  { id:'tier1', name:'🟢 Cơ bản' },
+  { id:'tier2', name:'🟡 TB' },
+  { id:'tier3', name:'🔴 Khó' }
+];
+
+function renderFilter() {
+  var html = '';
+  for (var i = 0; i < FILTERS.length; i++) {
+    var f = FILTERS[i];
+    html += '<button class="filter-btn' + (currentFilter === f.id ? ' active' : '') + '" data-filter="' + f.id + '" type="button">' + f.name + '</button>';
+  }
+  els.qFilterEl.innerHTML = html;
+
+  var btns = els.qFilterEl.querySelectorAll('.filter-btn');
+  for (var b = 0; b < btns.length; b++) {
+    (function(btn) {
+      btn.onclick = function() {
+        currentFilter = btn.getAttribute('data-filter');
+        renderFilter();
+        renderQuestions();
+      };
+    })(btns[b]);
+  }
+}
+
+// ============ CÂU HỎI — 50 câu, 10 nhóm ============
+function isPrime(n) {
+  if (n < 2) return false;
+  for (var i = 2; i * i <= n; i++) if (n % i === 0) return false;
+  return true;
+}
+
+function buildAllQuestions(len) {
+  len = Math.max(3, Math.min(7, parseInt(len, 10) || 3));
   var qs = [];
   var i;
 
-  // ===== NHÓM 1: CHẴN/LẺ từng vị trí =====
+  // NHÓM 1 — Chẵn/lẻ từng vị trí (tier 1)
   for (i = 0; i < len; i++) {
     (function(idx) {
       qs.push({
-        id: 'even_' + idx,
+        id: 'even_' + idx, tier: 1,
         text: 'Số thứ ' + (idx+1) + ' là số chẵn?',
         fn: function(s) { return s[idx] % 2 === 0; }
       });
     })(i);
   }
-
-  // ===== NHÓM 2: SO SÁNH với hằng số =====
+  // Lớn hơn 5 từng vị trí (tier 1)
   for (i = 0; i < len; i++) {
     (function(idx) {
       qs.push({
-        id: 'gt5_' + idx,
+        id: 'gt5_' + idx, tier: 1,
         text: 'Số thứ ' + (idx+1) + ' lớn hơn 5?',
         fn: function(s) { return s[idx] > 5; }
       });
     })(i);
   }
-  for (i = 0; i < len; i++) {
-    (function(idx) {
-      qs.push({
-        id: 'lt4_' + idx,
-        text: 'Số thứ ' + (idx+1) + ' nhỏ hơn 4?',
-        fn: function(s) { return s[idx] < 4; }
-      });
-    })(i);
-  }
 
-  // ===== NHÓM 3: SO SÁNH giữa các vị trí =====
+  // NHÓM 2 — So sánh 2 vị trí (tier 2)
   for (i = 0; i < len - 1; i++) {
     (function(idx) {
       qs.push({
-        id: 'cmp_' + idx,
+        id: 'cmp_' + idx, tier: 2,
         text: 'Số thứ ' + (idx+1) + ' lớn hơn số thứ ' + (idx+2) + '?',
         fn: function(s) { return s[idx] > s[idx+1]; }
       });
     })(i);
   }
-  // So sánh vị trí 1 với vị trí cuối
   if (len >= 3) {
     qs.push({
-      id: 'cmp_first_last',
-      text: 'Số đầu tiên lớn hơn số cuối cùng?',
+      id: 'cmp_first_last', tier: 2,
+      text: 'Số đầu lớn hơn số cuối?',
       fn: function(s) { return s[0] > s[len-1]; }
     });
     qs.push({
-      id: 'eq_first_last',
-      text: 'Số đầu tiên bằng số cuối cùng?',
+      id: 'eq_first_last', tier: 2,
+      text: 'Số đầu bằng số cuối?',
       fn: function(s) { return s[0] === s[len-1]; }
     });
   }
 
-  // ===== NHÓM 4: VỀ TỔNG =====
+  // NHÓM 3 — Tổng / Hiệu (tier 2/3)
   qs.push({
-    id: 'sum_even',
+    id: 'sum_even', tier: 2,
     text: 'Tổng các số là số chẵn?',
     fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%2===0; }
   });
-  // Tổng > trung bình (len * 4.5)
   qs.push({
-    id: 'sum_gt_avg',
+    id: 'sum_gt', tier: 2,
     text: 'Tổng các số lớn hơn ' + Math.floor(len * 4.5) + '?',
     fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t > Math.floor(len*4.5); }
   });
-  // Tổng chia hết cho 3
   qs.push({
-    id: 'sum_div3',
+    id: 'sum_div3', tier: 2,
     text: 'Tổng các số chia hết cho 3?',
     fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%3===0; }
   });
+  qs.push({
+    id: 'diff_gt5', tier: 3,
+    text: 'Hiệu số lớn nhất và nhỏ nhất > 5?',
+    fn: function(s) {
+      var mx=s[0], mn=s[0];
+      for (var k=1;k<s.length;k++){if(s[k]>mx)mx=s[k];if(s[k]<mn)mn=s[k];}
+      return (mx-mn) > 5;
+    }
+  });
 
-  // ===== NHÓM 5: VỀ XUẤT HIỆN SỐ CỤ THỂ =====
-  // Hỏi có các số 0, 3, 5, 7, 9 (đại diện)
+  // NHÓM 4 — Xuất hiện số cụ thể (tier 1)
   var checkNums = [0, 3, 5, 7, 9];
   for (i = 0; i < checkNums.length; i++) {
     (function(n) {
       qs.push({
-        id: 'has_' + n,
+        id: 'has_' + n, tier: 1,
         text: 'Dãy có chứa số ' + n + '?',
         fn: function(s) { return s.indexOf(n) !== -1; }
       });
     })(checkNums[i]);
   }
 
-  // ===== NHÓM 6: VỀ ĐẾM =====
+  // NHÓM 5 — Đếm (tier 2)
   qs.push({
-    id: 'even_more',
+    id: 'even_more', tier: 2,
     text: 'Có nhiều số chẵn hơn số lẻ?',
-    fn: function(s) {
-      var e=0; for (var k=0;k<s.length;k++) if (s[k]%2===0) e++;
-      return e > s.length - e;
-    }
+    fn: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++; return e > s.length-e; }
   });
   qs.push({
-    id: 'cnt_even_2',
+    id: 'cnt_even_2', tier: 2,
     text: 'Có đúng 2 số chẵn?',
-    fn: function(s) {
-      var e=0; for (var k=0;k<s.length;k++) if (s[k]%2===0) e++;
-      return e === 2;
-    }
-  });
-
-  // ===== NHÓM 7: VỀ TRẬT TỰ DÃY =====
-  qs.push({
-    id: 'increasing',
-    text: 'Dãy tăng dần (mỗi số lớn hơn số trước)?',
-    fn: function(s) {
-      for (var k=1;k<s.length;k++) if (s[k] <= s[k-1]) return false;
-      return true;
-    }
+    fn: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++; return e === 2; }
   });
   qs.push({
-    id: 'decreasing',
-    text: 'Dãy giảm dần (mỗi số nhỏ hơn số trước)?',
-    fn: function(s) {
-      for (var k=1;k<s.length;k++) if (s[k] >= s[k-1]) return false;
-      return true;
-    }
-  });
-
-  // ===== NHÓM 8: VỀ TRÙNG LẶP =====
-  qs.push({
-    id: 'has_dup',
-    text: 'Có 2 số bằng nhau trong dãy?',
-    fn: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if (s[a]===s[b]) return true;
-      return false;
-    }
+    id: 'has_dup', tier: 2,
+    text: 'Có 2 số bằng nhau?',
+    fn: function(s) { for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b])return true; return false; }
   });
   qs.push({
-    id: 'all_diff',
+    id: 'all_diff', tier: 2,
     text: 'Tất cả các số đều khác nhau?',
-    fn: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if (s[a]===s[b]) return false;
-      return true;
-    }
+    fn: function(s) { for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b])return false; return true; }
+  });
+  qs.push({
+    id: 'has_big', tier: 1,
+    text: 'Có ít nhất 1 số > 7?',
+    fn: function(s) { for (var k=0;k<s.length;k++) if(s[k]>7)return true; return false; }
   });
 
-  // ===== NHÓM 9: VỀ VỊ TRÍ MAX/MIN =====
+  // NHÓM 6 — Trật tự (tier 2)
   qs.push({
-    id: 'max_first_half',
-    text: 'Số lớn nhất nằm ở nửa đầu dãy?',
-    fn: function(s) {
-      var maxIdx=0;
-      for (var k=1;k<s.length;k++) if (s[k] > s[maxIdx]) maxIdx = k;
-      return maxIdx < s.length / 2;
-    }
+    id: 'increasing', tier: 2,
+    text: 'Dãy tăng dần?',
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]<=s[k-1])return false; return true; }
   });
   qs.push({
-    id: 'min_first_half',
-    text: 'Số nhỏ nhất nằm ở nửa đầu dãy?',
-    fn: function(s) {
-      var minIdx=0;
-      for (var k=1;k<s.length;k++) if (s[k] < s[minIdx]) minIdx = k;
-      return minIdx < s.length / 2;
-    }
+    id: 'decreasing', tier: 2,
+    text: 'Dãy giảm dần?',
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]>=s[k-1])return false; return true; }
   });
   qs.push({
-    id: 'max_is_first',
-    text: 'Số đầu tiên là số lớn nhất?',
-    fn: function(s) {
-      for (var k=1;k<s.length;k++) if (s[k] > s[0]) return false;
-      return true;
-    }
+    id: 'max_first', tier: 2,
+    text: 'Số đầu là số lớn nhất?',
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]>s[0])return false; return true; }
   });
   qs.push({
-    id: 'min_is_last',
-    text: 'Số cuối cùng là số nhỏ nhất?',
-    fn: function(s) {
-      for (var k=0;k<s.length-1;k++) if (s[k] < s[s.length-1]) return false;
-      return true;
-    }
+    id: 'min_first', tier: 2,
+    text: 'Số đầu là số nhỏ nhất?',
+    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]<s[0])return false; return true; }
   });
 
-  // ===== NHÓM 10: ĐẶC BIỆT =====
-  // Có số 0 đứng đầu?
+  // NHÓM 7 — Vị trí đặc biệt (tier 2/3)
   qs.push({
-    id: 'first_zero',
+    id: 'max_half1', tier: 3,
+    text: 'Số lớn nhất ở nửa đầu dãy?',
+    fn: function(s) {
+      var mi=0; for (var k=1;k<s.length;k++) if(s[k]>s[mi]) mi=k;
+      return mi < s.length/2;
+    }
+  });
+  qs.push({
+    id: 'min_half2', tier: 3,
+    text: 'Số nhỏ nhất ở nửa sau dãy?',
+    fn: function(s) {
+      var mi=0; for (var k=1;k<s.length;k++) if(s[k]<s[mi]) mi=k;
+      return mi >= s.length/2;
+    }
+  });
+  qs.push({
+    id: 'first_zero', tier: 2,
     text: 'Số đầu tiên là số 0?',
     fn: function(s) { return s[0] === 0; }
   });
-  // Không có số 0?
   qs.push({
-    id: 'no_zero',
+    id: 'no_zero', tier: 1,
     text: 'Dãy không có số 0?',
     fn: function(s) { return s.indexOf(0) === -1; }
   });
-  // Có số >= 8?
+
+  // NHÓM 8 — Mẫu số (tier 3)
   qs.push({
-    id: 'has_big',
-    text: 'Có số nào lớn hơn hoặc bằng 8?',
+    id: 'ap3', tier: 3,
+    text: 'Có 3 số tạo cấp số cộng?',
     fn: function(s) {
-      for (var k=0;k<s.length;k++) if (s[k] >= 8) return true;
+      var a = s.slice().sort(function(x,y){return x-y;});
+      for (var x=0;x<a.length-2;x++)
+        for (var y=x+1;y<a.length-1;y++)
+          for (var z=y+1;z<a.length;z++)
+            if (a[y]-a[x] === a[z]-a[y] && a[z]-a[y] > 0) return true;
       return false;
     }
   });
-  // Có số <= 1?
   qs.push({
-    id: 'has_small',
-    text: 'Có số nào nhỏ hơn hoặc bằng 1?',
+    id: 'sum_pair_10', tier: 3,
+    text: 'Có 2 số cộng lại bằng 10?',
     fn: function(s) {
-      for (var k=0;k<s.length;k++) if (s[k] <= 1) return true;
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]+s[b]===10)return true;
       return false;
     }
   });
-  // Tổng chữ số đơn vị chẵn?
   qs.push({
-    id: 'all_digits_in',
-    text: 'Tất cả các số đều nằm trong khoảng 2-7?',
+    id: 'one_equals_sum_other', tier: 3,
+    text: 'Có số nào bằng tổng 2 số còn lại?',
     fn: function(s) {
-      for (var k=0;k<s.length;k++) if (s[k] < 2 || s[k] > 7) return false;
-      return true;
+      for (var a=0;a<s.length;a++) for (var b=0;b<s.length;b++) for (var c=0;c<s.length;c++) {
+        if (a!==b && b!==c && a!==c && s[a] === s[b]+s[c]) return true;
+      }
+      return false;
     }
+  });
+  qs.push({
+    id: 'consec_diff1', tier: 3,
+    text: 'Có 2 số chênh lệch đúng 1?',
+    fn: function(s) {
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])===1)return true;
+      return false;
+    }
+  });
+  qs.push({
+    id: 'consec_diff5', tier: 3,
+    text: 'Có 2 số chênh lệch ≥ 5?',
+    fn: function(s) {
+      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])>=5)return true;
+      return false;
+    }
+  });
+
+  // NHÓM 9 — Tính chất đặc biệt (tier 2/3)
+  qs.push({
+    id: 'is_prime_first', tier: 2,
+    text: 'Số đầu tiên là số nguyên tố?',
+    fn: function(s) { return isPrime(s[0]); }
+  });
+  qs.push({
+    id: 'prime_more', tier: 3,
+    text: 'Có nhiều số nguyên tố hơn hợp số?',
+    fn: function(s) {
+      var p=0, c=0;
+      for (var k=0;k<s.length;k++) {
+        if (isPrime(s[k])) p++;
+        else if (s[k] > 1) c++;
+      }
+      return p > c;
+    }
+  });
+  qs.push({
+    id: 'sum_prime', tier: 3,
+    text: 'Tổng các số là số nguyên tố?',
+    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return isPrime(t); }
+  });
+  qs.push({
+    id: 'prod_even', tier: 2,
+    text: 'Tích 2 số đầu là số chẵn?',
+    fn: function(s) { return (s[0]*s[1]) % 2 === 0; }
+  });
+  qs.push({
+    id: 'last_div3', tier: 2,
+    text: 'Số cuối chia hết cho 3?',
+    fn: function(s) { return s[s.length-1] % 3 === 0; }
+  });
+
+  // NHÓM 10 — Meta-logic (tier 3)
+  qs.push({
+    id: 'plus1_10', tier: 3,
+    text: 'Nếu cộng 1 vào mỗi số, có số bằng 10?',
+    fn: function(s) { for (var k=0;k<s.length;k++) if(s[k]+1===10)return true; return false; }
+  });
+  qs.push({
+    id: 'reverse_first_even', tier: 3,
+    text: 'Nếu đảo ngược dãy, số đầu vẫn chẵn?',
+    fn: function(s) { return s[s.length-1] % 2 === 0; }
+  });
+  qs.push({
+    id: 'sort_first_orig', tier: 3,
+    text: 'Nếu sắp tăng dần, số ban đầu ở vị trí 1 vẫn đứng đầu?',
+    fn: function(s) {
+      var m = 0;
+      for (var k=1;k<s.length;k++) if(s[k] < s[m]) m = k;
+      return m === 0;
+    }
+  });
+  qs.push({
+    id: 'double_lt20', tier: 1,
+    text: 'Nếu nhân đôi mỗi số, tất cả đều < 20?',
+    fn: function(s) { for (var k=0;k<s.length;k++) if(s[k]*2>=20)return false; return true; }
+  });
+  qs.push({
+    id: 'abs_diff_first_gt3', tier: 3,
+    text: 'Trị tuyệt đối hiệu 2 số đầu > 3?',
+    fn: function(s) { return Math.abs(s[0]-s[1]) > 3; }
   });
 
   return qs;
 }
 
+// ============ BUILD / RENDER QUESTIONS ============
 function buildQuestionsList() {
-  // 🛡️ GUARD: ép numCount là số nguyên 3-7
   numCount = Math.max(3, Math.min(7, parseInt(numCount, 10) || 3));
-  console.log('[buildQuestionsList] numCount =', numCount);
-
-  var all = buildQuestionsForLen(numCount);
+  allQuestionsCache = buildAllQuestions(numCount);
 
   // Shuffle
-  for (var i = all.length - 1; i > 0; i--) {
+  for (var i = allQuestionsCache.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var tmp = all[i]; all[i] = all[j]; all[j] = tmp;
+    var tmp = allQuestionsCache[i];
+    allQuestionsCache[i] = allQuestionsCache[j];
+    allQuestionsCache[j] = tmp;
   }
 
-  // Hiển thị tất cả câu hỏi (thường 30-50 câu) để người chơi chọn
-  var maxShow = Math.min(all.length, 40);
-  var shown = all.slice(0, maxShow);
+  renderQuestions();
+}
+
+function renderQuestions() {
+  var list = allQuestionsCache;
+  if (currentFilter !== 'all') {
+    var tier = currentFilter === 'tier1' ? 1 : currentFilter === 'tier2' ? 2 : 3;
+    list = list.filter(function(q) { return q.tier === tier; });
+  }
 
   els.questionsListEl.innerHTML = '';
-  els.qCountEl.textContent = shown.length + ' câu';
-
-  for (var k = 0; k < shown.length; k++) {
+  for (var i = 0; i < list.length; i++) {
     (function(q) {
       var btn = document.createElement('button');
       btn.className = 'q-btn';
       btn.type = 'button';
-      btn.textContent = q.text;
       btn.setAttribute('data-qid', q.id);
 
-      // QUAN TRỌNG: dùng onclick trực tiếp — đơn giản nhất
+      var status = askedMap[q.id];
+      if (status) {
+        btn.classList.add('used', status);
+      }
+
+      // Số thứ tự (nếu đã hỏi)
+      if (status && q.askOrder) {
+        var numSpan = document.createElement('span');
+        numSpan.className = 'q-num';
+        numSpan.textContent = q.askOrder + '.';
+        btn.appendChild(numSpan);
+      }
+
+      // Dot tier
+      var dot = document.createElement('span');
+      dot.className = 'q-dot tier' + q.tier;
+      btn.appendChild(dot);
+
+      // Text
+      var txt = document.createElement('span');
+      txt.className = 'q-text';
+      txt.textContent = q.text;
+      btn.appendChild(txt);
+
+      // Đáp án (nếu đã hỏi)
+      if (status) {
+        var ansSpan = document.createElement('span');
+        ansSpan.className = 'q-answer';
+        ansSpan.textContent = status === 'yes' ? '= CÓ' : '= KHÔNG';
+        btn.appendChild(ansSpan);
+      }
+
       btn.onclick = function(e) {
         if (e) { e.preventDefault(); e.stopPropagation(); }
         handleQuestionClick(q, btn);
       };
 
       els.questionsListEl.appendChild(btn);
-    })(shown[k]);
+    })(list[i]);
   }
 }
 
 // ============ HANDLE CLICK ============
 function handleQuestionClick(q, btn) {
-  // Debug rõ ràng
-  console.log('[Q] Click:', q.id, 'qLeft=', questionsLeft, 'gameOver=', gameOver);
-
-  if (gameOver) {
-    showToast('Game đã kết thúc!', 'no');
-    return;
-  }
-  if (questionsLeft <= 0) {
-    showToast('Hết câu hỏi rồi!', 'no');
-    return;
-  }
-  if (askedMap[q.id]) {
-    showToast('Đã hỏi rồi!', 'no');
-    return;
-  }
-
-  askedMap[q.id] = true;
-  questionsLeft--;
+  if (gameOver) return;
+  if (questionsLeft <= 0) { showToast('Hết câu hỏi!', 'no'); return; }
+  if (askedMap[q.id]) return;
 
   var answer = !!q.fn(secret);
-  var ansText = answer ? 'CÓ' : 'KHÔNG';
+  var status = answer ? 'yes' : 'no';
+  askedMap[q.id] = status;
+  questionCounter++;
+  q.askOrder = questionCounter;
 
-  history.push({ q: q.text, a: ansText });
+  questionsLeft--;
 
-  // 1. Đổi style nút — RÕ RÀNG
-  btn.classList.add(answer ? 'used-yes' : 'used-no');
-  btn.textContent = q.text; // reset text (vì ::after thêm CÓ/KHÔNG)
+  // Cập nhật nút hiện tại
+  btn.classList.add('used', status);
+  btn.innerHTML = '';
 
-  // 2. Toast lớn giữa màn hình
-  showToast(answer ? 'CÓ ✓' : 'KHÔNG ✗', answer ? 'yes' : 'no');
+  var numSpan = document.createElement('span');
+  numSpan.className = 'q-num';
+  numSpan.textContent = q.askOrder + '.';
+  btn.appendChild(numSpan);
 
-  // 3. Update HUD + pulse
+  var dot = document.createElement('span');
+  dot.className = 'q-dot tier' + q.tier;
+  btn.appendChild(dot);
+
+  var txt = document.createElement('span');
+  txt.className = 'q-text';
+  txt.textContent = q.text;
+  btn.appendChild(txt);
+
+  var ansSpan = document.createElement('span');
+  ansSpan.className = 'q-answer';
+  ansSpan.textContent = answer ? '= CÓ' : '= KHÔNG';
+  btn.appendChild(ansSpan);
+
+  // Toast + sound
+  showToast(answer ? 'CÓ ✓' : 'KHÔNG ✗', status);
+
+  // HUD
   els.qLeftEl.textContent = questionsLeft;
   pulseStat(els.qStat);
 
-  // 4. Update history
-  renderHistory();
-
-  // 5. Hết câu → tự mở đoán
+  // Hết câu → mở đoán
   if (questionsLeft === 0) {
-    setTimeout(openGuessPanel, 1000);
+    setTimeout(openGuessPanel, 1200);
   }
 }
 
-// ============ RENDER HISTORY ============
-function renderHistory() {
-  if (history.length === 0) {
-    els.historyListEl.innerHTML = '<div class="history-empty">Chạm câu hỏi bên dưới 👇</div>';
-    return;
-  }
-  var html = '';
-  for (var i = history.length - 1; i >= 0; i--) {
-    var h = history[i];
-    var cls = h.a === 'CÓ' ? 'yes' : 'no';
-    html += '<div class="history-item ' + cls + '">';
-    html += '<span class="history-q">' + escapeHtml(h.q) + '</span>';
-    html += '<span class="history-a">' + h.a + '</span>';
-    html += '</div>';
-  }
-  els.historyListEl.innerHTML = html;
-  els.historyListEl.scrollTop = 0;
-}
-
-// ============ GUESS PANEL ============
+// ============ GUESS ============
 function openGuessPanel() {
   if (gameOver) return;
   currentGuess = [];
@@ -1036,78 +1186,61 @@ function openGuessPanel() {
 }
 
 function renderGuessPanel() {
-  // 🛡️ GUARD: đảm bảo numCount đúng
-  numCount = Math.max(3, Math.min(7, parseInt(numCount, 10) || 3));
-  console.log('[renderGuessPanel] numCount =', numCount);
-
   var html = '<h2>🎯 ĐOÁN DÃY SỐ</h2>';
-  html += '<p>Dãy có <b>' + numCount + '</b> số (0–' + maxVal + '):</p>';
-  html += '<div class="guess-row" id="guessRow">';
+  html += '<p>Dãy có <b>' + numCount + '</b> số (' + minVal + '–' + maxVal + '):</p>';
+  html += '<div class="guess-row">';
   for (var i = 0; i < numCount; i++) {
     var val = currentGuess[i];
     html += '<div class="guess-digit" data-pos="' + i + '">';
     html += '<div class="val' + (val === null ? ' empty' : '') + '" id="gval_' + i + '">' + (val === null ? '?' : val) + '</div>';
-    html += '<div class="pos">Số ' + (i + 1) + '</div>';
+    html += '<div class="pos">Số ' + (i+1) + '</div>';
     html += '</div>';
   }
   html += '</div>';
-
-  html += '<div class="digit-picker" style="display:flex;justify-content:center">';
-  html += '<div style="display:grid;grid-template-columns:repeat(5,48px);gap:5px">';
+  html += '<div class="digit-picker">';
   for (var v = minVal; v <= maxVal; v++) {
     html += '<button class="digit-btn" data-val="' + v + '" type="button">' + v + '</button>';
   }
   html += '</div>';
-  html += '</div>';
-
-  html += '<div style="font-size:11px;color:#666;margin-top:8px">👆 Chọn số, rồi chạm ô để điền</div>';
-  html += '<div style="margin-top:10px">';
+  html += '<div style="font-size:10px;color:#666;margin-top:6px">👆 Chọn số, rồi chạm ô để điền</div>';
+  html += '<div style="margin-top:8px">';
   html += '<button id="confirmGuess" type="button">XÁC NHẬN ✅</button>';
   html += '<button id="backToGame" type="button" class="secondary">QUAY LẠI</button>';
   html += '</div>';
 
   showOverlay(html);
 
-  // Digit picker
   var digitBtns = els.overlay.querySelectorAll('.digit-btn');
   for (var d = 0; d < digitBtns.length; d++) {
-    (function(btn) {
-      btn.onclick = function() {
+    (function(b) {
+      b.onclick = function() {
         var all = els.overlay.querySelectorAll('.digit-btn');
         for (var k = 0; k < all.length; k++) all[k].classList.remove('active');
-        btn.classList.add('active');
-        currentSelectedVal = parseInt(btn.getAttribute('data-val'), 10);
+        b.classList.add('active');
+        currentSelectedVal = parseInt(b.getAttribute('data-val'), 10);
       };
     })(digitBtns[d]);
   }
 
-  // Digit cells
   var cells = els.overlay.querySelectorAll('.guess-digit');
   for (var c = 0; c < cells.length; c++) {
     (function(cell, idx) {
       cell.onclick = function() {
-        if (currentSelectedVal === null) {
-          showToast('Chọn số trước!', 'no');
-          return;
-        }
+        if (currentSelectedVal === null) { showToast('Chọn số trước!', 'no'); return; }
         currentGuess[idx] = currentSelectedVal;
-        var valDiv = document.getElementById('gval_' + idx);
-        valDiv.textContent = currentSelectedVal;
-        valDiv.classList.remove('empty');
+        var vd = document.getElementById('gval_' + idx);
+        vd.textContent = currentSelectedVal;
+        vd.classList.remove('empty');
       };
     })(cells[c], c);
   }
 
   document.getElementById('confirmGuess').onclick = function() {
     for (var i = 0; i < numCount; i++) {
-      if (currentGuess[i] === null) {
-        showToast('Chọn đủ ' + numCount + ' số!', 'no');
-        return;
-      }
+      if (currentGuess[i] === null) { showToast('Chọn đủ ' + numCount + ' số!', 'no'); return; }
     }
     checkGuess();
   };
-
   document.getElementById('backToGame').onclick = hideOverlay;
 }
 
@@ -1119,9 +1252,9 @@ function checkGuess() {
   }
 
   gameOver = true;
-
   var questionsUsed = questionsTotal - questionsLeft;
   var points = 0;
+
   if (correct) {
     if (questionsUsed <= 2) points = 100;
     else if (questionsUsed === 3) points = 70;
@@ -1130,9 +1263,7 @@ function checkGuess() {
     else if (questionsUsed === 6) points = 25;
     else points = 15;
 
-    // Bonus theo độ dài dãy (dãy càng dài càng khó)
     points += (numCount - 3) * 25;
-    // Bonus theo chế độ
     var modeBonus = { easy: 0, normal: 15, hard: 35 };
     points += modeBonus[currentMode] || 0;
 
@@ -1206,17 +1337,10 @@ function showResult(correct, points, questionsUsed) {
       els.levelStatEl.textContent = level;
       startGame();
     };
-    document.getElementById('againBtn').onclick = function() {
-      startGame();
-    };
+    document.getElementById('againBtn').onclick = function() { startGame(); };
   } else {
-    document.getElementById('againBtn').onclick = function() {
-      startGame();
-    };
-    document.getElementById('changeModeBtn').onclick = function() {
-      level = 1;
-      showModeSelect();
-    };
+    document.getElementById('againBtn').onclick = function() { startGame(); };
+    document.getElementById('changeModeBtn').onclick = function() { level = 1; showModeSelect(); };
   }
 }
 
