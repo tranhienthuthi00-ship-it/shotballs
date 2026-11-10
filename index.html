@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🔧 Máy Turing Crayon</title>
+<title>🎮 Game Hub Crayon</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
   html, body {
     margin:0; padding:0; width:100%; height:100%;
     overflow:hidden; background:#fdf6e3;
-    font-family:'Comic Sans MS','Chalkboard SE','Segoe Print',cursive;
+    font-family:'Comic Sans MS','Chalkboard SE',cursive;
     touch-action:manipulation;
   }
   #app {
@@ -18,232 +18,376 @@
     padding:4px; gap:3px;
     max-width:520px; margin:0 auto;
   }
-  header { flex-shrink:0; text-align:center; padding:1px 0; }
-  h1 {
-    margin:0; font-size:clamp(14px,4.2vw,18px);
+
+  /* MENU */
+  #menuView {
+    flex:1;
+    display:flex; flex-direction:column;
+    overflow-y:auto;
+    padding:6px;
+    gap:8px;
+    -webkit-overflow-scrolling:touch;
+  }
+  #menuTitle {
+    text-align:center;
+    font-size:clamp(20px,6vw,26px);
     color:#2d3142;
-    text-shadow:2px 2px 0 #ffd166, -1px -1px 0 #ef476f;
+    text-shadow:3px 3px 0 #ffd166, -1px -1px 0 #ef476f;
+    margin:6px 0;
+    transform:rotate(-1deg);
+  }
+  #menuSubtitle {
+    text-align:center;
+    font-size:clamp(11px,3vw,13px);
+    color:#666;
+    font-style:italic;
+    margin-bottom:6px;
+  }
+  .game-card {
+    background:#fffef8;
+    border:3px solid #2d3142;
+    border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
+    padding:12px 14px;
+    box-shadow:3px 3px 0 rgba(45,49,66,0.35);
+    cursor:pointer;
+    transition:all 0.15s;
+    display:flex; align-items:center; gap:12px;
+    flex-shrink:0;
+  }
+  .game-card:active {
+    transform:translate(2px,2px);
+    box-shadow:1px 1px 0 rgba(45,49,66,0.35);
+  }
+  .game-card .icon {
+    font-size:clamp(28px,8vw,36px);
+    flex-shrink:0;
+    width:50px; text-align:center;
+  }
+  .game-card .info { flex:1; min-width:0; }
+  .game-card .name {
+    font-size:clamp(14px,4vw,17px);
+    font-weight:bold;
+    color:#2d3142;
+    margin-bottom:2px;
+  }
+  .game-card .desc {
+    font-size:clamp(10px,2.9vw,12px);
+    color:#666;
+    margin-bottom:4px;
+  }
+  .game-card .stats {
+    display:flex; gap:10px;
+    font-size:clamp(10px,2.8vw,11px);
+  }
+  .game-card .stats .high { color:#ef476f; font-weight:bold; }
+  .game-card .stats .total { color:#118ab2; font-weight:bold; }
+
+  .game-card.math { background:linear-gradient(135deg,#fffef8,#fff8e7); }
+  .game-card.mm { background:linear-gradient(135deg,#fffef8,#e8f4ff); }
+  .game-card.story { background:linear-gradient(135deg,#fffef8,#f0fdf8); }
+
+  /* GAME VIEW */
+  #gameView {
+    flex:1; min-height:0;
+    display:none;
+    flex-direction:column;
+    gap:3px;
+  }
+  #gameView.show { display:flex; }
+
+  header {
+    flex-shrink:0;
+    display:flex; align-items:center; gap:6px;
+    padding:1px 0;
+  }
+  #backBtn {
+    background:#fff;
+    border:2.5px solid #2d3142;
+    border-radius:10px;
+    width:36px; height:36px;
+    font-size:18px; font-weight:bold;
+    color:#2d3142;
+    cursor:pointer;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.35);
+    flex-shrink:0;
+    padding:0;
+    -webkit-appearance:none;
+  }
+  #backBtn:active { transform:translate(1px,1px); box-shadow:1px 1px 0 rgba(45,49,66,0.35); }
+  #gameTitle {
+    flex:1;
+    margin:0;
+    font-size:clamp(14px,4vw,18px);
+    color:#2d3142;
+    text-align:center;
+    text-shadow:2px 2px 0 #ffd166;
     transform:rotate(-0.5deg);
   }
+  #titleSpacer { width:36px; flex-shrink:0; }
+
   #hud {
-    display:flex; justify-content:center; gap:4px;
+    display:flex; justify-content:center; gap:3px;
     flex-shrink:0; flex-wrap:wrap;
   }
   .stat {
     background:#fff;
     border:2px solid #2d3142;
     border-radius:10px 4px 12px 5px / 5px 12px 4px 10px;
-    padding:2px 8px;
-    font-size:clamp(10px,2.9vw,12px);
+    padding:2px 6px;
+    font-size:clamp(9px,2.7vw,11px);
     color:#2d3142; font-weight:bold;
     box-shadow:2px 2px 0 rgba(45,49,66,0.35);
     white-space:nowrap;
+    display:flex; align-items:center; gap:2px;
+    max-width: 100%;
   }
   .stat span { color:#ef476f; }
+  .stat.player { background:#e8f4ff; }
+  .stat.player span { color:#118ab2; max-width:60px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:inline-block; vertical-align:bottom; }
   .stat:nth-child(2) span { color:#06d6a0; }
-  .stat:nth-child(3) span { color:#118ab2; }
+  .stat.high { background:#fff8e7; }
+  .stat.high span { color:#ff9a3c; }
   .stat.pulse { animation:pulseStat 0.35s; }
   @keyframes pulseStat {
     0%,100% { transform:scale(1); }
     50% { transform:scale(1.18); background:#ffd166; }
   }
 
-  #targetPanel {
+  #gameContent {
+    flex:1; min-height:0;
+    display:flex; flex-direction:column;
+    gap:3px;
+    overflow:hidden;
+  }
+
+  .panel {
+    background:#fffef8;
+    border:2.5px solid #2d3142;
+    border-radius:11px 4px 13px 6px / 6px 13px 4px 11px;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
+    padding:6px 8px;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+  }
+  .panel-title {
+    flex-shrink:0;
+    font-size:clamp(10px,2.8vw,12px);
+    color:#2d3142; font-weight:bold;
+    border-bottom:2px dashed #ffd166;
+    padding-bottom:3px;
+    margin-bottom:4px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .panel-title small { color:#666; font-weight:normal; font-size:0.85em; }
+
+  #mainPanel { flex:1; min-height:0; }
+  #mainList {
+    flex:1; overflow-y:auto;
+    display:flex; flex-direction:column; gap:4px;
+    -webkit-overflow-scrolling:touch;
+    padding-right:2px;
+  }
+
+  /* Math equation */
+  .equation {
+    padding:8px 10px;
+    background:linear-gradient(135deg, #fff8e7, #fffef8);
+    border:2px solid #ffd166;
+    border-radius:9px 4px 9px 4px / 4px 9px 4px 9px;
+    font-size:clamp(11px,3.2vw,14px);
+    font-weight:bold;
+    color:#2d3142;
+    text-align:center;
+    box-shadow:1.5px 1.5px 0 rgba(45,49,66,0.2);
+    flex-shrink:0;
+    line-height:1.4;
+  }
+  .equation.hard {
+    border-color:#ef476f;
+    background:linear-gradient(135deg, #ffe4e6, #fffef8);
+  }
+  .equation .eq-num {
+    display:inline-block;
+    background:#118ab2;
+    color:#fff;
+    font-size:0.75em;
+    padding:1px 6px;
+    border-radius:5px;
+    margin-right:5px;
+    vertical-align:middle;
+  }
+  .equation.hard .eq-num { background:#ef476f; }
+
+  /* Mastermind history */
+  .mm-history {
+    padding:6px 8px;
+    background:#fff;
+    border:1.5px solid #2d3142;
+    border-radius:8px;
+    display:flex; align-items:center; gap:6px;
+    flex-shrink:0;
+    animation:slideIn 0.25s;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+  .mm-history.win { background:#d4f8e4; border-color:#06d6a0; }
+  .mm-num {
+    font-size:clamp(9px,2.6vw,11px);
+    color:#888; font-weight:bold;
+    min-width:18px;
+  }
+  .mm-guess {
+    display:flex; gap:3px;
+  }
+  .mm-digit {
+    display:inline-flex;
+    align-items:center; justify-content:center;
+    width:clamp(20px,5.5vw,24px);
+    height:clamp(20px,5.5vw,24px);
+    background:#e8f4ff;
+    border:1.5px solid #2d3142;
+    border-radius:5px;
+    font-family:inherit;
+    font-size:clamp(11px,3vw,13px);
+    font-weight:bold;
+    color:#2d3142;
+  }
+  
+  /* FIX LỖI HIỂU LẦM MASTERMIND: Dùng dạng đếm số lượng */
+  .mm-feedback {
+    margin-left:auto;
+    display:flex; gap:4px; align-items:center;
+    font-family:sans-serif;
+    font-size:clamp(10px,2.8vw,12px);
+    font-weight:bold;
+  }
+  .fb-count {
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: 1.5px solid #2d3142;
+    display:flex; align-items:center; gap:2px;
+  }
+  .fb-count.exact { background:#06d6a0; color:#fff; }
+  .fb-count.color { background:#ffd166; color:#2d3142; }
+  .fb-count.wrong { background:#e0e0e0; color:#666; }
+  
+  .mm-empty {
+    text-align:center; color:#999; font-style:italic;
+    font-size:clamp(10px,2.8vw,12px); padding:12px;
+  }
+
+  /* Story */
+  .story-card {
+    padding:10px 12px;
+    background:linear-gradient(135deg, #fff8e7, #f0fdf8);
+    border:2px solid #ffd166;
+    border-radius:9px 4px 9px 4px / 4px 9px 4px 9px;
+    font-size:clamp(11px,3.2vw,14px);
+    color:#2d3142;
+    line-height:1.55;
+    flex-shrink:0;
+  }
+  .story-card .story-title {
+    font-weight:bold;
+    color:#ef476f;
+    margin-bottom:5px;
+    font-size:clamp(12px,3.4vw,15px);
+    text-align:center;
+    padding-bottom:4px;
+    border-bottom:1.5px dashed #ffd166;
+  }
+  .story-card .story-text { text-align:justify; }
+
+  /* Hint display */
+  #hintDisplay {
+    flex-shrink:0;
+    text-align:center;
+    font-size:clamp(10px,2.8vw,12px);
+    color:#118ab2;
+    font-weight:bold;
+    padding:3px 6px;
+    background:#e8f4ff;
+    border:1.5px dashed #118ab2;
+    border-radius:7px;
+    display:none;
+  }
+  #hintDisplay.show { display:block; }
+
+  /* Input */
+  #inputPanel {
     flex-shrink:0;
     background:linear-gradient(135deg, #fffef8, #fff8e7);
     border:3px solid #2d3142;
     border-radius:14px 5px 16px 7px / 7px 16px 5px 14px;
     box-shadow:3px 3px 0 rgba(45,49,66,0.35);
-    padding:5px 4px;
-    display:flex; flex-direction:column;
+    padding:6px 8px;
   }
-  #targetTitle {
+  #inputTitle {
     text-align:center;
-    font-size:clamp(10px,2.9vw,12px);
-    color:#2d3142; font-weight:bold;
-    margin-bottom:2px;
-    flex-shrink:0;
+    font-size:clamp(10px,2.8vw,12px);
+    color:#2d3142;
+    font-weight:bold;
+    margin-bottom:4px;
   }
-  #targetClue {
-    text-align:center;
-    font-size:clamp(10px,2.9vw,12px);
-    color:#ef476f; font-weight:bold;
-    background:#fff8e7;
-    border:2px dashed #ffd166;
-    border-radius:7px;
-    padding:3px 8px;
-    margin:2px 4px 5px;
-    flex-shrink:0;
-  }
-  #slotsRow {
+  #inputRow {
     display:flex;
     justify-content:center;
-    gap:4px;
+    gap:5px;
     flex-wrap:wrap;
   }
-  .slot {
+  .input-slot {
     display:flex; flex-direction:column;
     align-items:center;
-    background:#fff;
-    border:2.5px solid #2d3142;
-    border-radius:9px 4px 9px 4px / 4px 9px 4px 9px;
-    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
-    padding:3px;
-    min-width:52px;
-    max-width:64px;
-    flex:0 0 auto;
+    gap:2px;
   }
-  .slot-main {
-    width:100%;
-    font-size:clamp(20px,5.5vw,26px);
-    font-weight:bold;
-    color:#2d3142;
-    line-height:1.1;
-    min-height:26px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#fffef8;
-    border:2px dashed #ccc;
-    border-radius:5px;
-    text-align:center;
-    font-family:'Comic Sans MS', cursive;
-    -webkit-appearance:none;
-    outline:none;
-    padding:2px 0;
-    cursor:text;
-  }
-  .slot-main:focus {
-    border-color:#ef476f;
-    border-style:solid;
-    box-shadow:0 0 0 2px rgba(239,71,111,0.2);
-  }
-  .slot-main::placeholder { color:#ccc; }
-  .slot-main.filled { border-style:solid; border-color:#06d6a0; background:#d4f8e4; }
   .slot-label {
     font-size:clamp(7px,2vw,9px);
     color:#888;
     font-family:sans-serif;
-    margin-bottom:2px;
-  }
-  .mini-grid {
-    display:grid;
-    grid-template-columns:repeat(5, 1fr);
-    gap:1px;
-    width:100%;
-    margin-top:2px;
-  }
-  .mini-cell {
-    font-size:clamp(8px,2.4vw,10px);
-    font-family:sans-serif;
     font-weight:bold;
-    color:#2d3142;
-    background:#e8f4ff;
-    border:1px solid #99c9e8;
-    border-radius:3px;
     text-align:center;
-    padding:1px 0;
-    cursor:pointer;
-    transition:all 0.1s;
-    -webkit-appearance:none;
-    line-height:1;
-  }
-  .mini-cell:active { transform:scale(0.9); }
-  .mini-cell.eliminated {
-    background:#ddd;
-    color:#aaa;
-    text-decoration:line-through;
-    border-color:#bbb;
-  }
-  #targetHint {
-    text-align:center;
-    font-size:clamp(8px,2.4vw,10px);
-    color:#118ab2;
-    font-style:italic;
-    margin-top:2px;
-    flex-shrink:0;
-  }
-
-  #questionsPanel {
-    flex:1; min-height:0;
-    background:#fffef8;
-    border:2px solid #2d3142;
-    border-radius:11px 4px 13px 6px / 6px 13px 4px 11px;
-    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
-    padding:4px 6px;
-    display:flex; flex-direction:column;
+    max-width:48px;
     overflow:hidden;
-  }
-  #qFilter {
-    display:flex; gap:3px; margin-bottom:3px;
-    flex-shrink:0;
-    overflow-x:auto;
-    padding-bottom:2px;
-  }
-  .filter-btn {
-    font-family:inherit;
-    font-size:clamp(8px,2.3vw,10px);
-    padding:2px 6px;
-    border:1.5px solid #2d3142;
-    border-radius:7px;
-    background:#fff;
-    color:#2d3142;
-    cursor:pointer;
+    text-overflow:ellipsis;
     white-space:nowrap;
-    -webkit-appearance:none;
-    flex-shrink:0;
   }
-  .filter-btn.active { background:#ffd166; font-weight:bold; }
-  #questionsList {
-    flex:1; overflow-y:auto;
-    display:flex; flex-direction:column; gap:2px;
-    -webkit-overflow-scrolling:touch;
-    padding-right:2px;
-  }
-  .q-btn {
-    padding:6px 8px;
-    background:#fff;
-    border:1.5px solid #2d3142;
-    border-radius:8px 3px 9px 4px / 4px 9px 3px 8px;
-    font-family:inherit;
-    font-size:clamp(9px,2.6vw,11px);
-    color:#2d3142;
+  .slot-input {
+    width:clamp(34px,9vw,42px);
+    height:clamp(38px,10vw,46px);
+    background:#fffef8;
+    border:2.5px solid #2d3142;
+    border-radius:9px 4px 9px 4px / 4px 9px 4px 9px;
+    text-align:center;
+    font-family:'Comic Sans MS', cursive;
+    font-size:clamp(17px,5.2vw,21px);
     font-weight:bold;
-    text-align:left;
-    cursor:pointer;
-    box-shadow:1.5px 1.5px 0 rgba(45,49,66,0.25);
+    color:#2d3142;
     -webkit-appearance:none;
-    line-height:1.2;
-    width:100%;
-    flex-shrink:0;
-    display:flex; align-items:center; gap:4px;
-    transition:all 0.1s;
+    outline:none;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.3);
+    padding:0;
   }
-  .q-btn:active {
-    transform:translate(1px,1px);
-    box-shadow:0.5px 0.5px 0 rgba(45,49,66,0.25);
-    background:#ffd166;
+  .slot-input:focus {
+    border-color:#ef476f;
+    box-shadow:0 0 0 2px rgba(239,71,111,0.2);
   }
-  .q-btn.used { pointer-events:none; transform:none !important; }
-  .q-btn.used.yes { background:#d4f8e4; border-color:#06d6a0; cursor:default; }
-  .q-btn.used.no { background:#ffe4e6; border-color:#ef476f; cursor:default; }
-  .q-num { font-size:0.85em; color:#888; min-width:14px; text-align:right; flex-shrink:0; }
-  .q-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-  .q-dot.tier1 { background:#06d6a0; }
-  .q-dot.tier2 { background:#ffd166; }
-  .q-dot.tier3 { background:#ef476f; }
-  .q-text { flex:1; line-height:1.2; }
-  .q-answer {
-    font-weight:bold; padding:1px 6px;
-    border-radius:5px; font-size:0.85em;
-    white-space:nowrap; flex-shrink:0;
+  .slot-input.filled {
+    border-color:#06d6a0;
+    background:#d4f8e4;
   }
-  .q-cost { font-size:0.8em; color:#888; font-weight:normal; margin-left:2px; }
-  .q-btn.used.yes .q-answer { background:#06d6a0; color:#fff; }
-  .q-btn.used.no .q-answer { background:#ef476f; color:#fff; }
+  .slot-input.revealed {
+    border-color:#118ab2;
+    background:#e8f4ff;
+    color:#118ab2;
+    cursor:not-allowed;
+  }
 
-  #guessBtn {
+  #actionRow {
     flex-shrink:0;
+    display:flex;
+    gap:5px;
+  }
+  #submitBtn {
+    flex:2;
     padding:9px;
     background:#ef476f;
     color:#fff;
@@ -251,16 +395,32 @@
     border-radius:12px 4px 14px 6px / 6px 14px 4px 12px;
     font-family:inherit;
     font-weight:bold;
-    font-size:clamp(12px,3.3vw,15px);
+    font-size:clamp(12px,3.3vw,14px);
     cursor:pointer;
     box-shadow:2.5px 2.5px 0 #2d3142;
     -webkit-appearance:none;
-    letter-spacing:1px;
-    width:100%;
+    letter-spacing:0.5px;
   }
-  #guessBtn:active { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0 #2d3142; }
-  #guessBtn:disabled { background:#ccc; color:#666; cursor:not-allowed; box-shadow:2px 2px 0 #999; }
+  #submitBtn:active { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0 #2d3142; }
+  #submitBtn:disabled { background:#ccc; color:#666; cursor:not-allowed; box-shadow:2px 2px 0 #999; }
+  #hintBtn {
+    flex:1;
+    padding:9px;
+    background:#118ab2;
+    color:#fff;
+    border:3px solid #2d3142;
+    border-radius:12px 4px 14px 6px / 6px 14px 4px 12px;
+    font-family:inherit;
+    font-weight:bold;
+    font-size:clamp(11px,3vw,13px);
+    cursor:pointer;
+    box-shadow:2.5px 2.5px 0 #2d3142;
+    -webkit-appearance:none;
+  }
+  #hintBtn:active { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0 #2d3142; }
+  #hintBtn:disabled { background:#ccc; color:#666; cursor:not-allowed; box-shadow:2px 2px 0 #999; }
 
+  /* Toast */
   #toast {
     position:fixed; top:50%; left:50%;
     transform:translate(-50%, -50%) scale(0.3);
@@ -269,7 +429,7 @@
     border-radius:18px;
     padding:14px 30px;
     font-family:'Comic Sans MS', cursive;
-    font-size:clamp(24px,7vw,34px);
+    font-size:clamp(22px,6.5vw,30px);
     font-weight:bold;
     box-shadow:5px 5px 0 rgba(45,49,66,0.5);
     z-index:1000;
@@ -280,8 +440,10 @@
   #toast.show { opacity:1; transform:translate(-50%, -50%) scale(1); }
   #toast.yes { background:#06d6a0; color:#fff; }
   #toast.no { background:#ef476f; color:#fff; }
-  #toast.info { background:#118ab2; color:#fff; font-size:clamp(16px,5vw,22px); }
+  #toast.info { background:#118ab2; color:#fff; font-size:clamp(14px,4.5vw,20px); }
+  #toast.record { background:#ffd166; color:#2d3142; font-size:clamp(16px,5vw,22px); }
 
+  /* Overlay */
   #overlay {
     position:fixed; inset:0;
     background:rgba(253, 246, 227, 0.97);
@@ -308,14 +470,30 @@
     max-width:340px;
   }
   #overlay b { color:#06d6a0; }
-  .secret-reveal { display:flex; gap:5px; margin:8px 0; justify-content:center; flex-wrap:wrap; }
+  .secret-reveal {
+    display:flex; gap:5px; margin:8px 0;
+    justify-content:center; flex-wrap:wrap;
+  }
+  .secret-item {
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .secret-label {
+    font-size:clamp(8px,2.4vw,10px);
+    color:#666;
+    font-family:sans-serif;
+    font-weight:bold;
+    max-width:50px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
   .secret-num {
-    width:36px; height:36px;
+    width:38px; height:38px;
     background:#ffd166;
     border:3px solid #2d3142;
     border-radius:10px 3px 10px 3px / 3px 10px 3px 10px;
     display:flex; align-items:center; justify-content:center;
-    font-size:17px; font-weight:bold; color:#2d3142;
+    font-size:18px; font-weight:bold; color:#2d3142;
     box-shadow:2px 2px 0 rgba(45,49,66,0.4);
   }
   #overlay button {
@@ -336,27 +514,6 @@
   #overlay button.secondary { background:#118ab2; margin-left:5px; }
   #overlay button.tertiary { background:#06d6a0; }
 
-  .mode-btn {
-    display:block;
-    width:100%; max-width:280px;
-    margin:5px auto;
-    padding:10px;
-    font-family:inherit;
-    font-size:clamp(12px,3.6vw,14px);
-    font-weight:bold;
-    color:#2d3142;
-    background:#fff;
-    border:3px solid #2d3142;
-    border-radius:12px 4px 14px 6px / 6px 14px 4px 12px;
-    box-shadow:2.5px 2.5px 0 rgba(45,49,66,0.4);
-    cursor:pointer;
-    text-align:left;
-    -webkit-appearance:none;
-  }
-  .mode-btn:active { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0 rgba(45,49,66,0.4); }
-  .mode-btn .desc { display:block; font-size:0.8em; font-weight:normal; color:#666; margin-top:2px; }
-  .mode-btn.active { background:#ffd166; }
-
   .name-input {
     padding:9px 12px;
     font-size:14px;
@@ -372,17 +529,34 @@
   }
   .name-input:focus { border-color:#ef476f; box-shadow:0 0 0 3px rgba(239,71,111,0.2); }
 
+  .rules-box {
+    background:#fff8e7;
+    border:2px dashed #ffd166;
+    border-radius:10px;
+    padding:10px 14px;
+    margin:8px 0;
+    max-width:340px;
+    font-size:clamp(11px,3.1vw,13px);
+    color:#2d3142;
+    text-align:left;
+    line-height:1.5;
+  }
+  .rules-box b { color:#118ab2; }
+  .rules-box .exact { color:#06d6a0; font-weight:bold; }
+  .rules-box .color { color:#ff9a3c; font-weight:bold; }
+  .rules-box .wrong { color:#888; font-weight:bold; }
+
   .leaderboard {
     width:100%; max-width:340px;
-    margin:5px auto;
+    margin:8px auto;
     background:#fff;
     border:2.5px solid #2d3142;
     border-radius:11px;
-    padding:5px 8px;
+    padding:6px 9px;
     text-align:left;
   }
   .leaderboard h3 {
-    margin:0 0 4px;
+    margin:0 0 5px;
     font-size:12px; color:#2d3142; text-align:center;
     border-bottom:2px dashed #ffd166; padding-bottom:3px;
   }
@@ -395,265 +569,231 @@
   .lb-row .name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .lb-row .pts { color:#ef476f; font-weight:bold; }
 
-  .start-input-row { display:flex; gap:5px; justify-content:center; margin:10px 0; flex-wrap:wrap; }
-  .start-input {
-    width:46px; height:56px;
-    background:#fff;
+  .record-banner {
+    background:linear-gradient(135deg, #ffd166, #ff9a3c);
     border:3px solid #2d3142;
-    border-radius:11px 3px 11px 3px / 3px 11px 3px 11px;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Comic Sans MS', cursive;
-    font-size:22px; font-weight:bold;
-    color:#2d3142; text-align:center;
-    -webkit-appearance:none; outline:none;
-    box-shadow:2px 2.5px 0 rgba(45,49,66,0.35);
-    padding:0;
-  }
-  .start-input:focus { border-color:#ef476f; box-shadow:0 0 0 3px rgba(239,71,111,0.2); }
-  .start-input::placeholder { color:#ccc; }
-  .start-input.filled { border-color:#06d6a0; background:#d4f8e4; }
-  .hint-box {
-    background:#fff8e7;
-    border:2px dashed #ffd166;
-    border-radius:10px;
-    padding:10px 14px;
-    margin:8px 0;
-    max-width:300px;
-    font-size:clamp(11px,3.2vw,14px);
-    color:#2d3142;
-  }
-  .hint-box b { color:#118ab2; }
-  .penalty-note { font-size:11px; color:#ef476f; font-style:italic; margin-top:4px; }
-
-  /* Bảng giải thích từng số */
-  .explain-box {
-    width:100%; max-width:380px;
-    margin:10px 0;
-    background:#fff;
-    border:2.5px solid #2d3142;
     border-radius:11px;
-    padding:8px 10px;
-    text-align:left;
-    max-height:280px;
-    overflow-y:auto;
-  }
-  .explain-box h4 {
-    margin:0 0 6px;
-    font-size:12px; color:#118ab2;
-    text-align:center;
-    border-bottom:2px dashed #ffd166;
-    padding-bottom:3px;
-  }
-  .explain-summary {
-    background:#fff8e7;
-    border:2px dashed #ffd166;
-    border-radius:7px;
-    padding:5px 8px;
-    margin-bottom:8px;
-    font-size:11px;
-    color:#2d3142;
-    text-align:center;
-  }
-  .explain-summary b { color:#ef476f; }
-  .explain-slot {
-    background:#f8f9fc;
-    border-left:4px solid #118ab2;
-    border-radius:6px;
-    padding:6px 8px;
-    margin-bottom:6px;
-  }
-  .explain-slot-header {
-    font-size:12px;
+    padding:8px 14px;
+    margin:6px 0;
+    font-size:clamp(12px,3.4vw,15px);
     font-weight:bold;
-    color:#118ab2;
-    margin-bottom:4px;
-    padding-bottom:3px;
-    border-bottom:1px dashed #ccc;
-  }
-  .explain-slot-header b { color:#06d6a0; }
-  .explain-step {
-    font-size:11px;
     color:#2d3142;
-    padding:2px 0 2px 6px;
-    border-left:2px solid #ccc;
-    margin:2px 0 2px 3px;
-    line-height:1.3;
+    box-shadow:2px 2px 0 rgba(45,49,66,0.4);
+    animation:bounceRecord 0.6s ease-out;
   }
-  .explain-step.step-yes { border-left-color:#06d6a0; }
-  .explain-step.step-no { border-left-color:#ef476f; }
-  .explain-step.step-clue { border-left-color:#ffd166; background:#fff8e7; }
-  .explain-step .step-q { font-weight:bold; }
-  .explain-step .step-ans { font-weight:bold; }
-  .explain-step.step-yes .step-ans { color:#06d6a0; }
-  .explain-step.step-no .step-ans { color:#ef476f; }
-  .explain-step .step-elim { color:#ef476f; font-style:italic; }
-  .explain-step .step-remain { color:#118ab2; font-weight:bold; }
-  .explain-result {
-    font-size:11px;
-    font-weight:bold;
-    color:#06d6a0;
-    text-align:center;
-    padding:4px;
-    margin-top:4px;
-    background:#d4f8e4;
-    border-radius:5px;
-  }
-  .explain-empty {
-    text-align:center;
-    color:#888;
-    font-style:italic;
-    font-size:11px;
-    padding:10px;
+  @keyframes bounceRecord {
+    0% { transform:scale(0.3); opacity:0; }
+    60% { transform:scale(1.1); opacity:1; }
+    100% { transform:scale(1); }
   }
 
-  /* Nút tự hỏi */
-  #customBtn {
-    padding:5px 10px;
-    background:#ffd166;
-    color:#2d3142;
-    border:2px solid #2d3142;
-    border-radius:8px;
-    font-family:inherit;
-    font-weight:bold;
-    font-size:clamp(9px,2.5vw,11px);
-    cursor:pointer;
-    box-shadow:1.5px 1.5px 0 rgba(45,49,66,0.3);
-    margin-bottom:3px;
-    flex-shrink:0;
-    width:100%;
-  }
-  #customBtn:active { transform:translate(1px,1px); box-shadow:0.5px 0.5px 0 rgba(45,49,66,0.3); }
-
-  /* Form tự hỏi */
-  .form-overlay {
-    width:100%; max-width:380px;
-    background:#fffef8;
-    border:3px solid #2d3142;
-    border-radius:14px;
-    padding:14px;
-    box-shadow:4px 4px 0 rgba(45,49,66,0.4);
-    text-align:left;
-  }
-  .form-row {
-    margin:8px 0;
-    display:flex;
-    flex-wrap:wrap;
-    gap:5px;
-    align-items:center;
-    font-size:clamp(11px,3vw,13px);
-  }
-  .form-row label { font-weight:bold; color:#2d3142; }
-  .form-row select {
-    padding:6px 8px;
-    font-family:inherit;
-    font-size:clamp(11px,3vw,13px);
-    border:2px solid #2d3142;
-    border-radius:7px;
-    background:#fff;
-    color:#2d3142;
-    cursor:pointer;
-    outline:none;
-    -webkit-appearance:none;
-    min-width:50px;
-  }
-  .form-row select:focus { border-color:#ef476f; }
-  .form-preview {
-    background:#fff8e7;
-    border:2px dashed #ffd166;
-    border-radius:8px;
-    padding:8px;
-    margin:10px 0;
-    font-size:clamp(11px,3.2vw,14px);
-    font-weight:bold;
-    color:#2d3142;
-    text-align:center;
-  }
-  .form-preview b { color:#ef476f; }
-  .form-cost {
-    text-align:center;
-    font-size:11px;
-    color:#ef476f;
-    font-weight:bold;
-    margin-bottom:8px;
-  }
-  .form-btns { text-align:center; }
-  .form-btns button { margin:3px; }
-  .form-btns button.cancel { background:#888; }
+  .hidden { display:none !important; }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <header>
-    <h1>🔧 MÁY TURING CRAYON</h1>
-  </header>
 
-  <div id="hud">
-    <div class="stat" id="lvStat">Lv <span id="levelStat">1</span></div>
-    <div class="stat" id="qStat">❓ <span id="qLeft">8</span></div>
-    <div class="stat" id="scStat">🏆 <span id="scoreTotal">0</span></div>
+  <!-- MENU -->
+  <div id="menuView">
+    <div id="menuTitle">🎮 GAME HUB CRAYON</div>
+    <div id="menuSubtitle">Chọn 1 game để chơi</div>
+
+    <div class="game-card math" data-game="math">
+      <div class="icon">🧮</div>
+      <div class="info">
+        <div class="name">Math Puzzle</div>
+        <div class="desc">Giải phương trình tìm dãy số</div>
+        <div class="stats">
+          <span class="high">🏆 High: <span data-high="math">0</span></span>
+          <span class="total">💰 Total: <span data-total="math">0</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card mm" data-game="mastermind">
+      <div class="icon">🎯</div>
+      <div class="info">
+        <div class="name">Mastermind</div>
+        <div class="desc">Đoán mã bằng phản hồi trực quan</div>
+        <div class="stats">
+          <span class="high">🏆 High: <span data-high="mastermind">0</span></span>
+          <span class="total">💰 Total: <span data-total="mastermind">0</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card story" data-game="story">
+      <div class="icon">📖</div>
+      <div class="info">
+        <div class="name">Story Mode</div>
+        <div class="desc">Đọc truyện, tìm manh mối (Khó)</div>
+        <div class="stats">
+          <span class="high">🏆 High: <span data-high="story">0</span></span>
+          <span class="total">💰 Total: <span data-total="story">0</span></span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="targetPanel">
-    <div id="targetTitle">🎯 TÌM DÃY SỐ SAU BIẾT RẰNG:</div>
-    <div id="targetClue">...</div>
-    <div id="slotsRow"></div>
-    <div id="targetHint">💡 Gõ đáp án vào ô • Chạm số nhỏ để gạch bỏ</div>
+  <!-- GAME VIEW -->
+  <div id="gameView">
+    <header>
+      <button id="backBtn" type="button">←</button>
+      <h1 id="gameTitle"></h1>
+      <div id="titleSpacer"></div>
+    </header>
+
+    <div id="hud">
+      <div class="stat player">👤 <span id="playerNameDisplay">Ẩn danh</span></div>
+      <div class="stat" id="lvStat">Lv <span id="levelStat">1</span></div>
+      <div class="stat" id="attemptStat">Lượt <span id="attemptLeft">3</span></div>
+      <div class="stat high" id="highStat">🏆 <span id="highScore">0</span></div>
+      <div class="stat" id="scStat">💰 <span id="scoreTotal">0</span></div>
+    </div>
+
+    <div id="gameContent">
+      <div class="panel" id="mainPanel">
+        <div class="panel-title">
+          <span id="mainPanelTitle">📐</span>
+          <small id="mainPanelSub"></small>
+        </div>
+        <div id="mainList"></div>
+      </div>
+      <div id="hintDisplay"></div>
+      <div id="inputPanel">
+        <div id="inputTitle">Nhập dãy của bạn:</div>
+        <div id="inputRow"></div>
+      </div>
+    </div>
+
+    <div id="actionRow">
+      <button id="submitBtn" type="button">🎯 KIỂM TRA</button>
+      <button id="hintBtn" type="button">💡 HINT (-10đ)</button>
+    </div>
   </div>
 
-  <div id="questionsPanel">
-    <div id="qFilter"></div>
-    <button id="customBtn" type="button">✏️ TỰ TẠO CÂU HỎI</button>
-    <div id="questionsList"></div>
-  </div>
-
-  <button id="guessBtn" type="button">🎯 XÁC NHẬN ĐOÁN</button>
 </div>
 
 <div id="toast"></div>
-
-<div id="overlay">
-  <h2>🔧 MÁY TURING CRAYON</h2>
-  <p>Tìm dãy số bí ẩn bằng cách đặt câu hỏi Có/Không!</p>
-  <p style="font-size:11px;color:#666">Gõ đáp án trực tiếp vào ô số để đoán</p>
-  <button id="startBtn" type="button">BẮT ĐẦU 🖍️</button>
-</div>
+<div id="overlay" class="hidden"></div>
 
 <script>
 (function() {
 'use strict';
 
-// ============ MODES ============
-var MODES = {
-  easy:   { name:'Dễ',     startNums:3, min:0, max:9 },
-  normal: { name:'Thường', startNums:4, min:0, max:9 },
-  hard:   { name:'Khó',    startNums:5, min:0, max:9 }
+// ============ CONSTANTS ============
+var GAME_INFO = {
+  math:       { title: '🧮 Math Puzzle', icon: '🧮', submitLabel: '🎯 KIỂM TRA', maxAttempts: 3 },
+  mastermind: { title: '🎯 Mastermind',  icon: '🎯', submitLabel: '🎯 ĐOÁN',      maxAttempts: 8 },
+  story:      { title: '📖 Story Mode',  icon: '📖', submitLabel: '🎯 TRẢ LỜI',   maxAttempts: 3 }
 };
 
-// ============ STATE ============
-var currentMode = 'normal';
-var secret = [];
-var numCount = 3;
-var minVal = 0;
-var maxVal = 9;
-var questionsLeft = 8;
-var questionsTotal = 8;
-var askedMap = {};
-var questionCounter = 0;
-var gameOver = false;
-var totalScore = 0;
-var streak = 0;
-var playerName = 'Người chơi';
-var currentGuess = [];
-var level = 1;
-var eliminated = [];
-var currentFilter = 'all';
-var allQuestionsCache = [];
-var askedLog = [];
-var currentHint = '';
-var hintType = ''; // loại manh mối
+// Danh sách câu chuyện (Đã thêm câu khó 4-5 biến)
+var STORIES = [
+  {
+    title: "🍪 Bánh quy của em",
+    text: "Ba anh em chia nhau ăn bánh quy. Em út ăn 2 cái. Anh hai ăn gấp đôi em út. Anh cả ăn bằng tổng của hai em cộng 1. Hỏi mỗi người ăn bao nhiêu cái?",
+    answer: [2, 4, 7],
+    labels: ["Em út", "Anh hai", "Anh cả"]
+  },
+  {
+    title: "🌱 Vườn rau nhà An",
+    text: "Vườn nhà An có 3 luống rau. Luống 1 có 5 cây. Luống 2 có số cây bằng luống 1 trừ 3. Luống 3 có số cây gấp ba luống 2. Hỏi mỗi luống có bao nhiêu cây?",
+    answer: [5, 2, 6],
+    labels: ["Luống 1", "Luống 2", "Luống 3"]
+  },
+  {
+    title: "📚 Thư viện trường",
+    text: "Ba bạn mượn sách thư viện. An mượn 4 cuốn. Bình mượn nhiều hơn An 1 cuốn. Cường mượn ít hơn Bình 2 cuốn. Hỏi mỗi bạn mượn bao nhiêu cuốn?",
+    answer: [4, 5, 3],
+    labels: ["An", "Bình", "Cường"]
+  },
+  {
+    title: "⚽ Giải bóng đá",
+    text: "Ba đội bóng thi đấu. Đội 1 ghi 3 bàn. Đội 2 ghi gấp đôi đội 1. Đội 3 ghi bằng đội 2 trừ 4. Hỏi mỗi đội ghi bao nhiêu bàn?",
+    answer: [3, 6, 2],
+    labels: ["Đội 1", "Đội 2", "Đội 3"]
+  },
+  {
+    title: "🍰 Tiệm bánh",
+    text: "Bốn đầu bếp làm bánh. Bếp 1 làm 3 cái. Bếp 2 làm hơn bếp 1 một cái. Bếp 3 làm bằng tổng hai người đầu trừ 1. Bếp 4 làm bằng bếp 3 trừ bếp 2. Hỏi mỗi người làm bao nhiêu cái?",
+    answer: [3, 4, 6, 2],
+    labels: ["Bếp 1", "Bếp 2", "Bếp 3", "Bếp 4"]
+  },
+  {
+    title: "🎵 Ban nhạc nhí",
+    text: "Bốn bạn chơi nhạc. A chơi 5 nốt. B chơi ít hơn A 2 nốt. C chơi gấp đôi B. D chơi bằng C chia 2. Hỏi mỗi bạn chơi bao nhiêu nốt?",
+    answer: [5, 3, 6, 3],
+    labels: ["Bạn A", "Bạn B", "Bạn C", "Bạn D"]
+  },
+  {
+    title: "✈️ Chuyến du lịch",
+    text: "Năm bạn đi du lịch. A đi 2 ngày. B đi gấp đôi A. C đi bằng A cộng B. D đi bằng C trừ A. E đi bằng D chia 2. Hỏi mỗi bạn đi bao nhiêu ngày?",
+    answer: [2, 4, 6, 4, 2],
+    labels: ["Bạn A", "Bạn B", "Bạn C", "Bạn D", "Bạn E"]
+  },
+  {
+    title: "🔢 Bí ẩn năm số",
+    text: "Năm số bí ẩn: Số 1 = 1. Số 2 = 2. Số 3 bằng Số 1 cộng Số 2. Số 4 bằng Số 3 cộng 1. Số 5 bằng Số 4 trừ Số 2. Hỏi 5 số đó là gì?",
+    answer: [1, 2, 3, 4, 2],
+    labels: ["Số 1", "Số 2", "Số 3", "Số 4", "Số 5"]
+  },
+  {
+    title: "🕊️ Hạc giấy",
+    text: "Bốn bạn thi gấp hạc giấy. A gấp 3 con. B gấp gấp ba A. C gấp bằng B trừ A. D gấp bằng C cộng 1. Hỏi mỗi bạn gấp bao nhiêu con?",
+    answer: [3, 9, 6, 7],
+    labels: ["Bạn A", "Bạn B", "Bạn C", "Bạn D"]
+  },
+  {
+    title: "🍎 Rổ táo",
+    text: "Bốn rổ táo trong kho. Rổ 1 có 4 quả. Rổ 2 có ít hơn rổ 1 là 1 quả. Rổ 3 có bằng rổ 1 cộng rổ 2. Rổ 4 có bằng rổ 3 trừ 2. Hỏi mỗi rổ có bao nhiêu quả?",
+    answer: [4, 3, 7, 5],
+    labels: ["Rổ 1", "Rổ 2", "Rổ 3", "Rổ 4"]
+  },
+  {
+    title: "✏️ Bút chì",
+    text: "Năm bạn có số bút chì khác nhau. A có 8 bút. B kém A 2 bút. C bằng nửa B. D hơn C 4 bút. E kém D 3 bút. Hỏi mỗi bạn có bao nhiêu bút?",
+    answer: [8, 6, 3, 7, 4],
+    labels: ["Bạn A", "Bạn B", "Bạn C", "Bạn D", "Bạn E"]
+  },
+  {
+    title: "🧮 Phép toán bí ẩn",
+    text: "Năm số bí ẩn. Số 1 = 4. Số 2 = Số 1 nhân 2. Số 3 = Số 2 trừ 3. Số 4 = Số 3 cộng Số 1. Số 5 = Số 4 trừ 4. Hỏi 5 số đó là gì?",
+    answer: [4, 8, 5, 9, 5],
+    labels: ["Số 1", "Số 2", "Số 3", "Số 4", "Số 5"]
+  }
+];
 
-// DOM
+var storyDeck = [];
+
+// ============ GLOBAL STATE ============
+var currentGame = null;
+var playerName = 'Người chơi';
+
+// Per-game state
+var games = {
+  math:       { level: 1, total: 0, high: 0, secret: [], attempts: 0, maxAttempts: 3, hintUsed: false, revealed: {}, currentGuess: [], equations: [], gameOver: false },
+  mastermind: { level: 1, total: 0, high: 0, secret: [], attempts: 0, maxAttempts: 8, hintsUsed: 0, maxHints: 2, revealed: {}, currentGuess: [], history: [], gameOver: false },
+  story:      { level: 1, total: 0, high: 0, secret: [], attempts: 0, maxAttempts: 3, hintUsed: false, revealed: {}, currentGuess: [], storyIdx: 0, gameOver: false }
+};
+
+// ============ LS HELPERS ============
+function lsGet(k, d) { try { var v = localStorage.getItem(k); return v !== null ? v : d; } catch(e) { return d; } }
+function lsSet(k, v) { try { localStorage.setItem(k, String(v)); } catch(e) {} }
+function lsGetNum(k, d) { var n = parseInt(lsGet(k, String(d)), 10); return isNaN(n) ? d : n; }
+function loadGameStats(g) {
+  games[g].total = lsGetNum('hub_' + g + '_total', 0);
+  games[g].high = lsGetNum('hub_' + g + '_high', 0);
+}
+function saveGameStats(g) {
+  lsSet('hub_' + g + '_total', games[g].total);
+  lsSet('hub_' + g + '_high', games[g].high);
+}
+function getLB(g) { try { return JSON.parse(lsGet('hub_' + g + '_lb', '[]')); } catch(e) { return []; } }
+function saveLBTo(g, lb) { lsSet('hub_' + g + '_lb', JSON.stringify(lb)); }
+
+// ============ DOM REFS ============
 var els = {};
 
 // ============ READY ============
@@ -663,29 +803,58 @@ function ready(fn) {
 }
 
 ready(function() {
-  els.qLeftEl = document.getElementById('qLeft');
-  els.scoreTotalEl = document.getElementById('scoreTotal');
+  els.menuView = document.getElementById('menuView');
+  els.gameView = document.getElementById('gameView');
+  els.gameTitle = document.getElementById('gameTitle');
+  els.backBtn = document.getElementById('backBtn');
+  els.playerNameDisplay = document.getElementById('playerNameDisplay');
   els.levelStatEl = document.getElementById('levelStat');
-  els.questionsListEl = document.getElementById('questionsList');
-  els.qFilterEl = document.getElementById('qFilter');
-  els.overlay = document.getElementById('overlay');
-  els.guessBtn = document.getElementById('guessBtn');
+  els.attemptLeftEl = document.getElementById('attemptLeft');
+  els.attemptStatEl = document.getElementById('attemptStat');
+  els.scStatEl = document.getElementById('scStat');
+  els.highStatEl = document.getElementById('highStat');
+  els.highScoreEl = document.getElementById('highScore');
+  els.scoreTotalEl = document.getElementById('scoreTotal');
+  els.mainPanelTitle = document.getElementById('mainPanelTitle');
+  els.mainPanelSub = document.getElementById('mainPanelSub');
+  els.mainListEl = document.getElementById('mainList');
+  els.inputRowEl = document.getElementById('inputRow');
+  els.inputTitleEl = document.getElementById('inputTitle');
+  els.hintDisplayEl = document.getElementById('hintDisplay');
+  els.submitBtn = document.getElementById('submitBtn');
+  els.hintBtn = document.getElementById('hintBtn');
   els.toast = document.getElementById('toast');
-  els.qStat = document.getElementById('qStat');
-  els.slotsRow = document.getElementById('slotsRow');
-  els.scStat = document.getElementById('scStat');
-  els.targetClue = document.getElementById('targetClue');
+  els.overlay = document.getElementById('overlay');
 
-  try {
-    playerName = localStorage.getItem('turingCrayonName') || 'Người chơi';
-    totalScore = parseInt(localStorage.getItem('turingCrayonScore')) || 0;
-  } catch(e) {}
-  els.scoreTotalEl.textContent = totalScore;
+  for (var g in games) loadGameStats(g);
+  playerName = lsGet('hub_playerName', 'Người chơi');
+  els.playerNameDisplay.textContent = playerName;
 
-  document.getElementById('startBtn').onclick = showModeSelect;
-  els.guessBtn.onclick = handleGuess;
-  document.getElementById('customBtn').onclick = showCustomForm;
+  var cards = document.querySelectorAll('.game-card');
+  for (var i = 0; i < cards.length; i++) {
+    (function(card) {
+      card.addEventListener('click', function() {
+        var game = card.getAttribute('data-game');
+        selectGame(game);
+      });
+    })(cards[i]);
+  }
+
+  els.backBtn.onclick = backToMenu;
+  els.submitBtn.onclick = submitGuess;
+  els.hintBtn.onclick = applyHint;
+  updateMenuDisplay();
 });
+
+// ============ MENU DISPLAY ============
+function updateMenuDisplay() {
+  for (var g in games) {
+    var highEl = document.querySelector('[data-high="' + g + '"]');
+    var totalEl = document.querySelector('[data-total="' + g + '"]');
+    if (highEl) highEl.textContent = games[g].high;
+    if (totalEl) totalEl.textContent = games[g].total;
+  }
+}
 
 // ============ TOAST ============
 var toastTimer = null;
@@ -693,8 +862,8 @@ function showToast(text, type) {
   els.toast.textContent = text;
   els.toast.className = 'show ' + (type || 'info');
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { els.toast.className = ''; }, 1000);
-  try { if (navigator.vibrate) navigator.vibrate(type === 'yes' ? 25 : [25,35,25]); } catch(e) {}
+  toastTimer = setTimeout(function() { els.toast.className = ''; }, 1200);
+  try { if (navigator.vibrate) navigator.vibrate(type === 'yes' ? 25 : (type === 'no' ? [25,35,25] : 15)); } catch(e) {}
   playBeep(type === 'yes');
 }
 
@@ -716,7 +885,6 @@ function playBeep(high) {
   } catch(e) {}
 }
 
-// ============ PULSE ============
 function pulseStat(el) {
   if (!el) return;
   el.classList.remove('pulse');
@@ -731,1243 +899,583 @@ function showOverlay(html) {
 }
 function hideOverlay() { els.overlay.classList.add('hidden'); }
 
-// ============ TÍNH ĐIỂM ============
-function calcBasePoints(lv) {
-  return Math.min(300, 100 + (lv - 1) * 15);
+// ============ MENU -> GAME ============
+function selectGame(game) {
+  currentGame = game;
+  var info = GAME_INFO[game];
+  els.menuView.classList.add('hidden');
+  els.gameView.classList.add('show');
+  els.gameTitle.textContent = info.title;
+  els.submitBtn.textContent = info.submitLabel;
+
+  var g = games[game];
+  els.levelStatEl.textContent = g.level;
+  els.highScoreEl.textContent = g.high;
+  els.scoreTotalEl.textContent = g.total;
+  els.playerNameDisplay.textContent = playerName;
+
+  showNamePrompt();
 }
 
-function getQuestionCost(tier) {
-  if (tier === 1) return 15;
-  if (tier === 2) return 10;
-  return 5;
+function backToMenu() {
+  if (currentGame) saveGameStats(currentGame);
+  currentGame = null;
+  els.gameView.classList.remove('show');
+  els.menuView.classList.remove('hidden');
+  updateMenuDisplay();
+  hideOverlay();
 }
 
-// ============ MODE SELECT ============
-function showModeSelect() {
-  var html = '<h2>🔧 CHỌN CHẾ ĐỘ</h2>';
+// ============ NAME PROMPT ============
+function showNamePrompt() {
+  var html = '<h2>' + GAME_INFO[currentGame].icon + ' ' + GAME_INFO[currentGame].title + '</h2>';
   html += '<p>Tên của bạn:</p>';
   html += '<input id="nameInput" class="name-input" type="text" maxlength="16" placeholder="Nhập tên..." value="' + escapeHtml(playerName) + '">';
-  html += '<p style="margin-top:6px;font-size:11px;color:#666">Chọn độ khó:</p>';
-  for (var key in MODES) {
-    var m = MODES[key];
-    html += '<button class="mode-btn' + (key === currentMode ? ' active' : '') + '" data-mode="' + key + '" type="button">';
-    html += '📚 ' + m.name;
-    html += '<span class="desc">Bắt đầu ' + m.startNums + ' số (0-9)</span>';
-    html += '</button>';
-  }
-  html += '<button id="goBtn" type="button" style="margin-top:10px">VÀO GAME 🖍️</button>';
+  html += '<div class="rules-box">' + getRulesHTML(currentGame) + '</div>';
+  html += '<button id="goBtn" type="button">BẮT ĐẦU 🖍️</button>';
   showOverlay(html);
-
-  var btns = els.overlay.querySelectorAll('.mode-btn');
-  for (var i = 0; i < btns.length; i++) {
-    (function(btn) {
-      btn.onclick = function() {
-        var all = els.overlay.querySelectorAll('.mode-btn');
-        for (var j = 0; j < all.length; j++) all[j].classList.remove('active');
-        btn.classList.add('active');
-        currentMode = btn.getAttribute('data-mode');
-      };
-    })(btns[i]);
-  }
 
   document.getElementById('goBtn').onclick = function() {
     var input = document.getElementById('nameInput');
     var name = (input.value || '').trim() || 'Ẩn danh';
     if (name.length > 16) name = name.slice(0, 16);
     playerName = name;
-    try { localStorage.setItem('turingCrayonName', name); } catch(e) {}
-    level = 1;
-    totalScore = 0;
-    streak = 0;
-    els.scoreTotalEl.textContent = 0;
-    els.levelStatEl.textContent = 1;
-    prepareVan();
+    lsSet('hub_playerName', name);
+    els.playerNameDisplay.textContent = playerName;
+    
+    games[currentGame].level = 1;
+    // Reset story deck khi vào game mới
+    if (currentGame === 'story') storyDeck = []; 
+    prepareGame(currentGame);
   };
 }
 
-// ============ LEVEL CONFIG ============
-function getLevelConfig(lv) {
-  lv = Math.max(1, parseInt(lv, 10) || 1);
-  var m = MODES[currentMode] || MODES.normal;
-  var nums = Math.min(7, m.startNums + Math.floor((lv - 1) / 3));
-  nums = Math.max(3, nums);
-  var qs = 8 + (nums - 3) * 2 + Math.min(4, lv - 1);
-  return { nums: nums, min: m.min || 0, max: m.max || 9, questions: qs };
+function getRulesHTML(game) {
+  if (game === 'math') {
+    return '<b>📖 LUẬT CHƠI:</b><br>' +
+           '• Tìm dãy <b>3-5 số</b> (0-9) từ các phương trình.<br>' +
+           '• PT gồm: cộng, trừ, nhân, chia, bình phương, hỗn hợp.<br>' +
+           '• Có <b>3 lần</b> kiểm tra. Đúng lần 1 → điểm cao.<br>' +
+           '• <b>1 hint</b> (-10đ) để lộ 1 vị trí.';
+  }
+  if (game === 'mastermind') {
+    return '<b>📖 LUẬT CHƠI:</b><br>' +
+           '• Đoán dãy <b>3-5 số</b> (0-9), có thể trùng.<br>' +
+           '• Phản hồi bên phải là <b>SỐ LƯỢNG</b> (không phải vị trí):<br>' +
+           '&nbsp;&nbsp;<span class="exact">1 ✓</span> = 1 số đúng vị trí<br>' +
+           '&nbsp;&nbsp;<span class="color">1 ◐</span> = 1 số đúng nhưng sai vị trí<br>' +
+           '&nbsp;&nbsp;<span class="wrong">1 ✕</span> = 1 số không có trong dãy.<br>' +
+           '• Có <b>8 lượt</b>. <b>2 hint</b> (mỗi hint -10đ).';
+  }
+  if (game === 'story') {
+    return '<b>📖 LUẬT CHƠI:</b><br>' +
+           '• Đọc truyện, suy luận tìm dãy số.<br>' +
+           '• Chú ý tên nhân vật dưới các ô nhập liệu.<br>' +
+           '• Có <b>3 lần</b> trả lời. Đúng lần 1 → điểm cao.<br>' +
+           '• <b>1 hint</b> (-10đ) để lộ 1 vị trí.<br>' +
+           '• Các câu chuyện được xáo trộn ngẫu nhiên.';
+  }
+  return '';
 }
 
-// ============ PREPARE VÁN ============
-function prepareVan() {
-  var cfg = getLevelConfig(level);
-  numCount = cfg.nums;
-  minVal = cfg.min;
-  maxVal = cfg.max;
-  questionsLeft = cfg.questions;
-  questionsTotal = cfg.questions;
-  askedMap = {};
-  questionCounter = 0;
-  askedLog = [];
-  gameOver = false;
-  currentGuess = [];
-  currentFilter = 'all';
-  eliminated = [];
-
-  for (var i = 0; i < numCount; i++) {
-    currentGuess.push(null);
-    eliminated.push({});
-  }
-
-  secret = [];
-  for (var j = 0; j < numCount; j++) {
-    secret.push(minVal + Math.floor(Math.random() * (maxVal - minVal + 1)));
-  }
-
-  els.levelStatEl.textContent = level;
-  els.qLeftEl.textContent = questionsLeft;
-
-  showStartScreen();
-}
-
-// ============ MANH MỐI KHỞI ĐỘNG ============
-function generateHint() {
-  var hints = [];
-  var types = [];
-  var sum = 0;
-  for (var i = 0; i < secret.length; i++) sum += secret[i];
-  var avg = Math.round(sum / secret.length * 10) / 10;
-
-  hints.push('Tổng ' + numCount + ' số = ' + sum + '.');
-  types.push('sum:' + sum);
-
-  hints.push('Trung bình cộng = ' + avg + '.');
-  types.push('avg:' + avg);
-
-  hints.push('Số đầu + số cuối = ' + (secret[0] + secret[secret.length-1]) + '.');
-  types.push('firstlast:' + (secret[0] + secret[secret.length-1]));
-
-  if (numCount >= 3) {
-    hints.push('Tổng 2 số đầu = ' + (secret[0] + secret[1]) + '.');
-    types.push('first2:' + (secret[0] + secret[1]));
-
-    var maxIdx = 0, minIdx = 0;
-    for (var k = 1; k < secret.length; k++) {
-      if (secret[k] > secret[maxIdx]) maxIdx = k;
-      if (secret[k] < secret[minIdx]) minIdx = k;
+// ============ STORY LOGIC ============
+function getNextStoryIndex() {
+  if (storyDeck.length === 0) {
+    storyDeck = [];
+    for (var i = 0; i < STORIES.length; i++) storyDeck.push(i);
+    // Xáo trộn mảng
+    for (var j = storyDeck.length - 1; j > 0; j--) {
+      var k = Math.floor(Math.random() * (j + 1));
+      var tmp = storyDeck[j]; storyDeck[j] = storyDeck[k]; storyDeck[k] = tmp;
     }
-    hints.push('Số lớn nhất - số nhỏ nhất = ' + (secret[maxIdx] - secret[minIdx]) + '.');
-    types.push('maxmin:' + (secret[maxIdx] - secret[minIdx]));
-
-    hints.push('Số lớn nhất = ' + secret[maxIdx] + '.');
-    types.push('max:' + secret[maxIdx]);
-
-    hints.push('Số nhỏ nhất = ' + secret[minIdx] + '.');
-    types.push('min:' + secret[minIdx]);
   }
-
-  var idx = Math.floor(Math.random() * hints.length);
-  hintType = types[idx];
-  return hints[idx];
+  return storyDeck.pop();
 }
 
-// ============ MÀN HÌNH KHỞI ĐỘNG ============
-function showStartScreen() {
-  currentHint = generateHint();
+// ============ PREPARE GAME ============
+function prepareGame(game) {
+  var g = games[game];
+  g.attempts = 0;
+  g.hintUsed = false;
+  g.hintsUsed = 0;
+  g.revealed = {};
+  g.currentGuess = [];
+  g.history = [];
+  g.gameOver = false;
+  g.secret = [];
 
-  var html = '<h2>🎲 KHỞI ĐỘNG</h2>';
-  html += '<div class="hint-box">';
-  html += '<b>Tìm dãy số sau biết:</b><br>';
-  html += currentHint;
-  html += '</div>';
-
-  html += '<p style="font-size:12px;color:#666;margin-top:10px">Nếu biết đáp án, nhập luôn:</p>';
-
-  html += '<div class="start-input-row" id="startInputRow">';
-  for (var i = 0; i < numCount; i++) {
-    html += '<input class="start-input" data-pos="' + i + '" type="tel" inputmode="numeric" maxlength="1" placeholder="?" autocomplete="off">';
-  }
-  html += '</div>';
-
-  html += '<p class="penalty-note">⚠️ Đoán sai sẽ bị -10 điểm</p>';
-
-  html += '<div style="margin-top:10px">';
-  html += '<button id="quickGuessBtn" type="button">ĐOÁN NGAY</button>';
-  html += '<button id="startGameBtn" type="button" class="secondary">BẮT ĐẦU ĐI TÌM 🔍</button>';
-  html += '</div>';
-
-  showOverlay(html);
-
-  var startInputs = els.overlay.querySelectorAll('.start-input');
-  var startVals = [];
-  for (var s = 0; s < numCount; s++) startVals.push(null);
-
-  for (var k = 0; k < startInputs.length; k++) {
-    (function(inp, idx) {
-      inp.oninput = function() {
-        var val = inp.value.replace(/[^0-9]/g, '');
-        if (val.length > 1) val = val.slice(-1);
-        inp.value = val;
-        if (val !== '') {
-          startVals[idx] = parseInt(val, 10);
-          inp.classList.add('filled');
-          if (idx < numCount - 1) {
-            var next = els.overlay.querySelector('.start-input[data-pos="' + (idx+1) + '"]');
-            if (next) setTimeout(function() { next.focus(); }, 50);
-          }
-        } else {
-          startVals[idx] = null;
-          inp.classList.remove('filled');
-        }
-      };
-      inp.onkeydown = function(e) {
-        if (e.key === 'Backspace' && inp.value === '' && idx > 0) {
-          var prev = els.overlay.querySelector('.start-input[data-pos="' + (idx-1) + '"]');
-          if (prev) { e.preventDefault(); prev.focus(); prev.select(); }
-        }
-        if (e.key === 'Enter') {
-          e.preventDefault(); inp.blur();
-          document.getElementById('quickGuessBtn').click();
-        }
-      };
-      inp.onfocus = function() { setTimeout(function() { inp.select(); }, 0); };
-    })(startInputs[k], k);
+  if (game === 'math') {
+    var cfg = getLevelConfig(game, g.level);
+    g.maxAttempts = 3;
+    for (var i = 0; i < cfg.nums; i++) {
+      g.secret.push(Math.floor(Math.random() * 10));
+      g.currentGuess.push(null);
+    }
+    g.equations = buildMathPuzzle(g.secret);
+  } else if (game === 'mastermind') {
+    var cfg2 = getLevelConfig(game, g.level);
+    g.maxAttempts = 8;
+    for (var j = 0; j < cfg2.nums; j++) {
+      g.secret.push(Math.floor(Math.random() * 10));
+      g.currentGuess.push(null);
+    }
+  } else if (game === 'story') {
+    var storyIdx = getNextStoryIndex(); // Lấy ngẫu nhiên từ Deck
+    g.storyIdx = storyIdx;
+    var story = STORIES[storyIdx];
+    g.secret = story.answer.slice();
+    g.maxAttempts = 3;
+    for (var k = 0; k < g.secret.length; k++) {
+      g.currentGuess.push(null);
+    }
   }
 
-  document.getElementById('quickGuessBtn').onclick = function() {
-    var allFilled = true;
-    for (var i = 0; i < numCount; i++) if (startVals[i] === null) allFilled = false;
-    if (!allFilled) { showToast('Nhập đủ ' + numCount + ' số!', 'no'); return; }
-    quickGuess(startVals);
-  };
+  els.levelStatEl.textContent = g.level;
+  els.highScoreEl.textContent = g.high;
+  els.scoreTotalEl.textContent = g.total;
+  els.submitBtn.disabled = false;
+  els.hintBtn.disabled = false;
+  els.hintDisplayEl.classList.remove('show');
+  els.hintDisplayEl.textContent = '';
 
-  document.getElementById('startGameBtn').onclick = function() {
-    startMainGame();
-  };
-}
-
-function quickGuess(vals) {
-  var correct = true;
-  for (var i = 0; i < numCount; i++) {
-    if (vals[i] !== secret[i]) { correct = false; break; }
-  }
-
-  if (correct) {
-    gameOver = true;
-    var pts = calcBasePoints(level) * 2 + (numCount - 3) * 25;
-    var modeBonus = { easy: 0, normal: 15, hard: 35 }[currentMode] || 0;
-    pts += modeBonus;
-    if (streak >= 3) pts = Math.floor(pts * 1.5);
-    streak++;
-    totalScore += pts;
-    els.scoreTotalEl.textContent = totalScore;
-    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
-    saveToLB(pts);
-    showQuickWin(vals, pts);
-  } else {
-    totalScore = Math.max(0, totalScore - 10);
-    els.scoreTotalEl.textContent = totalScore;
-    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
-    showToast('-10 điểm', 'no');
-    setTimeout(function() { startMainGame(); }, 1000);
-  }
-}
-
-function showQuickWin(vals, pts) {
-  var html = '<h2 class="win">🎉 ĐOÁN ĐÚNG NGAY!</h2>';
-  html += '<p>Bạn đã tìm ra dãy số từ manh mối!</p>';
-  html += '<div class="secret-reveal">';
-  for (var i = 0; i < vals.length; i++) html += '<div class="secret-num">' + vals[i] + '</div>';
-  html += '</div>';
-  html += '<p>+<b>' + pts + '</b> điểm (thưởng đoán nhanh ×2)</p>';
-  html += '<button id="nextLvBtn" type="button" class="tertiary">LEVEL TIẾP ▶</button>';
-  html += '<button id="againBtn" type="button" class="secondary">CHƠI LẠI</button>';
-  showOverlay(html);
-
-  document.getElementById('nextLvBtn').onclick = function() {
-    level++; prepareVan();
-  };
-  document.getElementById('againBtn').onclick = function() {
-    prepareVan();
-  };
-}
-
-// ============ START MAIN GAME ============
-function startMainGame() {
-  els.qLeftEl.textContent = questionsLeft;
-  els.guessBtn.disabled = false;
-  els.targetClue.textContent = '"' + currentHint + '"';
-  renderSlots();
-  renderFilter();
-  buildQuestionsList();
+  renderGame();
+  updateHUD();
   hideOverlay();
 }
 
-// ============ RENDER SLOTS ============
-function renderSlots() {
+function getLevelConfig(game, lv) {
+  lv = Math.max(1, parseInt(lv, 10) || 1);
+  var nums;
+  if (game === 'math') {
+    nums = Math.min(5, 3 + Math.floor((lv - 1) / 2));
+  } else if (game === 'mastermind') {
+    nums = Math.min(5, 3 + Math.floor((lv - 1) / 2));
+  } else {
+    nums = 3;
+  }
+  return { nums: nums };
+}
+
+// ============ RENDER GAME ============
+function renderGame() {
+  if (currentGame === 'math') renderMath();
+  else if (currentGame === 'mastermind') renderMastermind();
+  else if (currentGame === 'story') renderStory();
+
+  renderInput();
+  renderHint();
+}
+
+function renderMath() {
+  var g = games.math;
+  els.mainPanelTitle.textContent = '📐 Phương trình gợi ý';
+  els.mainPanelSub.textContent = g.equations.length + ' PT';
+
   var html = '';
-  for (var i = 0; i < numCount; i++) {
-    html += '<div class="slot" data-slot="' + i + '">';
-    html += '<div class="slot-label">Số ' + (i+1) + '</div>';
-    html += '<input class="slot-main" data-slot="' + i + '" type="tel" inputmode="numeric" maxlength="1" placeholder="?" autocomplete="off">';
-    html += '<div class="mini-grid" data-slot="' + i + '">';
-    for (var v = minVal; v <= maxVal; v++) {
-      var elim = eliminated[i] && eliminated[i][v];
-      html += '<button class="mini-cell' + (elim ? ' eliminated' : '') + '" data-slot="' + i + '" data-val="' + v + '" type="button">' + v + '</button>';
+  for (var i = 0; i < g.equations.length; i++) {
+    var eq = g.equations[i];
+    html += '<div class="equation' + (eq.hard ? ' hard' : '') + '">';
+    html += '<span class="eq-num">' + (i+1) + '</span>';
+    html += escapeHtml(eq.text);
+    html += '</div>';
+  }
+  els.mainListEl.innerHTML = html;
+}
+
+function renderMastermind() {
+  var g = games.mastermind;
+  els.mainPanelTitle.textContent = '📝 Lịch sử đoán';
+  els.mainPanelSub.textContent = g.history.length + ' lượt';
+
+  if (g.history.length === 0) {
+    els.mainListEl.innerHTML = '<div class="mm-empty">Chưa có lượt nào. Nhập dãy bên dưới 👇</div>';
+    return;
+  }
+
+  var html = '';
+  for (var i = g.history.length - 1; i >= 0; i--) {
+    var item = g.history[i];
+    var isWin = item.exact === g.secret.length;
+    var wrong = g.secret.length - item.exact - item.colorOnly;
+    
+    html += '<div class="mm-history' + (isWin ? ' win' : '') + '">';
+    html += '<span class="mm-num">#' + (i+1) + '</span>';
+    html += '<span class="mm-guess">';
+    for (var j = 0; j < item.guess.length; j++) {
+      html += '<span class="mm-digit">' + item.guess[j] + '</span>';
     }
-    html += '</div>';
+    html += '</span>';
+    
+    // Giao diện mới: Hiện số lượng rõ ràng (VD: 1✓ 1◐ 1✕)
+    html += '<span class="mm-feedback">';
+    if (item.exact > 0) html += '<span class="fb-count exact">' + item.exact + ' ✓</span>';
+    if (item.colorOnly > 0) html += '<span class="fb-count color">' + item.colorOnly + ' ◐</span>';
+    if (wrong > 0) html += '<span class="fb-count wrong">' + wrong + ' ✕</span>';
+    html += '</span>';
     html += '</div>';
   }
-  els.slotsRow.innerHTML = html;
+  els.mainListEl.innerHTML = html;
+}
 
-  var cells = els.slotsRow.querySelectorAll('.mini-cell');
-  for (var c = 0; c < cells.length; c++) {
-    (function(cell) {
-      cell.onclick = function(e) {
-        if (e) e.stopPropagation();
-        var slot = parseInt(cell.getAttribute('data-slot'), 10);
-        var val = parseInt(cell.getAttribute('data-val'), 10);
-        toggleEliminate(slot, val, cell);
-      };
-    })(cells[c]);
+function renderStory() {
+  var g = games.story;
+  var story = STORIES[g.storyIdx];
+  els.mainPanelTitle.textContent = '📖 Câu chuyện';
+  els.mainPanelSub.textContent = 'Tập ' + (g.storyIdx + 1) + '/' + STORIES.length;
+
+  var html = '<div class="story-card">';
+  html += '<div class="story-title">' + escapeHtml(story.title) + '</div>';
+  html += '<div class="story-text">' + escapeHtml(story.text) + '</div>';
+  html += '</div>';
+  els.mainListEl.innerHTML = html;
+}
+
+// ============ RENDER HINT ============
+function renderHint() {
+  var g = games[currentGame];
+  var keys = Object.keys(g.revealed);
+  if (keys.length === 0) {
+    els.hintDisplayEl.classList.remove('show');
+    els.hintDisplayEl.textContent = '';
+    return;
   }
+  var parts = [];
+  var n = g.secret.length;
+  var labels = (currentGame === 'story') ? STORIES[g.storyIdx].labels : null;
+  
+  for (var i = 0; i < n; i++) {
+    if (i in g.revealed) {
+      var label = labels ? labels[i] : ('Số ' + (i+1));
+      parts.push(label + ' = ' + g.revealed[i]);
+    }
+  }
+  els.hintDisplayEl.textContent = '💡 ' + parts.join(' • ');
+  els.hintDisplayEl.classList.add('show');
+}
 
-  var inputs = els.slotsRow.querySelectorAll('.slot-main');
+// ============ RENDER INPUT ============
+function renderInput() {
+  var g = games[currentGame];
+  var n = g.secret.length;
+  var labels = (currentGame === 'story') ? STORIES[g.storyIdx].labels : null;
+  
+  var html = '';
+  for (var i = 0; i < n; i++) {
+    var isRev = (i in g.revealed);
+    var val = '';
+    if (isRev) val = g.revealed[i];
+    else if (g.currentGuess[i] !== null && g.currentGuess[i] !== undefined) val = g.currentGuess[i];
+
+    var slotLabel = labels ? labels[i] : ('Số ' + (i+1));
+
+    html += '<div class="input-slot">';
+    html += '<div class="slot-label">' + escapeHtml(slotLabel) + '</div>';
+    html += '<input class="slot-input' +
+            (isRev ? ' revealed' : '') +
+            (val !== '' ? ' filled' : '') +
+            '" data-pos="' + i + '" type="tel" inputmode="numeric" maxlength="1" placeholder="?" value="' + val + '"' +
+            (isRev ? ' readonly' : '') + ' autocomplete="off">';
+    html += '</div>';
+  }
+  els.inputRowEl.innerHTML = html;
+  bindInputs();
+}
+
+function bindInputs() {
+  var g = games[currentGame];
+  var inputs = els.inputRowEl.querySelectorAll('.slot-input');
   for (var k = 0; k < inputs.length; k++) {
     (function(inp, idx) {
+      if (inp.readOnly) return;
+
       inp.oninput = function() {
-        if (gameOver) { inp.value = ''; return; }
-        var val = inp.value.replace(/[^0-9]/g, '');
-        if (val.length > 1) val = val.slice(-1);
-        inp.value = val;
-        if (val !== '') {
-          currentGuess[idx] = parseInt(val, 10);
+        if (g.gameOver) { inp.value = ''; return; }
+        var v = inp.value.replace(/[^0-9]/g, '');
+        if (v.length > 1) v = v.slice(-1);
+        inp.value = v;
+        if (v !== '') {
+          g.currentGuess[idx] = parseInt(v, 10);
           inp.classList.add('filled');
-          if (idx < numCount - 1) {
-            var next = els.slotsRow.querySelector('.slot-main[data-slot="' + (idx+1) + '"]');
-            if (next) setTimeout(function() { next.focus(); }, 50);
+          for (var n = idx + 1; n < g.secret.length; n++) {
+            var next = els.inputRowEl.querySelector('.slot-input[data-pos="' + n + '"]');
+            if (next && !next.readOnly) {
+              setTimeout(function() { next.focus(); }, 50);
+              break;
+            }
           }
         } else {
-          currentGuess[idx] = null;
+          g.currentGuess[idx] = null;
           inp.classList.remove('filled');
         }
       };
+
       inp.onkeydown = function(e) {
         if (e.key === 'Backspace' && inp.value === '' && idx > 0) {
-          var prev = els.slotsRow.querySelector('.slot-main[data-slot="' + (idx-1) + '"]');
-          if (prev) { e.preventDefault(); prev.focus(); prev.select(); }
+          for (var n = idx - 1; n >= 0; n--) {
+            var prev = els.inputRowEl.querySelector('.slot-input[data-pos="' + n + '"]');
+            if (prev && !prev.readOnly) {
+              e.preventDefault();
+              prev.focus();
+              prev.select();
+              break;
+            }
+          }
         }
-        if (e.key === 'Enter') { e.preventDefault(); inp.blur(); handleGuess(); }
+        if (e.key === 'Enter') { e.preventDefault(); inp.blur(); submitGuess(); }
       };
+
       inp.onfocus = function() { setTimeout(function() { inp.select(); }, 0); };
     })(inputs[k], k);
   }
 }
 
-function toggleEliminate(slot, val, cell) {
-  if (gameOver) return;
-  if (!eliminated[slot]) eliminated[slot] = {};
-  if (eliminated[slot][val]) {
-    delete eliminated[slot][val];
-    cell.classList.remove('eliminated');
-  } else {
-    eliminated[slot][val] = true;
-    cell.classList.add('eliminated');
-    try { if (navigator.vibrate) navigator.vibrate(10); } catch(e) {}
-  }
+// ============ HUD UPDATE ============
+function updateHUD() {
+  var g = games[currentGame];
+  var left = g.maxAttempts - g.attempts;
+  els.attemptLeftEl.textContent = left;
+  els.highScoreEl.textContent = g.high;
+  els.scoreTotalEl.textContent = g.total;
+  pulseStat(els.attemptStatEl);
 }
 
-// ============ FILTER ============
-var FILTERS = [
-  { id:'all',  name:'Tất cả' },
-  { id:'tier1', name:'🟢 Cơ bản' },
-  { id:'tier2', name:'🟡 TB' },
-  { id:'tier3', name:'🔴 Khó' }
-];
+// ============ SUBMIT GUESS ============
+function submitGuess() {
+  var g = games[currentGame];
+  if (g.gameOver) { showToast('Ván đã kết thúc!', 'no'); return; }
 
-function renderFilter() {
-  var html = '';
-  for (var i = 0; i < FILTERS.length; i++) {
-    var f = FILTERS[i];
-    html += '<button class="filter-btn' + (currentFilter === f.id ? ' active' : '') + '" data-filter="' + f.id + '" type="button">' + f.name + '</button>';
-  }
-  els.qFilterEl.innerHTML = html;
-
-  var btns = els.qFilterEl.querySelectorAll('.filter-btn');
-  for (var b = 0; b < btns.length; b++) {
-    (function(btn) {
-      btn.onclick = function() {
-        currentFilter = btn.getAttribute('data-filter');
-        renderFilter();
-        renderQuestions();
-      };
-    })(btns[b]);
-  }
-}
-
-// ============ CÂU HỎI ============
-function isPrime(n) {
-  if (n < 2) return false;
-  for (var i = 2; i * i <= n; i++) if (n % i === 0) return false;
-  return true;
-}
-
-function buildAllQuestions(len) {
-  len = Math.max(3, Math.min(7, parseInt(len, 10) || 3));
-  var qs = [];
-  var i;
-
-  for (i = 0; i < len; i++) {
-    (function(idx) {
-      qs.push({
-        id: 'even_' + idx, tier: 1,
-        text: 'Số thứ ' + (idx+1) + ' là số chẵn?',
-        fn: function(s) { return s[idx] % 2 === 0; },
-        affects: [{ slot: idx, when: function(ans, v) {
-          // Nếu CÓ: loại số lẻ. Nếu KHÔNG: loại số chẵn
-          return ans ? (v % 2 !== 0) : (v % 2 === 0);
-        }}],
-        reason: function(s) { return 'Số thứ ' + (idx+1) + ' là ' + s[idx] + ' — ' + (s[idx]%2===0 ? 'số chẵn' : 'số lẻ') + '.'; }
-      });
-    })(i);
-  }
-  for (i = 0; i < len; i++) {
-    (function(idx) {
-      qs.push({
-        id: 'gt5_' + idx, tier: 1,
-        text: 'Số thứ ' + (idx+1) + ' lớn hơn 5?',
-        fn: function(s) { return s[idx] > 5; },
-        affects: [{ slot: idx, when: function(ans, v) {
-          return ans ? (v <= 5) : (v > 5);
-        }}],
-        reason: function(s) { return 'Số thứ ' + (idx+1) + ' là ' + s[idx] + ' — ' + (s[idx]>5 ? 'lớn hơn 5' : 'không lớn hơn 5') + '.'; }
-      });
-    })(i);
-  }
-  for (i = 0; i < len - 1; i++) {
-    (function(idx) {
-      qs.push({
-        id: 'cmp_' + idx, tier: 2,
-        text: 'Số thứ ' + (idx+1) + ' lớn hơn số thứ ' + (idx+2) + '?',
-        fn: function(s) { return s[idx] > s[idx+1]; },
-        reason: function(s) { return s[idx] + ' ' + (s[idx]>s[idx+1] ? '>' : '≤') + ' ' + s[idx+1] + '.'; }
-      });
-    })(i);
-  }
-  if (len >= 3) {
-    qs.push({
-      id: 'cmp_first_last', tier: 2,
-      text: 'Số đầu lớn hơn số cuối?',
-      fn: function(s) { return s[0] > s[len-1]; },
-      reason: function(s) { return s[0] + ' ' + (s[0]>s[len-1] ? '>' : '≤') + ' ' + s[len-1] + '.'; }
-    });
-    qs.push({
-      id: 'eq_first_last', tier: 2,
-      text: 'Số đầu bằng số cuối?',
-      fn: function(s) { return s[0] === s[len-1]; },
-      reason: function(s) { return s[0] + (s[0]===s[len-1] ? ' = ' : ' ≠ ') + s[len-1] + '.'; }
-    });
-  }
-  qs.push({
-    id: 'sum_even', tier: 2,
-    text: 'Tổng các số là số chẵn?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%2===0; },
-    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return 'Tổng = ' + t + ' — ' + (t%2===0 ? 'số chẵn' : 'số lẻ') + '.'; }
-  });
-  qs.push({
-    id: 'sum_gt', tier: 2,
-    text: 'Tổng các số lớn hơn ' + Math.floor(len * 4.5) + '?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t > Math.floor(len*4.5); },
-    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return 'Tổng = ' + t + '.'; }
-  });
-  qs.push({
-    id: 'sum_div3', tier: 2,
-    text: 'Tổng các số chia hết cho 3?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return t%3===0; },
-    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return 'Tổng = ' + t + ' — ' + (t%3===0 ? 'chia hết 3' : 'không chia hết 3') + '.'; }
-  });
-  qs.push({
-    id: 'diff_gt5', tier: 3,
-    text: 'Hiệu số lớn nhất và nhỏ nhất > 5?',
-    fn: function(s) {
-      var mx=s[0], mn=s[0];
-      for (var k=1;k<s.length;k++){if(s[k]>mx)mx=s[k];if(s[k]<mn)mn=s[k];}
-      return (mx-mn) > 5;
-    },
-    reason: function(s) {
-      var mx=s[0], mn=s[0];
-      for (var k=1;k<s.length;k++){if(s[k]>mx)mx=s[k];if(s[k]<mn)mn=s[k];}
-      return 'Hiệu = ' + (mx-mn) + '.';
-    }
-  });
-  var checkNums = [0, 3, 5, 7, 9];
-  for (i = 0; i < checkNums.length; i++) {
-    (function(n) {
-      qs.push({
-        id: 'has_' + n, tier: 1,
-        text: 'Dãy có chứa số ' + n + '?',
-        fn: function(s) { return s.indexOf(n) !== -1; },
-        affects: function() {
-          // Nếu KHÔNG: loại n ở tất cả slots
-          return [{ slot: -1, when: function(ans, v) { return !ans && v === n; } }];
-        }(),
-        reason: function(s) { return s.indexOf(n) !== -1 ? 'Có số ' + n + ' trong dãy.' : 'Không có số ' + n + '.'; }
-      });
-    })(checkNums[i]);
-  }
-  qs.push({
-    id: 'even_more', tier: 2,
-    text: 'Có nhiều số chẵn hơn số lẻ?',
-    fn: function(s) { var e=0; for (var k=0;k<s.length;k++) if(s[k]%2===0)e++; return e > s.length-e; },
-    reason: function(s) { var e=0,o=0; for (var k=0;k<s.length;k++) { if(s[k]%2===0)e++; else o++; } return 'Có ' + e + ' chẵn, ' + o + ' lẻ.'; }
-  });
-  qs.push({
-    id: 'has_dup', tier: 2,
-    text: 'Có 2 số bằng nhau?',
-    fn: function(s) { for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b])return true; return false; },
-    reason: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]===s[b]) return 'Số ' + s[a] + ' xuất hiện nhiều lần.';
-      return 'Các số đều khác nhau.';
-    }
-  });
-  qs.push({
-    id: 'increasing', tier: 2,
-    text: 'Dãy tăng dần?',
-    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]<=s[k-1])return false; return true; },
-    reason: function(s) {
-      for (var k=1;k<s.length;k++) if(s[k]<=s[k-1]) return 'Không tăng: ' + s[k-1] + ' ≥ ' + s[k] + '.';
-      return 'Tăng dần.';
-    }
-  });
-  qs.push({
-    id: 'max_first', tier: 2,
-    text: 'Số đầu là số lớn nhất?',
-    fn: function(s) { for (var k=1;k<s.length;k++) if(s[k]>s[0])return false; return true; },
-    reason: function(s) { var mx=Math.max.apply(null,s); return 'Max = ' + mx + (s[0]===mx ? ' (số đầu).' : '.'); }
-  });
-  qs.push({
-    id: 'first_zero', tier: 2,
-    text: 'Số đầu tiên là số 0?',
-    fn: function(s) { return s[0] === 0; },
-        affects: [{ slot: 0, when: function(ans, v) { return ans ? (v !== 0) : (v === 0); } }],
-    reason: function(s) { return 'Số đầu = ' + s[0] + '.'; }
-  });
-  qs.push({
-    id: 'no_zero', tier: 1,
-    text: 'Dãy không có số 0?',
-    fn: function(s) { return s.indexOf(0) === -1; },
-    affects: [{ slot: -1, when: function(ans, v) { return ans && v === 0; } }],
-    reason: function(s) { return s.indexOf(0)===-1 ? 'Không có số 0.' : 'Có số 0.'; }
-  });
-  qs.push({
-    id: 'is_prime_first', tier: 2,
-    text: 'Số đầu tiên là số nguyên tố?',
-    fn: function(s) { return isPrime(s[0]); },
-    reason: function(s) { return s[0] + (isPrime(s[0]) ? ' là số nguyên tố.' : ' không phải số nguyên tố.'); }
-  });
-  qs.push({
-    id: 'sum_prime', tier: 3,
-    text: 'Tổng các số là số nguyên tố?',
-    fn: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return isPrime(t); },
-    reason: function(s) { var t=0; for (var k=0;k<s.length;k++) t+=s[k]; return 'Tổng = ' + t + (isPrime(t) ? ' là số nguyên tố.' : ' không phải số nguyên tố.'); }
-  });
-  qs.push({
-    id: 'ap3', tier: 3,
-    text: 'Có 3 số tạo cấp số cộng?',
-    fn: function(s) {
-      var a = s.slice().sort(function(x,y){return x-y;});
-      for (var x=0;x<a.length-2;x++)
-        for (var y=x+1;y<a.length-1;y++)
-          for (var z=y+1;z<a.length;z++)
-            if (a[y]-a[x] === a[z]-a[y] && a[z]-a[y] > 0) return true;
-      return false;
-    },
-    reason: function(s) {
-      var a = s.slice().sort(function(x,y){return x-y;});
-      for (var x=0;x<a.length-2;x++)
-        for (var y=x+1;y<a.length-1;y++)
-          for (var z=y+1;z<a.length;z++)
-            if (a[y]-a[x] === a[z]-a[y] && a[z]-a[y] > 0)
-              return 'Có: ' + a[x] + ', ' + a[y] + ', ' + a[z] + '.';
-      return 'Không có.';
-    }
-  });
-  qs.push({
-    id: 'sum_pair_10', tier: 3,
-    text: 'Có 2 số cộng lại bằng 10?',
-    fn: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]+s[b]===10)return true;
-      return false;
-    },
-    reason: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(s[a]+s[b]===10)
-        return s[a] + ' + ' + s[b] + ' = 10.';
-      return 'Không có cặp nào cộng = 10.';
-    }
-  });
-  qs.push({
-    id: 'consec_diff1', tier: 3,
-    text: 'Có 2 số chênh lệch đúng 1?',
-    fn: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])===1)return true;
-      return false;
-    },
-    reason: function(s) {
-      for (var a=0;a<s.length;a++) for (var b=a+1;b<s.length;b++) if(Math.abs(s[a]-s[b])===1)
-        return s[a] + ' và ' + s[b] + ' chênh 1.';
-      return 'Không có cặp chênh 1.';
-    }
-  });
-  qs.push({
-    id: 'has_square', tier: 2,
-    text: 'Có số nào là số chính phương? (0,1,4,9)',
-    fn: function(s) {
-      for (var k=0;k<s.length;k++) if([0,1,4,9].indexOf(s[k])!==-1) return true;
-      return false;
-    },
-    reason: function(s) {
-      var found = [];
-      for (var k=0;k<s.length;k++) if([0,1,4,9].indexOf(s[k])!==-1) found.push(s[k]);
-      return found.length ? 'Có: ' + found.join(', ') + '.' : 'Không có số chính phương.';
-    }
-  });
-  qs.push({
-    id: 'has_mult5', tier: 2,
-    text: 'Có số nào chia hết cho 5? (0,5)',
-    fn: function(s) {
-      for (var k=0;k<s.length;k++) if(s[k] % 5 === 0) return true;
-      return false;
-    },
-    reason: function(s) {
-      var found = [];
-      for (var k=0;k<s.length;k++) if(s[k]%5===0) found.push(s[k]);
-      return found.length ? 'Có: ' + found.join(', ') + '.' : 'Không có.';
-    }
-  });
-  qs.push({
-    id: 'avg_gt5', tier: 2,
-    text: 'Trung bình cộng > 5?',
-    fn: function(s) {
-      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
-      return (t / s.length) > 5;
-    },
-    reason: function(s) {
-      var t=0; for (var k=0;k<s.length;k++) t+=s[k];
-      return 'TB = ' + (t/s.length).toFixed(1) + '.';
-    }
-  });
-  qs.push({
-    id: 'has_3_consec', tier: 3,
-    text: 'Có 3 số liên tiếp trong dãy? (VD: 2,3,4)',
-    fn: function(s) {
-      var a = s.slice().sort(function(x,y){return x-y;});
-      for (var x=0;x<a.length-2;x++)
-        if (a[x+1] === a[x]+1 && a[x+2] === a[x]+2) return true;
-      return false;
-    },
-    reason: function(s) {
-      var a = s.slice().sort(function(x,y){return x-y;});
-      for (var x=0;x<a.length-2;x++)
-        if (a[x+1] === a[x]+1 && a[x+2] === a[x]+2)
-          return 'Có: ' + a[x] + ', ' + a[x+1] + ', ' + a[x+2] + '.';
-      return 'Không có 3 số liên tiếp.';
-    }
-  });
-  qs.push({
-    id: 'max_minus_min_even', tier: 3,
-    text: 'Hiệu max - min là số chẵn?',
-    fn: function(s) {
-      var mx = Math.max.apply(null, s);
-      var mn = Math.min.apply(null, s);
-      return (mx - mn) % 2 === 0;
-    },
-    reason: function(s) {
-      var mx = Math.max.apply(null, s);
-      var mn = Math.min.apply(null, s);
-      return 'Hiệu = ' + (mx-mn) + '.';
-    }
-  });
-
-  return qs;
-}
-
-// ============ BUILD / RENDER QUESTIONS ============
-function buildQuestionsList() {
-  numCount = Math.max(3, Math.min(7, parseInt(numCount, 10) || 3));
-  allQuestionsCache = buildAllQuestions(numCount);
-
-  for (var i = allQuestionsCache.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = allQuestionsCache[i];
-    allQuestionsCache[i] = allQuestionsCache[j];
-    allQuestionsCache[j] = tmp;
-  }
-
-  renderQuestions();
-}
-
-function renderQuestions() {
-  var list = allQuestionsCache;
-  if (currentFilter !== 'all') {
-    var tier = currentFilter === 'tier1' ? 1 : currentFilter === 'tier2' ? 2 : 3;
-    list = list.filter(function(q) { return q.tier === tier; });
-  }
-
-  els.questionsListEl.innerHTML = '';
-  for (var i = 0; i < list.length; i++) {
-    (function(q) {
-      var btn = document.createElement('button');
-      btn.className = 'q-btn';
-      btn.type = 'button';
-
-      var status = askedMap[q.id];
-      if (status) btn.classList.add('used', status);
-
-      if (status && q.askOrder) {
-        var numSpan = document.createElement('span');
-        numSpan.className = 'q-num';
-        numSpan.textContent = q.askOrder + '.';
-        btn.appendChild(numSpan);
-      }
-
-      var dot = document.createElement('span');
-      dot.className = 'q-dot tier' + q.tier;
-      btn.appendChild(dot);
-
-      var txt = document.createElement('span');
-      txt.className = 'q-text';
-      txt.textContent = q.text;
-      btn.appendChild(txt);
-
-      if (status) {
-        var ansSpan = document.createElement('span');
-        ansSpan.className = 'q-answer';
-        ansSpan.textContent = status === 'yes' ? '= CÓ' : '= KHÔNG';
-        btn.appendChild(ansSpan);
-      } else {
-        var cost = getQuestionCost(q.tier);
-        var costSpan = document.createElement('span');
-        costSpan.className = 'q-cost';
-        costSpan.textContent = '(-' + cost + 'đ)';
-        btn.appendChild(costSpan);
-      }
-
-      btn.onclick = function(e) {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
-        handleQuestionClick(q, btn);
-      };
-
-      els.questionsListEl.appendChild(btn);
-    })(list[i]);
-  }
-}
-
-// ============ HANDLE CLICK ============
-function handleQuestionClick(q, btn) {
-  if (gameOver) return;
-  if (questionsLeft <= 0) { showToast('Hết câu hỏi!', 'no'); return; }
-  if (askedMap[q.id]) return;
-
-  var answer = !!q.fn(secret);
-  var status = answer ? 'yes' : 'no';
-  askedMap[q.id] = status;
-  questionCounter++;
-  q.askOrder = questionCounter;
-  questionsLeft--;
-
-  var reason = '';
-  if (q.reason) {
-    try { reason = q.reason(secret); } catch(e) {}
-  }
-  askedLog.push({
-    order: questionCounter,
-    text: q.text,
-    answer: answer,
-    tier: q.tier,
-    reason: reason,
-    affects: q.affects || null
-  });
-
-  updateQuestionButton(btn, q, status);
-  showToast(answer ? 'CÓ ✓' : 'KHÔNG ✗', status);
-  els.qLeftEl.textContent = questionsLeft;
-  pulseStat(els.qStat);
-
-  if (questionsLeft === 0) showToast('Hết câu hỏi!', 'no');
-}
-
-function updateQuestionButton(btn, q, status) {
-  btn.classList.add('used', status);
-  btn.innerHTML = '';
-
-  var numSpan = document.createElement('span');
-  numSpan.className = 'q-num';
-  numSpan.textContent = (q.askOrder || '') + '.';
-  btn.appendChild(numSpan);
-
-  var dot = document.createElement('span');
-  dot.className = 'q-dot tier' + q.tier;
-  btn.appendChild(dot);
-
-  var txt = document.createElement('span');
-  txt.className = 'q-text';
-  txt.textContent = q.text;
-  btn.appendChild(txt);
-
-  var ansSpan = document.createElement('span');
-  ansSpan.className = 'q-answer';
-  ansSpan.textContent = status === 'yes' ? '= CÓ' : '= KHÔNG';
-  btn.appendChild(ansSpan);
-}
-
-// ============ FORM TỰ HỎI ============
-function showCustomForm() {
-  if (gameOver) { showToast('Ván đã kết thúc!', 'no'); return; }
-  if (questionsLeft <= 0) { showToast('Hết câu hỏi!', 'no'); return; }
-
-  var html = '<div class="form-overlay">';
-  html += '<h2 style="text-align:center;margin-top:0">✏️ TỰ TẠO CÂU HỎI</h2>';
-  html += '<p style="text-align:center;font-size:11px;color:#666;margin-bottom:10px">Chọn mẫu câu hỏi và điền tham số</p>';
-
-  html += '<div class="form-row">';
-  html += '<label>Mẫu:</label>';
-  html += '<select id="tplSelect" style="flex:1">';
-  html += '<option value="even">Số thứ [X] là số chẵn?</option>';
-  html += '<option value="gt5">Số thứ [X] lớn hơn 5?</option>';
-  html += '<option value="cmp">Số thứ [X] lớn hơn số thứ [Y]?</option>';
-  html += '<option value="eq">Số thứ [X] bằng số thứ [Y]?</option>';
-  html += '<option value="gtnum">Số thứ [X] lớn hơn [Y]?</option>';
-  html += '<option value="ltnum">Số thứ [X] nhỏ hơn [Y]?</option>';
-  html += '<option value="hasnum">Dãy có chứa số [Y]?</option>';
-  html += '</select>';
-  html += '</div>';
-
-  html += '<div class="form-row" id="paramRow1">';
-  html += '<label>X:</label>';
-  html += '<select id="paramX"></select>';
-  html += '</div>';
-
-  html += '<div class="form-row" id="paramRow2" style="display:none">';
-  html += '<label id="paramYLabel">Y:</label>';
-  html += '<select id="paramY"></select>';
-  html += '</div>';
-
-  html += '<div class="form-preview" id="previewBox">Số thứ 1 là số chẵn?</div>';
-  html += '<div class="form-cost" id="costBox">Chi phí: -15đ</div>';
-
-  html += '<div class="form-btns">';
-  html += '<button id="submitCustomBtn" type="button" class="tertiary">HỎI ✓</button>';
-  html += '<button id="cancelCustomBtn" type="button" class="cancel">HỦY</button>';
-  html += '</div>';
-  html += '</div>';
-
-  showOverlay(html);
-
-  var selX = document.getElementById('paramX');
-  for (var x = 1; x <= numCount; x++) {
-    var opt = document.createElement('option');
-    opt.value = x;
-    opt.textContent = x;
-    selX.appendChild(opt);
-  }
-
-  var tplSelect = document.getElementById('tplSelect');
-  var paramRow2 = document.getElementById('paramRow2');
-  var paramYLabel = document.getElementById('paramYLabel');
-  var selY = document.getElementById('paramY');
-  var previewBox = document.getElementById('previewBox');
-  var costBox = document.getElementById('costBox');
-
-  function getTemplateTier(tpl) {
-    if (tpl === 'even' || tpl === 'gt5' || tpl === 'hasnum') return 1;
-    if (tpl === 'cmp' || tpl === 'eq') return 2;
-    if (tpl === 'gtnum' || tpl === 'ltnum') return 2;
-    return 2;
-  }
-
-  function refreshParams() {
-    var tpl = tplSelect.value;
-    selY.innerHTML = '';
-
-    if (tpl === 'cmp' || tpl === 'eq') {
-      paramRow2.style.display = 'flex';
-      paramYLabel.textContent = 'Y (số thứ):';
-      for (var i = 1; i <= numCount; i++) {
-        var opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = i;
-        selY.appendChild(opt);
-      }
-    } else if (tpl === 'gtnum' || tpl === 'ltnum' || tpl === 'hasnum') {
-      paramRow2.style.display = 'flex';
-      paramYLabel.textContent = 'Y (số 0-9):';
-      for (var v = 0; v <= 9; v++) {
-        var opt2 = document.createElement('option');
-        opt2.value = v;
-        opt2.textContent = v;
-        selY.appendChild(opt2);
-      }
-    } else {
-      paramRow2.style.display = 'none';
-    }
-    updatePreview();
-  }
-
-  function updatePreview() {
-    var tpl = tplSelect.value;
-    var x = parseInt(selX.value, 10);
-    var y = parseInt(selY.value, 10);
-    var text = '';
-
-    if (tpl === 'even') text = 'Số thứ ' + x + ' là số chẵn?';
-    else if (tpl === 'gt5') text = 'Số thứ ' + x + ' lớn hơn 5?';
-    else if (tpl === 'cmp') text = 'Số thứ ' + x + ' lớn hơn số thứ ' + y + '?';
-    else if (tpl === 'eq') text = 'Số thứ ' + x + ' bằng số thứ ' + y + '?';
-    else if (tpl === 'gtnum') text = 'Số thứ ' + x + ' lớn hơn ' + y + '?';
-    else if (tpl === 'ltnum') text = 'Số thứ ' + x + ' nhỏ hơn ' + y + '?';
-    else if (tpl === 'hasnum') text = 'Dãy có chứa số ' + y + '?';
-
-    previewBox.textContent = text;
-
-    var tier = getTemplateTier(tpl);
-    costBox.textContent = 'Chi phí: -' + getQuestionCost(tier) + 'đ';
-  }
-
-  tplSelect.onchange = refreshParams;
-  selX.onchange = updatePreview;
-  selY.onchange = updatePreview;
-
-  refreshParams();
-
-  document.getElementById('submitCustomBtn').onclick = function() {
-    var tpl = tplSelect.value;
-    var x = parseInt(selX.value, 10);
-    var y = parseInt(selY.value, 10);
-
-    if (tpl === 'cmp' || tpl === 'eq') {
-      if (x === y) { showToast('X phải khác Y!', 'no'); return; }
-    }
-
-    var customQ = buildCustomQuestion(tpl, x, y);
-    if (!customQ) { showToast('Lỗi tạo câu hỏi!', 'no'); return; }
-
-    // Kiểm tra trùng
-    for (var k = 0; k < allQuestionsCache.length; k++) {
-      if (allQuestionsCache[k].text === customQ.text && !askedMap[allQuestionsCache[k].id]) {
-        hideOverlay();
-        var btnFound = findQuestionButton(allQuestionsCache[k].id);
-        if (btnFound) handleQuestionClick(allQuestionsCache[k], btnFound);
-        else handleQuestionClickNoButton(allQuestionsCache[k]);
-        return;
-      }
-    }
-
-    allQuestionsCache.unshift(customQ);
-    hideOverlay();
-    renderQuestions();
-    var newBtn = findQuestionButton(customQ.id);
-    if (newBtn) handleQuestionClick(customQ, newBtn);
-    else handleQuestionClickNoButton(customQ);
-  };
-
-  document.getElementById('cancelCustomBtn').onclick = function() {
-    hideOverlay();
-  };
-}
-
-function buildCustomQuestion(tpl, x, y) {
-  var id = 'custom_' + Date.now();
-  if (tpl === 'even') {
-    return {
-      id: id, tier: 1,
-      text: 'Số thứ ' + x + ' là số chẵn?',
-      fn: function(s) { return s[x-1] % 2 === 0; },
-      affects: [{ slot: x-1, when: function(ans, v) { return ans ? (v % 2 !== 0) : (v % 2 === 0); } }],
-      reason: function(s) { return 'Số thứ ' + x + ' là ' + s[x-1] + '.'; }
-    };
-  }
-  if (tpl === 'gt5') {
-    return {
-      id: id, tier: 1,
-      text: 'Số thứ ' + x + ' lớn hơn 5?',
-      fn: function(s) { return s[x-1] > 5; },
-      affects: [{ slot: x-1, when: function(ans, v) { return ans ? (v <= 5) : (v > 5); } }],
-      reason: function(s) { return 'Số thứ ' + x + ' là ' + s[x-1] + '.'; }
-    };
-  }
-  if (tpl === 'cmp') {
-    return {
-      id: id, tier: 2,
-      text: 'Số thứ ' + x + ' lớn hơn số thứ ' + y + '?',
-      fn: function(s) { return s[x-1] > s[y-1]; },
-      reason: function(s) { return s[x-1] + ' ' + (s[x-1]>s[y-1]?'>':'≤') + ' ' + s[y-1] + '.'; }
-    };
-  }
-  if (tpl === 'eq') {
-    return {
-      id: id, tier: 2,
-      text: 'Số thứ ' + x + ' bằng số thứ ' + y + '?',
-      fn: function(s) { return s[x-1] === s[y-1]; },
-      reason: function(s) { return s[x-1] + (s[x-1]===s[y-1]?' = ':' ≠ ') + s[y-1] + '.'; }
-    };
-  }
-  if (tpl === 'gtnum') {
-    return {
-      id: id, tier: 2,
-      text: 'Số thứ ' + x + ' lớn hơn ' + y + '?',
-      fn: function(s) { return s[x-1] > y; },
-      affects: [{ slot: x-1, when: function(ans, v) { return ans ? (v <= y) : (v > y); } }],
-      reason: function(s) { return 'Số thứ ' + x + ' là ' + s[x-1] + '.'; }
-    };
-  }
-  if (tpl === 'ltnum') {
-    return {
-      id: id, tier: 2,
-      text: 'Số thứ ' + x + ' nhỏ hơn ' + y + '?',
-      fn: function(s) { return s[x-1] < y; },
-      affects: [{ slot: x-1, when: function(ans, v) { return ans ? (v >= y) : (v < y); } }],
-      reason: function(s) { return 'Số thứ ' + x + ' là ' + s[x-1] + '.'; }
-    };
-  }
-  if (tpl === 'hasnum') {
-    return {
-      id: id, tier: 1,
-      text: 'Dãy có chứa số ' + y + '?',
-      fn: function(s) { return s.indexOf(y) !== -1; },
-      affects: [{ slot: -1, when: function(ans, v) { return !ans && v === y; } }],
-      reason: function(s) { return s.indexOf(y)!==-1 ? 'Có số ' + y + '.' : 'Không có số ' + y + '.'; }
-    };
-  }
-  return null;
-}
-
-function findQuestionButton(qid) {
-  var btns = els.questionsListEl.querySelectorAll('.q-btn');
-  for (var i = 0; i < btns.length; i++) {
-    if (btns[i].getAttribute('data-qid') === qid) return btns[i];
-  }
-  return null;
-}
-
-function handleQuestionClickNoButton(q) {
-  if (gameOver) return;
-  if (questionsLeft <= 0) { showToast('Hết câu hỏi!', 'no'); return; }
-  if (askedMap[q.id]) return;
-
-  var answer = !!q.fn(secret);
-  var status = answer ? 'yes' : 'no';
-  askedMap[q.id] = status;
-  questionCounter++;
-  q.askOrder = questionCounter;
-  questionsLeft--;
-
-  var reason = '';
-  if (q.reason) {
-    try { reason = q.reason(secret); } catch(e) {}
-  }
-  askedLog.push({
-    order: questionCounter,
-    text: q.text,
-    answer: answer,
-    tier: q.tier,
-    reason: reason,
-    affects: q.affects || null
-  });
-
-  showToast(answer ? 'CÓ ✓' : 'KHÔNG ✗', status);
-  els.qLeftEl.textContent = questionsLeft;
-  pulseStat(els.qStat);
-
-  renderQuestions();
-
-  if (questionsLeft === 0) showToast('Hết câu hỏi!', 'no');
-}
-
-// ============ HANDLE GUESS ============
-function handleGuess() {
-  if (gameOver) { showToast('Ván đã kết thúc!', 'no'); return; }
-  for (var i = 0; i < numCount; i++) {
-    if (currentGuess[i] === null || currentGuess[i] === undefined) {
-      showToast('Nhập đủ ' + numCount + ' số!', 'no');
+  for (var i = 0; i < g.secret.length; i++) {
+    if (g.currentGuess[i] === null || g.currentGuess[i] === undefined) {
+      showToast('Nhập đủ ' + g.secret.length + ' số!', 'no');
       return;
     }
   }
-  checkGuess();
-}
 
-// ============ CHECK ============
-function checkGuess() {
-  var correct = true;
-  for (var i = 0; i < numCount; i++) {
-    if (currentGuess[i] !== secret[i]) { correct = false; break; }
-  }
-
-  gameOver = true;
-  els.guessBtn.disabled = true;
-
-  var questionsUsed = questionsTotal - questionsLeft;
-  var points = 0;
-
-  if (correct) {
-    var base = calcBasePoints(level);
-    var modeBonus = { easy: 0, normal: 15, hard: 35 }[currentMode] || 0;
-    var lengthBonus = (numCount - 3) * 25;
-    var cost = 0;
-    for (var k = 0; k < askedLog.length; k++) {
-      cost += getQuestionCost(askedLog[k].tier);
+  for (var pos in g.revealed) {
+    var p = parseInt(pos, 10);
+    if (g.currentGuess[p] !== g.revealed[p]) {
+      showToast('Ô đã gợi ý phải giữ nguyên!', 'no');
+      return;
     }
-    points = base + modeBonus + lengthBonus - cost;
-    points = Math.max(0, points);
-    streak++;
-    if (streak >= 3) points = Math.floor(points * 1.5);
-    totalScore += points;
-    els.scoreTotalEl.textContent = totalScore;
-    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
-    saveToLB(points);
-  } else {
-    streak = 0;
-    totalScore = Math.max(0, totalScore - 10);
-    els.scoreTotalEl.textContent = totalScore;
-    try { localStorage.setItem('turingCrayonScore', totalScore); } catch(e) {}
   }
 
-  showResult(correct, points, questionsUsed);
+  if (currentGame === 'mastermind') submitMastermind();
+  else submitSimple();
 }
 
-function saveToLB(points) {
-  try {
-    var lb = JSON.parse(localStorage.getItem('turingCrayonLB') || '[]');
-    lb.push({ name: playerName, score: points, level: level, mode: currentMode, date: Date.now() });
-    lb.sort(function(a, b) { return b.score - a.score; });
-    lb = lb.slice(0, 10);
-    localStorage.setItem('turingCrayonLB', JSON.stringify(lb));
-  } catch(e) {}
+function submitSimple() {
+  var g = games[currentGame];
+  var correct = true;
+  for (var k = 0; k < g.secret.length; k++) {
+    if (g.currentGuess[k] !== g.secret[k]) { correct = false; break; }
+  }
+
+  g.attempts++;
+
+  if (correct) { endGame(true); return; }
+  if (g.attempts >= g.maxAttempts) { endGame(false); return; }
+
+  showToast('Sai rồi! Còn ' + (g.maxAttempts - g.attempts) + ' lượt', 'no');
+  updateHUD();
+
+  for (var m = 0; m < g.secret.length; m++) {
+    if (!(m in g.revealed)) g.currentGuess[m] = null;
+  }
+  renderInput();
 }
 
-// ============ GIẢI THÍCH TỪNG SỐ ============
-function buildSlotExplanation(slotIdx) {
-  // Trả về mảng các bước giải thích cho số thứ slotIdx
-  var steps = [];
-  var remaining = [];
-  for (var v = minVal; v <= maxVal; v++) remaining.push(v);
+function submitMastermind() {
+  var g = games.mastermind;
+  var fb = getMastermindFeedback(g.secret, g.currentGuess);
 
-  // Duyệt từng câu hỏi đã hỏi
-  for (var i = 0; i < askedLog.length; i++) {
-    var item = askedLog[i];
-    var eliminated = [];
-    
-    // Kiểm tra xem câu hỏi có ảnh hưởng đến slot này không
-    if (item.affects && item.affects.length) {
-      for (var a = 0; a < item.affects.length; a++) {
-        var aff = item.affects[a];
-        // slot = -1 nghĩa là áp dụng cho tất cả các slot
-        if (aff.slot === slotIdx || aff.slot === -1) {
-          // Tìm các số bị loại
-          for (var r = 0; r < remaining.length; r++) {
-            if (aff.when(item.answer, remaining[r])) {
-              eliminated.push(remaining[r]);
-            }
-          }
-          // Loại khỏi remaining
-          if (eliminated.length > 0) {
-            remaining = remaining.filter(function(v) { return eliminated.indexOf(v) === -1; });
-          }
-        }
+  g.history.push({
+    guess: g.currentGuess.slice(),
+    exact: fb.exact,
+    colorOnly: fb.colorOnly
+  });
+
+  g.attempts++;
+  updateHUD();
+
+  if (fb.exact === g.secret.length) {
+    renderMastermind();
+    endGame(true);
+    return;
+  }
+
+  if (g.attempts >= g.maxAttempts) {
+    renderMastermind();
+    endGame(false);
+    return;
+  }
+
+  for (var k = 0; k < g.secret.length; k++) {
+    if (!(k in g.revealed)) g.currentGuess[k] = null;
+  }
+
+  renderMastermind();
+  renderInput();
+  showToast('Sai rồi! Còn ' + (g.maxAttempts - g.attempts) + ' lượt', 'info');
+}
+
+function getMastermindFeedback(secretArr, guessArr) {
+  var n = secretArr.length;
+  var secretMatched = new Array(n).fill(false);
+  var guessMatched = new Array(n).fill(false);
+  var exact = 0, colorOnly = 0;
+
+  for (var i = 0; i < n; i++) {
+    if (guessArr[i] === secretArr[i]) {
+      exact++;
+      secretMatched[i] = true;
+      guessMatched[i] = true;
+    }
+  }
+
+  for (var i = 0; i < n; i++) {
+    if (guessMatched[i]) continue;
+    for (var j = 0; j < n; j++) {
+      if (secretMatched[j]) continue;
+      if (guessArr[i] === secretArr[j]) {
+        colorOnly++;
+        secretMatched[j] = true;
+        break;
       }
     }
-
-    if (eliminated.length > 0) {
-      steps.push({
-        order: item.order,
-        text: item.text,
-        answer: item.answer,
-        eliminated: eliminated.slice(),
-        remaining: remaining.slice()
-      });
-    }
   }
 
-  return {
-    slot: slotIdx,
-    secret: secret[slotIdx],
-    steps: steps,
-    finalRemaining: remaining
-  };
+  return { exact: exact, colorOnly: colorOnly };
 }
 
-// ============ RESULT + GIẢI THÍCH TỪNG SỐ ============
-function showResult(correct, points, questionsUsed) {
-  var html = '';
-  if (correct) {
-    html += '<h2 class="win">🎉 PHÁ MÃ THÀNH CÔNG!</h2>';
-    html += '<p>Sau <b>' + questionsUsed + '</b> câu hỏi, bạn đã tìm ra:</p>';
+// ============ HINT ============
+function applyHint() {
+  var g = games[currentGame];
+  if (g.gameOver) { showToast('Ván đã kết thúc!', 'no'); return; }
+
+  if (currentGame === 'mastermind') {
+    if (g.hintsUsed >= g.maxHints) { showToast('Hết hint rồi!', 'no'); return; }
   } else {
-    html += '<h2>😅 CHƯA ĐÚNG</h2>';
-    html += '<p>Dãy đúng là:</p>';
+    if (g.hintUsed) { showToast('Đã dùng hint rồi!', 'no'); return; }
+  }
+
+  var avail = [];
+  for (var i = 0; i < g.secret.length; i++) {
+    if (!(i in g.revealed)) avail.push(i);
+  }
+  if (avail.length === 0) { showToast('Đã lộ hết rồi!', 'no'); return; }
+
+  var pos = avail[Math.floor(Math.random() * avail.length)];
+  g.revealed[pos] = g.secret[pos];
+  g.currentGuess[pos] = g.secret[pos];
+
+  if (currentGame === 'mastermind') {
+    g.hintsUsed++;
+    if (g.hintsUsed >= g.maxHints) els.hintBtn.disabled = true;
+  } else {
+    g.hintUsed = true;
+    els.hintBtn.disabled = true;
+  }
+
+  renderHint();
+  renderInput();
+  showToast('💡 Lộ 1 số (-10đ)', 'info');
+}
+
+// ============ END GAME ============
+function endGame(won) {
+  var g = games[currentGame];
+  g.gameOver = true;
+  els.submitBtn.disabled = true;
+  els.hintBtn.disabled = true;
+
+  var points = 0;
+  var isNewRecord = false;
+  var hintPenalty = 0;
+
+  if (currentGame === 'mastermind') hintPenalty = g.hintsUsed * 10;
+  else hintPenalty = g.hintUsed ? 10 : 0;
+
+  if (won) {
+    if (currentGame === 'math' || currentGame === 'story') {
+      var baseByAtt = [0, 500, 300, 150];
+      points = Math.max(50, (baseByAtt[g.attempts] || 100) - hintPenalty);
+    } else {
+      var baseMM = [0, 1000, 800, 650, 500, 400, 300, 200, 150];
+      points = Math.max(50, (baseMM[g.attempts] || 100) - hintPenalty);
+    }
+
+    g.total += points;
+    els.scoreTotalEl.textContent = g.total;
+
+    if (points > g.high) {
+      isNewRecord = true;
+      g.high = points;
+      els.highScoreEl.textContent = g.high;
+      pulseStat(els.highStatEl);
+    }
+
+    saveGameStats(currentGame);
+    saveToLB(points, g.attempts);
+  }
+
+  if (isNewRecord) {
+    showToast('🏆 KỶ LỤC MỚI! ' + g.high + 'đ', 'record');
+  }
+
+  showResult(won, points, isNewRecord);
+}
+
+function saveToLB(points, attempts) {
+  var lb = getLB(currentGame);
+  lb.push({
+    name: playerName,
+    score: points,
+    level: games[currentGame].level,
+    attempts: attempts,
+    date: Date.now()
+  });
+  lb.sort(function(a, b) { return b.score - a.score; });
+  lb = lb.slice(0, 10);
+  saveLBTo(currentGame, lb);
+}
+
+// ============ SHOW RESULT ============
+function showResult(won, points, isNewRecord) {
+  var g = games[currentGame];
+  var labels = (currentGame === 'story') ? STORIES[g.storyIdx].labels : null;
+  var html = '';
+
+  if (won) {
+    html += '<h2 class="win">🎉 CHÍNH XÁC!</h2>';
+    html += '<p>Bạn đoán đúng sau <b>' + g.attempts + '</b> lượt!</p>';
+  } else {
+    html += '<h2>😅 HẾT LƯỢT!</h2>';
+    html += '<p>Đáp án đúng là:</p>';
   }
 
   html += '<div class="secret-reveal">';
-  for (var i = 0; i < secret.length; i++) {
-    html += '<div class="secret-num">' + secret[i] + '</div>';
+  for (var i = 0; i < g.secret.length; i++) {
+    var label = labels ? labels[i] : ('Số ' + (i+1));
+    html += '<div class="secret-item">';
+    html += '<div class="secret-label">' + escapeHtml(label) + '</div>';
+    html += '<div class="secret-num">' + g.secret[i] + '</div>';
+    html += '</div>';
   }
   html += '</div>';
 
-  if (correct) {
-    html += '<p>+<b>' + points + '</b> điểm' + (streak > 1 ? ' 🔥 Chuỗi ' + streak : '') + '</p>';
-  } else {
-    html += '<p>Bạn đoán: ' + currentGuess.slice(0, numCount).join(' - ') + '</p>';
-    html += '<p style="font-size:11px;color:#ef476f">-10 điểm</p>';
+  if (isNewRecord) {
+    html += '<div class="record-banner">🏆 KỶ LỤC MỚI: ' + g.high + ' điểm!</div>';
   }
 
-  // BẢNG GIẢI THÍCH TỪNG SỐ
-  if (askedLog.length === 0) {
-    html += '<div class="explain-box">';
-    html += '<h4>📖 GIẢI THÍCH</h4>';
-    html += '<div class="explain-empty">Bạn đoán không cần hỏi câu nào! 🎯</div>';
-    html += '</div>';
+  if (won) {
+    html += '<p>+<b>' + points + '</b> điểm</p>';
+    html += '<p style="font-size:11px;color:#666">High: ' + g.high + ' • Tổng: ' + g.total + '</p>';
   } else {
-    html += '<div class="explain-box">';
-    html += '<h4>📖 GIẢI THÍCH TỪNG SỐ</h4>';
-    
-    // Manh mối khởi động
-    html += '<div class="explain-summary">';
-    html += '🎲 Manh mối: <b>' + escapeHtml(currentHint) + '</b>';
-    html += '</div>';
-
-    // Từng số
-    for (var s = 0; s < numCount; s++) {
-      var exp = buildSlotExplanation(s);
-      html += '<div class="explain-slot">';
-      html += '<div class="explain-slot-header">📍 SỐ ' + (s+1) + ' = <b>' + exp.secret + '</b></div>';
-      
-      if (exp.steps.length === 0) {
-        html += '<div class="explain-step step-clue">Không có câu hỏi nào ảnh hưởng trực tiếp</div>';
-      } else {
-        for (var st = 0; st < exp.steps.length; st++) {
-          var step = exp.steps[st];
-          var cls = 'step-' + (step.answer ? 'yes' : 'no');
-          html += '<div class="explain-step ' + cls + '">';
-          html += '<span class="step-q">' + step.order + '. ' + escapeHtml(step.text) + '</span> ';
-          html += '<span class="step-ans">→ ' + (step.answer ? 'CÓ' : 'KHÔNG') + '</span>';
-          html += '<br><span class="step-elim">❌ Loại: ' + step.eliminated.join(', ') + '</span>';
-          html += ' <span class="step-remain">→ Còn: ' + (step.remaining.length ? step.remaining.join(', ') : 'không còn') + '</span>';
-          html += '</div>';
-        }
-      }
-
-      // Kết quả cuối
-      if (exp.finalRemaining.length === 1) {
-        html += '<div class="explain-result">✅ Sau khi loại trừ: còn ' + exp.finalRemaining[0] + '</div>';
-      } else if (exp.finalRemaining.length > 1) {
-        html += '<div class="explain-result">🔍 Còn lại: ' + exp.finalRemaining.join(', ') + ' — cần thêm manh mối</div>';
-      } else if (exp.steps.length > 0) {
-        html += '<div class="explain-result">✅ Đã loại hết, kết quả: ' + exp.secret + '</div>';
-      }
-      html += '</div>';
-    }
-    html += '</div>';
+    html += '<p style="font-size:11px;color:#ef476f">Không được điểm lần này</p>';
+    html += '<p style="font-size:11px;color:#666">High: ' + g.high + ' • Tổng: ' + g.total + '</p>';
   }
 
-  // Leaderboard
-  var lb = [];
-  try { lb = JSON.parse(localStorage.getItem('turingCrayonLB') || '[]'); } catch(e) {}
+  var lb = getLB(currentGame);
   if (lb.length > 0) {
     html += '<div class="leaderboard"><h3>🏆 TOP 10</h3>';
     for (var m = 0; m < Math.min(lb.length, 10); m++) {
@@ -1977,26 +1485,222 @@ function showResult(correct, points, questionsUsed) {
     html += '</div>';
   }
 
-  if (correct) {
+  if (won) {
     html += '<button id="nextLvBtn" type="button" class="tertiary">LEVEL TIẾP ▶</button>';
     html += '<button id="againBtn" type="button" class="secondary">CHƠI LẠI</button>';
   } else {
     html += '<button id="againBtn" type="button">THỬ LẠI 🔁</button>';
-    html += '<button id="changeModeBtn" type="button" class="secondary">Đổi chế độ</button>';
+    html += '<button id="menuBtn" type="button" class="secondary">VỀ MENU</button>';
   }
 
   showOverlay(html);
 
-  if (correct) {
+  if (won) {
     document.getElementById('nextLvBtn').onclick = function() {
-      level++;
-      els.levelStatEl.textContent = level;
-      prepareVan();
+      g.level++;
+      els.levelStatEl.textContent = g.level;
+      prepareGame(currentGame);
     };
-    document.getElementById('againBtn').onclick = function() { prepareVan(); };
+    document.getElementById('againBtn').onclick = function() {
+      prepareGame(currentGame);
+    };
   } else {
-    document.getElementById('againBtn').onclick = function() { prepareVan(); };
-    document.getElementById('changeModeBtn').onclick = function() { level = 1; showModeSelect(); };
+    document.getElementById('againBtn').onclick = function() {
+      prepareGame(currentGame);
+    };
+    document.getElementById('menuBtn').onclick = function() {
+      backToMenu();
+    };
+  }
+}
+
+// ============ MATH PUZZLE - SINH PHƯƠNG TRÌNH ============
+function generateEquationPool(s) {
+  var n = s.length;
+  var all = [];
+  var i, j, k;
+
+  for (i = 0; i < n; i++) {
+    for (j = i + 1; j < n; j++) {
+      (function(a, b) {
+        var val = s[a] + s[b];
+        all.push({ text: 'Số ' + (a+1) + ' + Số ' + (b+1) + ' = ' + val, strength: 1, hard: false, check: function(arr) { return arr[a] + arr[b] === val; } });
+      })(i, j);
+    }
+  }
+  for (i = 0; i < n; i++) {
+    for (j = i + 1; j < n; j++) {
+      if (s[i] === s[j]) continue;
+      (function(a, b) {
+        var hi = s[a] > s[b] ? a : b; var lo = s[a] > s[b] ? b : a; var val = Math.abs(s[a] - s[b]);
+        all.push({ text: 'Số ' + (hi+1) + ' - Số ' + (lo+1) + ' = ' + val, strength: 1, hard: false, check: function(arr) { return Math.abs(arr[a] - arr[b]) === val; } });
+      })(i, j);
+    }
+  }
+  for (i = 0; i < n; i++) {
+    for (j = i + 1; j < n; j++) {
+      if (s[i] === 0 || s[j] === 0) continue;
+      (function(a, b) {
+        var val = s[a] * s[b];
+        all.push({ text: 'Số ' + (a+1) + ' × Số ' + (b+1) + ' = ' + val, strength: 1.5, hard: false, check: function(arr) { return arr[a] * arr[b] === val; } });
+      })(i, j);
+    }
+  }
+  if (n >= 3) {
+    (function() {
+      var total = 0; var parts = [];
+      for (var x = 0; x < n; x++) { total += s[x]; parts.push('Số ' + (x+1)); }
+      all.push({ text: parts.join(' + ') + ' = ' + total, strength: 1.5, hard: false, check: function(arr) { var t = 0; for (var y = 0; y < arr.length; y++) t += arr[y]; return t === total; } });
+    })();
+  }
+  for (i = 0; i < n; i++) {
+    (function(a) {
+      var val = s[a] * s[a];
+      all.push({ text: 'Số ' + (a+1) + '² = ' + val, strength: 2, hard: true, check: function(arr) { return arr[a] * arr[a] === val; } });
+    })(i);
+  }
+  if (n >= 2) {
+    (function() {
+      var total = 0; var parts = [];
+      for (var x = 0; x < n; x++) { total += s[x] * s[x]; parts.push('Số ' + (x+1) + '²'); }
+      all.push({ text: parts.join(' + ') + ' = ' + total, strength: 2.5, hard: true, check: function(arr) { var t = 0; for (var y = 0; y < arr.length; y++) t += arr[y] * arr[y]; return t === total; } });
+    })();
+  }
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      if (i === j || s[i] <= s[j]) continue;
+      (function(a, b) {
+        var val = s[a]*s[a] - s[b]*s[b];
+        all.push({ text: 'Số ' + (a+1) + '² - Số ' + (b+1) + '² = ' + val, strength: 2, hard: true, check: function(arr) { return arr[a]*arr[a] - arr[b]*arr[b] === val; } });
+      })(i, j);
+    }
+  }
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      if (i === j || s[j] === 0 || s[i] % s[j] !== 0) continue;
+      (function(a, b) {
+        var val = s[a] / s[b];
+        all.push({ text: 'Số ' + (a+1) + ' ÷ Số ' + (b+1) + ' = ' + val, strength: 2, hard: true, check: function(arr) { return arr[b] !== 0 && arr[a] / arr[b] === val; } });
+      })(i, j);
+    }
+  }
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      if (i === j) continue;
+      (function(a, b) {
+        var val = s[a] * 2 + s[b];
+        all.push({ text: 'Số ' + (a+1) + ' × 2 + Số ' + (b+1) + ' = ' + val, strength: 2, hard: true, check: function(arr) { return arr[a] * 2 + arr[b] === val; } });
+      })(i, j);
+    }
+  }
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      if (i === j) continue;
+      (function(a, b) {
+        var val = s[a] * s[a] + s[b];
+        all.push({ text: 'Số ' + (a+1) + '² + Số ' + (b+1) + ' = ' + val, strength: 2, hard: true, check: function(arr) { return arr[a] * arr[a] + arr[b] === val; } });
+      })(i, j);
+    }
+  }
+  if (n >= 3) {
+    for (i = 0; i < n; i++) {
+      for (j = i + 1; j < n; j++) {
+        for (k = j + 1; k < n; k++) {
+          (function(a, b, c) {
+            var val = s[a] * s[b] * s[c];
+            all.push({ text: 'Số ' + (a+1) + ' × Số ' + (b+1) + ' × Số ' + (c+1) + ' = ' + val, strength: 2.5, hard: true, check: function(arr) { return arr[a] * arr[b] * arr[c] === val; } });
+          })(i, j, k);
+        }
+      }
+    }
+  }
+  if (n >= 3) {
+    for (i = 0; i < n; i++) {
+      for (j = i + 1; j < n; j++) {
+        for (k = 0; k < n; k++) {
+          if (k === i || k === j) continue;
+          (function(a, b, c) {
+            var val = (s[a] + s[b]) * s[c];
+            all.push({ text: '(Số ' + (a+1) + ' + Số ' + (b+1) + ') × Số ' + (c+1) + ' = ' + val, strength: 2.5, hard: true, check: function(arr) { return (arr[a] + arr[b]) * arr[c] === val; } });
+          })(i, j, k);
+        }
+      }
+    }
+  }
+  if (n >= 3) {
+    for (i = 0; i < n; i++) {
+      for (j = i + 1; j < n; j++) {
+        for (k = 0; k < n; k++) {
+          if (k === i || k === j) continue;
+          (function(a, b, c) {
+            var val = s[a] * s[b] + s[c];
+            all.push({ text: 'Số ' + (a+1) + ' × Số ' + (b+1) + ' + Số ' + (c+1) + ' = ' + val, strength: 2, hard: true, check: function(arr) { return arr[a] * arr[b] + arr[c] === val; } });
+          })(i, j, k);
+        }
+      }
+    }
+  }
+  return all;
+}
+
+function countMathSolutions(pts, n, maxV, limit) {
+  var count = 0;
+  var total = Math.pow(maxV + 1, n);
+  for (var x = 0; x < total; x++) {
+    var arr = [];
+    var tmp = x;
+    for (var i = 0; i < n; i++) {
+      arr.push(tmp % (maxV + 1));
+      tmp = Math.floor(tmp / (maxV + 1));
+    }
+    var ok = true;
+    for (var p = 0; p < pts.length; p++) {
+      if (!pts[p].check(arr)) { ok = false; break; }
+    }
+    if (ok) {
+      count++;
+      if (count >= limit) return count;
+    }
+  }
+  return count;
+}
+
+function buildMathPuzzle(s) {
+  var n = s.length;
+  var maxV = 9;
+  var all = generateEquationPool(s);
+
+  var strong = [], medium = [], weak = [];
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].strength >= 2.5) strong.push(all[i]);
+    else if (all[i].strength >= 2) medium.push(all[i]);
+    else weak.push(all[i]);
+  }
+
+  if (strong.length >= 2 && medium.length >= 1) {
+    for (var t1 = 0; t1 < 6; t1++) { shuffle(strong); shuffle(medium); var sel1 = strong.slice(0, 2).concat(medium.slice(0, 1)); if (countMathSolutions(sel1, n, maxV, 2) === 1) return sel1; }
+  }
+  if (strong.length >= 3) {
+    for (var t2 = 0; t2 < 6; t2++) { shuffle(strong); var sel2 = strong.slice(0, 3); if (countMathSolutions(sel2, n, maxV, 2) === 1) return sel2; }
+  }
+  if (strong.length >= 2 && medium.length >= 2) {
+    for (var t3 = 0; t3 < 6; t3++) { shuffle(strong); shuffle(medium); var sel3 = strong.slice(0, 2).concat(medium.slice(0, 2)); if (countMathSolutions(sel3, n, maxV, 2) === 1) return sel3; }
+  }
+  if (strong.length >= 1 && medium.length >= 3) {
+    for (var t4 = 0; t4 < 6; t4++) { shuffle(strong); shuffle(medium); var sel4 = strong.slice(0, 1).concat(medium.slice(0, 3)); if (countMathSolutions(sel4, n, maxV, 2) === 1) return sel4; }
+  }
+  var combined = strong.concat(medium).concat(weak);
+  shuffle(combined);
+  for (var k = 3; k <= Math.min(6, combined.length); k++) {
+    if (countMathSolutions(combined.slice(0, k), n, maxV, 2) === 1) return combined.slice(0, k);
+  }
+  return combined.slice(0, Math.min(4, combined.length));
+}
+
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
   }
 }
 
