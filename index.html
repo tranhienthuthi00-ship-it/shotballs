@@ -1249,19 +1249,7 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     background-attachment: fixed;
   }
 
-  /* Thêm lề đỏ dọc bên trái kiểu vở ô ly (tùy chọn) */
-  body.theme-crayon::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 40px;
-    width: 1.5px;
-    background: rgba(230,57,70,0.25);
-    pointer-events: none;
-    z-index: 0;
-  }
-
+  
   /* Viền run run cho mọi card */
   body.theme-crayon .card,
   body.theme-crayon .goal-widget,
@@ -2365,45 +2353,11 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
      BIẾN Ô NHẬP NỘI DUNG THÀNH TRANG GIẤY
      ============================================================ */
 
-  /* 1. Trang giấy mặc định (Giấy vở kẻ ngang) */
-  #noteContent {
-    background-color: #fdfdfd !important;
-    background-image: 
-      linear-gradient(90deg, transparent 39px, #ffb3b3 39px, #ffb3b3 41px, transparent 41px), /* Lề đỏ */
-      repeating-linear-gradient(transparent, transparent 27px, #dbeafe 27px, #dbeafe 28px); /* Dòng kẻ xanh */
-    background-attachment: local;
-    line-height: 28px !important; /* Khớp với khoảng cách dòng kẻ */
-    padding: 10px 15px 10px 50px !important; /* Cách lề trái 50px để chừa chỗ lề đỏ */
-    border: 1.5px solid var(--border) !important;
-    border-radius: 4px !important; /* Trang giấy thường vuông vức */
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.05) !important;
-    font-family: inherit !important;
-    color: var(--text) !important;
-    resize: vertical;
-  }
   #noteContent:focus {
     outline: none !important;
     box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2) !important;
   }
 
-  /* 2. Trang giấy cho Theme Notion (Giấy Note vàng nhạt) */
-  body.theme-notion #noteContent {
-    background-color: #fdfaf6 !important;
-    background-image: 
-      linear-gradient(90deg, transparent 39px, #d4b895 39px, #d4b895 41px, transparent 41px),
-      repeating-linear-gradient(transparent, transparent 27px, #e8d8c8 27px, #e8d8c8 28px);
-    border-color: #d4b895 !important;
-  }
-
-  /* 3. Trang giấy cho Theme Bút sáp (Giấy vẽ) */
-  body.theme-crayon #noteContent {
-    background-color: #fffdf5 !important;
-    background-image: 
-      repeating-linear-gradient(transparent, transparent 27px, #fde68a 27px, #fde68a 28px); /* Chỉ có dòng kẻ vàng, không có lề đỏ */
-    padding-left: 15px !important;
-    border: 2px solid #2b2d42 !important;
-    box-shadow: 3px 3px 0px rgba(43,45,66,0.3) !important;
-  }
   /* ============================================================
      THEME COZY WINTER (LÁ THƯ MÙA ĐÔNG - BẢN HOÀN THIỆN)
      ============================================================ */
@@ -2789,157 +2743,6 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   .bucket-progress {
     background: var(--pink-light) !important; /* Nền màu Be */
     color: var(--pink-dark) !important; /* Chữ màu Nâu đậm */
-  }
- /* ============================================================
-     THEME EDITORIAL POP (TẠP CHÍ) - ĐÃ TINH CHỈNH
-     ============================================================ */
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Caveat:wght@600&family=Quicksand:wght@500;700&display=swap');
-
-  body.theme-editorial {
-    --pink-bg: #C1D7FF; 
-    --pink-surface: #F3F0EA; 
-    --pink-primary: #FFC0FB; 
-    --pink-light: #E0E9FA; 
-    --pink-dark: #000000; 
-    --text: #000000;
-    --text-muted: #555555;
-    --border: #000000; 
-    --bg-gradient: #C1D7FF;
-      
-  }
-
-  body.theme-editorial {
-    background-color: #C1D7FF !important;
-    background-image: none !important; 
-  }
-
-  /* 1. CÁC THẺ (CARD) - Thêm hiệu ứng dán sticker */
-  body.theme-editorial .card,
-  body.theme-editorial .goal-widget,
-  body.theme-editorial .dash-chart-widget,
-  body.theme-editorial .suggest-card,
-  body.theme-editorial .compact-card,
-  body.theme-editorial .salary-card,
-  body.theme-editorial .bucket-list-container,
-  body.theme-editorial .event-card,
-  body.theme-editorial .timeline-card,
-  body.theme-editorial .braces-timeline-card,
-  body.theme-editorial .diary-compact-card,
-  body.theme-editorial .note-list-card,
-  body.theme-editorial .search-box,
-  body.theme-editorial .filter-btn,
-  body.theme-editorial .calendar-grid,
-  body.theme-editorial .settings-group,
-  body.theme-editorial .place-card-item,
-  body.theme-editorial .other-card {
-    background-color: var(--pink-surface) !important;
-    border: 1.5px solid #000000 !important; 
-    border-radius: 20px !important; 
-    box-shadow: 4px 4px 0px #000000 !important; 
-    filter: none !important; 
-    transform: none !important;
-    position: relative; /* Cần để neo sticker */
-  }
-
-  /* 2. STICKER TRANG TRÍ (Chỉ áp dụng cho các thẻ to) */
-  /* Thêm ngôi sao ✦ ở góc trên bên phải */
-  body.theme-editorial .other-card::after {
-    content: '✦';
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    font-size: 20px;
-    color: #000;
-    font-family: sans-serif;
-    z-index: 2;
-  }
-  /* Thêm bông hoa ✿ ở góc dưới bên trái */
-  body.theme-editorial .other-card::before {
-    content: '✿';
-    position: absolute;
-    bottom: 8px;
-    left: 12px;
-    font-size: 16px;
-    color: var(--pink-primary);
-    z-index: 2;
-  }
-
-  /* 3. TIÊU ĐỀ - Hạn chế highlight */
-  /* Các tiêu đề trong thẻ Card (Như "Địa điểm", "Ghi chú") thì KHÔNG highlight, chỉ in đậm */
-  body.theme-editorial .other-card-title {
-    font-family: 'Oswald', sans-serif !important;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--pink-dark) !important;
-    background: none !important; /* Bỏ highlight */
-    padding: 0;
-    transform: none;
-  }
-
-  /* Chỉ những tiêu đề chính (như Tên địa điểm) mới có highlight */
-  body.theme-editorial .suggest-title,
-  body.theme-editorial .note-title-text,
-  body.theme-editorial .diary-title-text {
-    font-family: 'Oswald', sans-serif !important;
-    text-transform: uppercase;
-    color: var(--pink-dark) !important;
-    background: var(--pink-primary) !important;
-    display: inline-block;
-    padding: 2px 6px;
-    transform: rotate(-1deg);
-    border-radius: 4px;
-  }
-
-  /* Lời chào */
-  body.theme-editorial .greeting {
-    font-family: 'Caveat', cursive !important;
-    font-size: 32px !important;
-    background: var(--pink-light) !important;
-    padding: 0 10px;
-    border-radius: 8px;
-  }
-
-  /* 4. Nút bấm & FAB */
-  body.theme-editorial .save-btn {
-    background: var(--pink-light) !important;
-    color: #000 !important;
-    border: 1.5px solid #000 !important;
-    border-radius: 999px !important; 
-    font-family: 'Oswald', sans-serif !important;
-    box-shadow: 3px 3px 0px #000 !important;
-  }
-  
-  body.theme-editorial .fab {
-    background: var(--pink-primary) !important; 
-    border: 2px solid #000 !important;
-    border-radius: 50% !important;
-    box-shadow: 4px 4px 0px #000 !important;
-  }
-  body.theme-editorial .fab svg { stroke: #000 !important; }
-
-  body.theme-editorial .bottom-nav {
-    background: var(--pink-surface);
-    border: 1.5px solid #000;
-    border-radius: 999px;
-    box-shadow: 4px 4px 0px #000;
-  }
-  body.theme-editorial .nav-item.active { color: #d946ef !important; }
-  body.theme-editorial .nav-item.active svg { stroke: #d946ef !important; }
-
-  /* ==========================================
-     CÁC PHẦN SỬA LỖI (Giữ nguyên)
-     ========================================== */
-  body.theme-editorial .swipe-item {
-    border-radius: 20px !important;
-    overflow: hidden !important;
-    background: transparent !important;
-  }
-  body.theme-editorial .swipe-item .diary-compact-card,
-  body.theme-editorial .swipe-item .note-list-card {
-    margin: 0 !important;
-    width: 100% !important;
-    border-radius: 20px !important;
-    border: 1.5px solid #000 !important;
   }
 /* =======================================================
      TIMELINE CHO NHẬT KÝ & NIỀNG RĂNG
@@ -3965,7 +3768,7 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
         <div class="setting-options">
           <button class="theme-btn" data-theme="default">Đơn giản</button>
            
-          <button class="theme-btn" data-theme="editorial">Editorial Pop</button>
+           
           <button class="theme-btn" data-theme="crayon">🖍️ Bút sáp</button>
           <button class="theme-btn" data-theme="notion">☁️ Notion Aesthetic</button>           <button class="theme-btn" data-theme="winter">❄️ Cozy Winter</button>  
         </div>
@@ -5291,7 +5094,6 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     </div>
   </div>
 </div>
-<!-- Popup Nhắc nhở học tiếng Anh -->
 <div class="confirm-overlay" id="studyReminderOverlay">
   <div class="confirm-box">
     <div class="ico" style="color: var(--pink-primary);">
@@ -5299,13 +5101,15 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     </div>
     <h4>Đến giờ ôn bài rồi!</h4>
     <div style="display: flex; gap: 12px; margin: 16px 0;">
-      <div style="flex: 1; background: #f0fdf4; padding: 12px; border-radius: 12px; border: 1px solid #bbf7d0;">
-        <div id="reminderNewCount" style="font-size: 24px; font-weight: 800; color: #16a34a;">0</div>
-        <div style="font-size: 11px; font-weight: 600; color: #15803d; text-transform: uppercase;">Từ mới</div>
+      <!-- Ô Từ mới -->
+      <div style="flex: 1; background: var(--pink-surface); padding: 12px; border-radius: 12px; border: 1.5px solid var(--pink-light);">
+        <div id="reminderNewCount" style="font-size: 24px; font-weight: 800; color: var(--pink-primary);">0</div>
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Từ mới</div>
       </div>
-      <div style="flex: 1; background: #eff6ff; padding: 12px; border-radius: 12px; border: 1px solid #bfdbfe;">
-        <div id="reminderDueCount" style="font-size: 24px; font-weight: 800; color: #2563eb;">0</div>
-        <div style="font-size: 11px; font-weight: 600; color: #1d4ed8; text-transform: uppercase;">Cần ôn</div>
+      <!-- Ô Cần ôn -->
+      <div style="flex: 1; background: var(--pink-surface); padding: 12px; border-radius: 12px; border: 1.5px solid var(--pink-light);">
+        <div id="reminderDueCount" style="font-size: 24px; font-weight: 800; color: var(--pink-dark);">0</div>
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Cần ôn</div>
       </div>
     </div>
     <p style="font-size: 13px; margin-bottom: 20px;">Tổng cộng <b id="reminderTotalCount" style="color: var(--pink-primary);">0</b> thẻ đang chờ bạn.</p>
@@ -5637,7 +5441,7 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   function applySettings() {
     document.body.className = '';
      
-    if (settings.theme === 'editorial') document.body.classList.add('theme-editorial');
+     
     if (settings.theme === 'nightsky') document.body.classList.add('theme-nightsky');
     if (settings.theme === 'crayon') document.body.classList.add('theme-crayon');
     if (settings.theme === 'notion') document.body.classList.add('theme-notion');
@@ -10768,6 +10572,49 @@ $('btnSavePassageCards').addEventListener('click', () => {
   
   // Chuyển sang tab Quản lý thẻ để người dùng thấy ngay
   openManageView();
+});
+  /* ============================================================
+   FIX LỖI MÚI GIỜ / QUA NGÀY MỚI KHÔNG TỰ CẬP NHẬT
+   ============================================================ */
+let lastKnownDate = new Date().toLocaleDateString('sv').split(' ')[0];
+
+function checkDateChange() {
+  const currentDate = new Date().toLocaleDateString('sv').split(' ')[0];
+  
+  // Nếu ngày hiện tại khác với ngày đã lưu (tức là đã qua 12h đêm)
+  if (currentDate !== lastKnownDate) {
+    lastKnownDate = currentDate;
+    
+    // 1. Cập nhật lại giao diện Trang chủ (Streak, Việc hôm nay, v.v.)
+    if (typeof renderHome === 'function') renderHome();
+    
+    // 2. Cập nhật lại tab Nhật ký (nếu đang mở)
+    if (currentTab === 'diary' && typeof renderDiaries === 'function') {
+      renderDiaries();
+    }
+    
+    // 3. Cập nhật lại tab Tài chính (nhắc nhở thanh toán)
+    if (currentTab === 'finance' && typeof renderFinance === 'function') {
+      renderFinance();
+    }
+
+    // 4. Cập nhật lại phần Học (nếu đang mở)
+    if (currentTab === 'study' && typeof renderStudyMain === 'function') {
+      renderStudyMain();
+    }
+    
+    console.log('🌅 Đã qua ngày mới, tự động cập nhật giao diện!');
+  }
+}
+
+// Cứ mỗi 30 giây sẽ kiểm tra 1 lần (nhẹ nhàng, không tốn pin)
+setInterval(checkDateChange, 30000);
+
+// Kiểm tra ngay khi người dùng quay lại app (từ background trở về)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    checkDateChange();
+  }
 });
 })();
 </script>
