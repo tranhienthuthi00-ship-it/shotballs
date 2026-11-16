@@ -3633,9 +3633,10 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   border-color: var(--pink-primary);
 }
 .fc-checkbox svg {
-  width: 12px;
-  height: 12px;
-  stroke: white;
+  width: 14px !important;
+  height: 14px !important;
+  stroke: white !important;
+  stroke-width: 3 !important; /* Làm nét vẽ đậm hơn cho dễ nhìn */
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -3677,7 +3678,8 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   position: fixed;
   bottom: calc(var(--nav-bottom) + 16px);
   left: 50%;
-  transform: translateX(-50%) translateY(100px);
+  transform: translateX(-50%);
+  display: none;
   
   /* Sử dụng biến màu của Theme */
   background: var(--pink-surface) !important; 
@@ -3686,7 +3688,6 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   
   padding: 10px 16px;
   border-radius: 999px;
-  display: flex;
   align-items: center;
   gap: 12px;
   box-shadow: var(--shadow-lg) !important;
@@ -3696,6 +3697,7 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
 }
 
 .fc-bulk-action-bar.show {
+  display: flex;
   transform: translateX(-50%) translateY(0);
 }
 
@@ -3990,6 +3992,22 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     </div>
     
     <button class="save-btn" id="saveSettingsBtn">Lưu thay đổi</button>
+    <!-- Nút Sao lưu / Khôi phục (Toàn bộ App) -->
+<div class="settings-group" style="margin-top: 20px;">
+  <div class="settings-group-title">Dữ liệu & Sao lưu</div>
+  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5;">
+    Sao lưu toàn bộ Sổ tay (Địa điểm, Nhật ký, Ghi chú, Tài chính, Flashcard...) thành 1 file duy nhất.
+  </div>
+  <div class="backup-bar">
+    <button class="backup-btn" id="btnExportData">
+      <svg class="hand-icon"><use href="#icon-download"/></svg> Sao lưu
+    </button>
+    <button class="backup-btn" id="btnImportData">
+      <svg class="hand-icon"><use href="#icon-upload"/></svg> Khôi phục
+    </button>
+    <input type="file" id="importFileInput" accept=".json" style="display:none">
+  </div>
+</div>
   </div>
 </div>
 
@@ -4368,16 +4386,6 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
         <button class="credit-add-btn" id="btnAddCredit">+ Thêm khoản chi</button>
       </div>
 
-      <!-- Nút Sao lưu / Khôi phục -->
-      <div class="backup-bar">
-        <button class="backup-btn" id="btnExportData">
-          <svg class="hand-icon"><use href="#icon-download"/></svg> Sao lưu
-        </button>
-        <button class="backup-btn" id="btnImportData">
-          <svg class="hand-icon"><use href="#icon-upload"/></svg> Khôi phục
-        </button>
-        <input type="file" id="importFileInput" accept=".json" style="display:none">
-      </div>
     </div>
 
   </div>
@@ -5796,6 +5804,9 @@ const NOTE_STATUS = {
 
   /* ==================== TAB SWITCHER ==================== */
   function switchTab(tabId) {
+    if (typeof isSelectMode !=='undefined'&& isSelectMode) {
+      exitSelectMode();
+    }
     currentTab = tabId;
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.getElementById('tab-' + tabId).classList.add('active');
@@ -7952,7 +7963,7 @@ ${p.status === 'done' ? `<div class="visited-stamp in-list"><div class="stamp-te
 
   /* ==================== EXPORT / IMPORT ==================== */
   $('btnExportData').addEventListener('click', () => {
-    const backup = { places, diaries, braces, notes, finances, revenues, settings, salaryData, goals, events, bills, exportedAt: new Date().toISOString(), version: 'v34' };
+    const backup = { places, diaries, braces, notes, finances, revenues, settings, salaryData, goals, events, bills, flashcards, exportedAt: new Date().toISOString(), version: 'v35' };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -8025,9 +8036,14 @@ ${p.status === 'done' ? `<div class="visited-stamp in-list"><div class="stamp-te
           }
         }
         if (Array.isArray(data.goals)) goals = data.goals;
-        if (Array.isArray(data.events)) events = data.events;
-        if (Array.isArray(data.bills)) bills = data.bills;
-        
+if (Array.isArray(data.events)) events = data.events;
+if (Array.isArray(data.bills)) bills = data.bills;
+
+// Khôi phục Flashcards
+if (Array.isArray(data.flashcards)) {
+  flashcards = data.flashcards;
+  saveFlashcards();
+}
         applySettings();
         saveData();
         switchTab(currentTab);
@@ -8502,6 +8518,9 @@ ${p.status === 'done' ? `<div class="visited-stamp in-list"><div class="stamp-te
 
   /* ==================== SỰ KIỆN LƯU ==================== */
   $('fab').addEventListener('click', () => {
+    if (typeof isSelectMode !=='undefined'&& isSelectMode) {
+      exitSelectMode();
+    }
     if (currentTab === 'others') {
       if (currentOtherCategory === 'place') openPlaceModal(null);
       else if (currentOtherCategory === 'goal') toast('Vui lòng thêm trực tiếp ở bảng bên dưới');
@@ -9900,7 +9919,7 @@ function renderFcManageList() {
   const list = $('fcManageList');
   let arr = flashcards.slice();
 
-  // 1. Lọc theo từ khóa tìm kiếm (Tiếng Việt, Tiếng Anh, Ghi chú, Tag)
+  // 1. Lọc tìm kiếm
   if (typeof fcSearchQuery !== 'undefined' && fcSearchQuery.trim() !== '') {
     const q = fcSearchQuery.toLowerCase().trim();
     arr = arr.filter(c => 
@@ -9911,12 +9930,12 @@ function renderFcManageList() {
     );
   }
 
-  // 2. Lọc theo nút Chip (Chưa học, Đang học, Đã thuộc)
+  // 2. Lọc theo Chip
   if (fcFilterMode === 'new') arr = arr.filter(c => !c.sr || c.sr.reps === 0);
   else if (fcFilterMode === 'learning') arr = arr.filter(c => c.sr && c.sr.reps > 0 && c.sr.interval < 21);
   else if (fcFilterMode === 'mastered') arr = arr.filter(c => c.sr && c.sr.interval >= 21);
 
-  // 3. Hiển thị thông báo nếu không có thẻ nào
+  // 3. Thông báo rỗng
   if (arr.length === 0) {
     if (typeof fcSearchQuery !== 'undefined' && fcSearchQuery) {
       list.innerHTML = `<div class="study-empty"><h3>Không tìm thấy thẻ</h3><p>Không có thẻ nào khớp với từ khóa "${esc(fcSearchQuery)}".</p></div>`;
@@ -9927,7 +9946,7 @@ function renderFcManageList() {
     return;
   }
 
-  // 4. Sắp xếp và render
+  // 4. Render danh sách
   arr.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
 
   list.innerHTML = arr.map(c => {
@@ -9936,25 +9955,23 @@ function renderFcManageList() {
     const isSelected = selectedFcIds.has(c.id);
     
     return `
-      <div class="fc-card">
-        <!-- Nút chọn (Chỉ hiện khi ở chế độ chọn) -->
+      <div class="fc-card" onclick="${isSelectMode ? `toggleSelectCard('${c.id}')` : `openFcModal('${c.id}')`}">
+        
+        <!-- Checkbox nằm góc phải trên cùng -->
         ${isSelectMode ? `
-          <div class="fc-select-checkbox ${isSelected ? 'selected' : ''}" data-id="${c.id}" onclick="event.stopPropagation(); toggleSelectCard('${c.id}')">
+          <div class="fc-checkbox ${isSelected ? 'checked' : ''}" data-id="${c.id}" onclick="event.stopPropagation(); toggleSelectCard('${c.id}')">
             <svg class="hand-icon"><use href="#icon-check-circle"/></svg>
           </div>
         ` : ''}
         
-        <!-- Vùng nội dung (Bấm vào để sửa hoặc để chọn) -->
-        <div onclick="${isSelectMode ? `toggleSelectCard('${c.id}')` : `openFcModal('${c.id}')`}" style="flex:1; display:flex; flex-direction:column; gap:6px; cursor:pointer;">
-          <div class="fc-card-top">
-            <div class="fc-card-vi">${esc(c.vi)}</div>
-            <span class="fc-card-status ${status.cls}">${status.label}</span>
-          </div>
-          <div class="fc-card-en">→ ${esc(c.en)}</div>
-          <div class="fc-card-meta">
-            <span>📅 ${interval}</span>
-            ${c.tag ? `<span>#${esc(c.tag)}</span>` : ''}
-          </div>
+        <div class="fc-card-top">
+          <div class="fc-card-vi">${esc(c.vi)}</div>
+          <span class="fc-card-status ${status.cls}">${status.label}</span>
+        </div>
+        <div class="fc-card-en">→ ${esc(c.en)}</div>
+        <div class="fc-card-meta">
+          <span>📅 ${interval}</span>
+          ${c.tag ? `<span>#${esc(c.tag)}</span>` : ''}
         </div>
       </div>
     `;
