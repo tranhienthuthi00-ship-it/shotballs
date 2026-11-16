@@ -2943,12 +2943,14 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   .study-main-btn svg { width: 22px; height: 22px; }
 
   .study-secondary-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Chia làm 2 cột bằng nhau */
     gap: 10px;
+    width: 100%;
   }
   .study-secondary-btn {
-    flex: 1;
-    padding: 14px;
+    width: 100%;
+    padding: 14px 10px;
     border-radius: 14px;
     border: 1.5px dashed var(--pink-light);
     background: var(--pink-surface);
@@ -2961,7 +2963,7 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     justify-content: center;
     gap: 6px;
     font-family: inherit;
-    transition: all 0.15s;
+    white-space: nowrap;
   }
   .study-secondary-btn:active {
     transform: scale(0.97);
