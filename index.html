@@ -2816,7 +2816,7 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     margin-bottom: 2px;
   }
   #bracesTimelineWrap .tl-date {
-    color: #2563eb;
+    color: var(--pink-primary) !important;
   }
 
   /* Thẻ nội dung bên dưới ngày */
@@ -6896,17 +6896,23 @@ ${p.status === 'done' ? `<div class="visited-stamp in-list"><div class="stamp-te
 
       // ===== 2. RENDER KIẾN THỨC (Phong cách Apple Notes) =====
       if (n.type === 'knowledge') {
-        // Tách text thuần từ HTML (nếu có) để hiển thị đoạn trích ngắn gọn
-        const plainTextContent = n.content ? n.content.replace(/<[^>]+>/g, ' ').trim() : '';
-        
         return `
-          <div class="apple-note-card" onclick="openDetailModal('note', '${n.id}')" style="position: relative; z-index: 10; cursor: pointer;">
+          <div class="apple-note-card" onclick="openDetailModal('note', '${n.id}')">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 8px;">
               <div class="note-title-text" style="flex: 1; min-width: 0; font-size: 15px;">${esc(n.title)}</div>
-              <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); white-space: nowrap; margin-top: 2px;">${fmtDate(n.date)}</span>
+              
+              <!-- Cụm Ngày tháng & Nút Xóa -->
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); white-space: nowrap; margin-top: 2px;">${fmtDate(n.date)}</span>
+                <!-- Nút Xóa -->
+                <div onclick="event.stopPropagation(); askDelete('${n.id}', 'note')" style="color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px;">
+                  <svg class="hand-icon" style="width: 16px; height: 16px;"><use href="#icon-trash"/></svg>
+                </div>
+              </div>
             </div>
             
-            ${plainTextContent ? `<div class="note-desc-text" style="font-size: 13px; margin-top: 4px; -webkit-line-clamp: 2;">${esc(plainTextContent)}</div>` : ''}
+            <!-- HIỂN THỊ NỘI DUNG ĐÃ ĐỊNH DẠNG (BỎ LỆNH XÓA THẺ HTML) -->
+            ${n.content ? `<div class="note-desc-text" style="font-size: 13px; margin-top: 4px; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${n.content}</div>` : ''}
             
             ${n.hashtags && n.hashtags.length > 0 ? `
               <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 6px;">
