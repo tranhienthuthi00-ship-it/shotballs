@@ -1569,7 +1569,108 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   }
 
   /* ===== Đồng điệu màu các chỗ còn sót ===== */
+  /* ===== NÂNG CẤP RIÊNG CHO TAB HỌC TIẾNG ANH ===== */
+  
+  /* 1. Khung Header Thống kê (Nền vàng sáp, viền đen) */
+  body.theme-crayon .study-header {
+    background: var(--crayon-yellow) !important;
+    color: var(--text) !important;
+    border: 2.5px solid var(--text) !important;
+    border-radius: 12px 10px 13px 11px !important;
+    box-shadow: 3px 3px 0px rgba(43,45,66,0.35) !important;
+    filter: url(#crayon-wobble);
+  }
+  body.theme-crayon .study-header-title,
+  body.theme-crayon .study-stat-lbl {
+    color: var(--text) !important;
+  }
+  
+  /* 2. Các ô số liệu bên trong Header */
+  body.theme-crayon .study-stat-box {
+    background: rgba(255,255,255,0.6) !important;
+    border: 2px dashed var(--text) !important;
+    border-radius: 10px 8px 11px 9px !important;
+    color: var(--text) !important;
+  }
+  body.theme-crayon .study-stat-val {
+    color: var(--crayon-red) !important;
+  }
 
+  /* 3. Nút Bắt đầu học (Xanh lá sáp, viền đen) */
+  body.theme-crayon .study-main-btn {
+    background: var(--crayon-green) !important;
+    color: white !important;
+    border: 2.5px solid var(--text) !important;
+    border-radius: 12px 10px 13px 11px !important;
+    box-shadow: 3px 3px 0px rgba(43,45,66,0.4) !important;
+    filter: url(#crayon-wobble-strong);
+  }
+  body.theme-crayon .study-main-btn svg {
+    stroke: white !important;
+    stroke-width: 3 !important;
+  }
+  body.theme-crayon .study-main-btn:active {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 1px 1px 0px rgba(43,45,66,0.4) !important;
+  }
+
+  /* 4. Các nút phụ (Quản lý, Import, Export, Dịch đoạn văn) */
+  body.theme-crayon .study-secondary-btn {
+    background: #fffdf5 !important;
+    color: var(--text) !important;
+    border: 2px dashed var(--text) !important;
+    border-radius: 10px 8px 11px 9px !important;
+    box-shadow: 2px 2px 0px rgba(43,45,66,0.35) !important;
+  }
+  body.theme-crayon .study-secondary-btn svg {
+    stroke: var(--text) !important;
+  }
+
+  /* 5. Thẻ Flashcard (Khung vẽ tay) */
+  body.theme-crayon .study-card {
+    border: 2.5px solid var(--text) !important;
+    border-radius: 12px 10px 13px 11px !important;
+    box-shadow: 3px 3px 0px rgba(43,45,66,0.35) !important;
+    background: #fffdf5 !important;
+    filter: url(#crayon-wobble);
+  }
+
+  /* 6. Ô nhập câu trả lời */
+  body.theme-crayon .study-answer-input {
+    border: 2px solid var(--text) !important;
+    border-radius: 10px 8px 11px 9px !important;
+    background: #fffdf5 !important;
+    box-shadow: none !important;
+  }
+  body.theme-crayon .study-answer-input:focus {
+    border-color: var(--crayon-red) !important;
+    box-shadow: 3px 3px 0px rgba(230,57,70,0.3) !important;
+  }
+
+  /* 7. Nút Đánh giá (Again, Hard, Good) */
+  body.theme-crayon .study-rating-btn {
+    border: 2px solid var(--text) !important;
+    border-radius: 10px 8px 11px 9px !important;
+    box-shadow: 2px 2px 0px var(--text) !important;
+    color: var(--text) !important;
+  }
+  body.theme-crayon .study-rating-btn:active {
+    transform: translate(2px, 2px) !important;
+    box-shadow: none !important;
+  }
+  /* Màu pastel nền cho 3 nút */
+  body.theme-crayon .study-rating-btn.again { background: #ffe5e7 !important; }
+  body.theme-crayon .study-rating-btn.hard { background: #fff3cd !important; }
+  body.theme-crayon .study-rating-btn.good { background: #d8f3dc !important; }
+
+  /* 8. Thẻ trong Quản lý thẻ (fc-card) */
+  body.theme-crayon .fc-card {
+    border: 2.5px solid var(--text) !important;
+    border-radius: 12px 10px 13px 11px !important;
+    box-shadow: 3px 3px 0px rgba(43,45,66,0.35) !important;
+    background: #fffdf5 !important;
+    filter: url(#crayon-wobble);
+  }
   /* 1. Bảng tổng hợp niềng răng */
   body.theme-crayon .braces-dashboard-card {
     background: linear-gradient(135deg, #ffe5e7, #fff3cd);
