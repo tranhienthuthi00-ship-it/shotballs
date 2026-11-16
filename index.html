@@ -4431,6 +4431,10 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     <svg class="hand-icon"><use href="#icon-list"/></svg>
     Quản lý thẻ
   </button>
+        <button class="study-secondary-btn" id="btnTranslatePassage">
+  <svg class="hand-icon"><use href="#icon-pencil-square"/></svg>
+  Dịch đoạn văn
+</button>
   <button class="study-secondary-btn" id="btnImportCards">
     <svg class="hand-icon"><use href="#icon-upload"/></svg>
     Import
@@ -5327,6 +5331,33 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
       <button class="cancel" id="btnPaymentLater">Để sau</button>
       <button class="confirm" id="btnPaymentNow">Xem ngay</button>
     </div>
+  </div>
+</div>
+  <!-- Modal Dịch đoạn văn -->
+<div class="overlay" id="translatePassageOverlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2>Dịch đoạn văn <button id="closeTranslateModal"><svg class="hand-icon"><use href="#icon-x"/></svg></button></h2>
+
+    <div id="translateStep1">
+      <div class="field">
+        <label>Dán đoạn văn Tiếng Việt</label>
+        <textarea id="passageViInput" placeholder="Dán đoạn văn của bạn vào đây... (VD: Hôm nay trời đẹp. Tôi đi cà phê với bạn. Chúng tôi nói chuyện rất vui vẻ.)" style="min-height: 150px;"></textarea>
+      </div>
+      <button class="save-btn" id="btnSplitPassage">
+        <svg class="hand-icon"><use href="#icon-list"/></svg> Tách thành từng câu
+      </button>
+    </div>
+
+    <div id="translateStep2" style="display: none;">
+  <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5;">
+    Đã tách thành <b id="passageSentenceCount" style="color: var(--pink-primary);">0</b> câu. Bạn có thể nhập bản dịch tiếng Anh ngay bên dưới.
+  </div>
+  <div id="passageSentenceList" style="display: flex; flex-direction: column; gap: 12px; max-height: 50vh; overflow-y: auto; padding-right: 4px; padding-bottom: 10px;"></div>
+  <button class="save-btn" id="btnSavePassageCards" style="margin-top: 10px;">
+    <svg class="hand-icon"><use href="#icon-save"/></svg> Lưu tất cả thành thẻ
+  </button>
+</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -9254,7 +9285,46 @@ function renderStudyCard() {
   $('stProgressCurrent').textContent = studySession.currentIndex + 1;
   $('stProgressTotal').textContent = studySession.queue.length;
 
-  // Tạo HTML cho phần Gợi ý (nếu có ghi chú)
+  // Kiểm tra xem thẻ này có phải là thẻ "Dịch đoạn văn" đang trống đáp án không
+  const isPassageCard = (!card.en || card.en.trim() === '') && card.tag === 'Đoạn văn';
+
+  if (isPassageCard) {
+    // === GIAO DIỆN DÀNH RIÊNG CHO DỊCH ĐOẠN VĂN ===
+    $('stSessionContent').innerHTML = `
+      <div class="study-card">
+        <div class="study-card-label">Dịch sang tiếng Anh</div>
+        <div class="study-card-question">${esc(card.vi)}</div>
+        
+        <div style="margin-top:20px;">
+          <div class="study-card-label">Nhập câu tiếng Anh của bạn</div>
+          <textarea class="study-answer-input" id="stPassageAnswer" placeholder="Nhập bản dịch của bạn..."></textarea>
+        </div>
+
+        <button class="study-main-btn" style="margin-top:16px;" id="btnSavePassageAnswer">
+          <svg class="hand-icon"><use href="#icon-save"/></svg> Lưu đáp án
+        </button>
+      </div>
+    `;
+
+    $('btnSavePassageAnswer').addEventListener('click', () => {
+      const ans = $('stPassageAnswer').value.trim();
+      if (!ans) return toast('Vui lòng nhập bản dịch');
+      
+      // Cập nhật đáp án vào thẻ
+      card.en = ans;
+      saveFlashcards();
+      toast('✅ Đã lưu đáp án!');
+      
+      // Chuyển sang thẻ tiếp theo
+      studySession.currentIndex++;
+      renderStudyCard();
+    });
+    
+    setTimeout(() => $('stPassageAnswer').focus(), 200);
+    return; // Dừng hàm tại đây
+  }
+
+  // === CÁC THẺ BÌNH THƯỜNG (Giữ nguyên code cũ của bạn) ===
   let hintHtml = '';
   if (card.note) {
     hintHtml = `
@@ -9267,22 +9337,16 @@ function renderStudyCard() {
     `;
   }
 
-  // 1 khung duy nhất: study-card chứa câu hỏi + input + nút nghe + nút kiểm tra
   $('stSessionContent').innerHTML = `
     <div class="study-card">
       <div class="study-card-label">Tiếng Việt</div>
       <div class="study-card-question">${esc(card.vi)}</div>
 
-      <!-- Khu vực chứa Loa và Nút Gợi ý -->
       <div style="margin-top:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%;">
-        
-        <!-- Nút loa -->
         <button type="button" id="btnPlayHint" style="width:42px; height:42px; border-radius:50%; background:var(--pink-primary); border:none; color:white; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);">
           <svg class="hand-icon" style="width:20px; height:20px; stroke:white;"><use href="#icon-bell"/></svg>
         </button>
-        
         ${hintHtml}
-        
       </div>
 
       <div style="margin-top:20px;">
@@ -9297,17 +9361,14 @@ function renderStudyCard() {
     </div>
   `;
 
-  // Gắn sự kiện
   $('btnCheckAnswer').addEventListener('click', checkAnswer);
   $('btnPlayHint').addEventListener('click', () => speakEnglish(card.en));
 
-  // Sự kiện Ẩn/Hiện Ghi chú
   const btnShowNote = $('btnShowNote');
   if (btnShowNote) {
     btnShowNote.addEventListener('click', () => {
       const noteContainer = $('hintNoteContainer');
       const isHidden = noteContainer.style.display === 'none' || noteContainer.style.display === '';
-      
       if (isHidden) {
         noteContainer.style.display = 'block';
         btnShowNote.innerHTML = `<svg class="hand-icon" style="width:14px; height:14px; stroke:var(--pink-primary);"><use href="#icon-bulb"/></svg> Ẩn gợi ý`;
@@ -9320,7 +9381,6 @@ function renderStudyCard() {
 
   setTimeout(() => $('stUserAnswer').focus(), 200);
 }
-
 function checkAnswer() {
   if (studySession.answered) return;
   const userAns = $('stUserAnswer').value.trim();
@@ -10592,6 +10652,123 @@ if (newCashHeader) {
   return { current: current, best: 0 }; 
   // (Phần best có thể bỏ qua nếu không hiển thị ở đây)
 }
+  /* ==================== DỊCH ĐOẠN VĂN ==================== */
+let passageSentences = []; // Mảng lưu các câu tạm thời
+
+// Mở modal
+$('btnTranslatePassage').addEventListener('click', () => {
+  $('translateStep1').style.display = 'block';
+  $('translateStep2').style.display = 'none';
+  $('passageViInput').value = '';
+  passageSentences = [];
+  $('translatePassageOverlay').classList.add('show');
+  setTimeout(() => $('passageViInput').focus(), 300);
+});
+
+$('closeTranslateModal').addEventListener('click', () => {
+  $('translatePassageOverlay').classList.remove('show');
+});
+
+// Tách câu
+$('btnSplitPassage').addEventListener('click', () => {
+  const text = $('passageViInput').value.trim();
+  if (!text) return toast('Vui lòng dán đoạn văn');
+
+  // Regex tách câu thông minh (tách theo dấu . ? ! và giữ lại dấu câu)
+  // Tránh tách các số thập phân (VD 3.14) bằng cách yêu cầu có khoảng trắng phía sau
+  const rawSentences = text.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 0);
+  
+  if (rawSentences.length === 0) return toast('Không tìm thấy câu nào');
+
+  passageSentences = rawSentences.map((s, idx) => ({
+    id: 'temp_' + idx,
+    vi: s.trim(),
+    en: '' // Sẽ nhập ở Bước 4
+  }));
+
+  renderPassageSentences();
+  $('translateStep1').style.display = 'none';
+  $('translateStep2').style.display = 'block';
+});
+
+// Hiển thị danh sách câu để duyệt/xóa
+// Hiển thị danh sách câu để duyệt/nhập bản dịch
+function renderPassageSentences() {
+  const list = $('passageSentenceList');
+  $('passageSentenceCount').textContent = passageSentences.length;
+
+  if (passageSentences.length === 0) {
+    list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">Không còn câu nào.</div>`;
+    $('btnSavePassageCards').style.display = 'none';
+    return;
+  }
+
+  $('btnSavePassageCards').style.display = 'flex';
+
+  list.innerHTML = passageSentences.map(s => `
+    <div style="background: var(--pink-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; position: relative;">
+      
+      <!-- Nút xóa câu -->
+      <button onclick="removePassageSentence('${s.id}')" style="position: absolute; top: 8px; right: 8px; background: #fef2f2; border: none; color: #dc2626; cursor: pointer; padding: 6px; border-radius: 6px;">
+        <svg class="hand-icon" style="width: 14px; height: 14px; stroke: currentColor;"><use href="#icon-trash"/></svg>
+      </button>
+
+      <!-- Câu tiếng Việt -->
+      <div style="font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; padding-right: 30px;">
+        <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Tiếng Việt</span>
+        ${esc(s.vi)}
+      </div>
+
+      <!-- Ô nhập câu tiếng Anh -->
+      <div>
+        <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Bản dịch tiếng Anh</span>
+        <input type="text" class="passage-en-input" data-id="${s.id}" value="${esc(s.en || '')}" placeholder="Nhập tiếng Anh (hoặc để trống)..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--pink-surface); color: var(--text); outline: none; font-family: inherit; font-size: 13.5px;">
+      </div>
+    </div>
+  `).join('');
+  
+  // Lưu giá trị vào mảng passageSentences mỗi khi gõ
+  list.querySelectorAll('.passage-en-input').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const id = e.target.dataset.id;
+      const item = passageSentences.find(x => x.id === id);
+      if (item) item.en = e.target.value;
+    });
+  });
+}
+window.removePassageSentence = function(id) {
+  passageSentences = passageSentences.filter(s => s.id !== id);
+  renderPassageSentences();
+};
+
+// Lưu thành Flashcard
+$('btnSavePassageCards').addEventListener('click', () => {
+  if (passageSentences.length === 0) return toast('Không có câu nào để lưu');
+
+  let addedCount = 0;
+  const now = Date.now();
+
+  passageSentences.forEach((s, idx) => {
+    // Tạo thẻ với tiếng Anh để trống (người dùng sẽ tự điền khi học)
+    flashcards.push({
+      id: 'fc_passage_' + now + '_' + idx,
+      vi: s.vi,
+      en: '', // Để trống để người dùng học bằng cách dịch
+      note: 'Dịch đoạn văn',
+      tag: 'Đoạn văn',
+      createdAt: now + idx,
+      sr: { interval: 0, ease: 2.5, due: Date.now(), reps: 0, lapses: 0, history: [] }
+    });
+    addedCount++;
+  });
+
+  saveFlashcards();
+  $('translatePassageOverlay').classList.remove('show');
+  toast(`✅ Đã thêm ${addedCount} câu vào bộ thẻ!`);
+  
+  // Chuyển sang tab Quản lý thẻ để người dùng thấy ngay
+  openManageView();
+});
 })();
 </script>
 </body>
