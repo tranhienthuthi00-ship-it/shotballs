@@ -132,20 +132,6 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   .legend-item { display: flex; align-items: center; gap: 4px; }
   .legend-color { width: 8px; height: 8px; border-radius: 50%; }
 
-  /* Goal Widget -> Chỉnh thành thẻ dọc cho ngang hàng */
-  .goal-widget {
-    background: var(--pink-surface); border-radius: 20px; padding: 16px;
-    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
-    display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
-    text-align: center;
-  }
-  .goal-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; margin-bottom: 12px;}
-  .goal-title svg { width: 18px; height: 18px; stroke: var(--pink-primary); }
-  .goal-progress-badge {
-    background: #e0e7ff; color: #4338ca; padding: 8px 12px; border-radius: 999px;
-    font-size: 12px; font-weight: 700;
-  }
-
   /* Animated Suggest Card */
   .suggest-card {
     background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
@@ -592,30 +578,6 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   }
   .book-card:active { transform: scale(0.96) rotate(-1deg); }
   
-  /* Gáy sách - Dùng biến màu chung để đổi theo Theme */
-  .book-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 14px;
-    background: var(--pink-primary);
-    border-radius: 6px 0 0 6px;
-  }
-  /* Các đường chỉ khâu trên gáy */
-  .book-card::after {
-    content: '';
-    position: absolute;
-    left: 4px; top: 12px; bottom: 12px;
-    width: 2px;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.6) 0px,
-      rgba(255,255,255,0.6) 4px,
-      transparent 4px,
-      transparent 10px
-    );
-  }
-  
   .book-title {
     font-size: 14px;
     font-weight: 700;
@@ -650,11 +612,6 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     background: repeating-linear-gradient(180deg, #a32a36, #a32a36 6px, #2a4365, #2a4365 12px);
   }
   
-  /* Hiệu ứng mở sách */
-  @keyframes openBook {
-    0% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; }
-    100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; }
-  }
   /* ===== BIẾN MODAL NOTE THÀNH TRANG GIẤY ===== */
   #noteOverlay .modal {
     background: #fefcf5 !important;
