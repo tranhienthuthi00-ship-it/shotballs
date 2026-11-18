@@ -4005,10 +4005,10 @@ input:checked + .slider:before { transform: translateX(20px); }
     <h2>Thêm hàng loạt <button id="closeFcBulkModal"><svg class="hand-icon"><use href="#icon-x"/></svg></button></h2>
 
     <div style="font-size:12.5px; color:var(--text-muted); background:var(--pink-bg); padding:12px; border-radius:12px; margin-bottom:16px; line-height:1.7;">
-  <b>Định dạng:</b> Mỗi dòng = 1 thẻ, các trường cách nhau bởi dấu phẩy<br>
-  <code style="background:var(--pink-surface); padding:3px 8px; border-radius:4px; font-size:12px; display:block; margin:6px 0;">câu Việt, câu Anh, ghi chú, tag</code>
+  <b>Định dạng:</b> Mỗi dòng = 1 thẻ, các trường cách nhau bởi dấu gạch đứng<br>
+  <code style="background:var(--pink-surface); padding:3px 8px; border-radius:4px; font-size:12px; display:block; margin:6px 0;">câu Việt | câu Anh | ghi chú | tag</code>
   <span style="font-size:11.5px;">
-    • Tối thiểu <b>2 trường</b> (câu Việt, câu Anh)<br>
+    • Tối thiểu <b>2 trường</b> (câu Việt | câu Anh)<br>
     • Có thể nhập <b>2, 3 hoặc 4 trường</b> — trường thiếu để trống<br>
     • <b>Ghi chú</b> và <b>tag</b> là tuỳ chọn
   </span>
@@ -4016,7 +4016,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
     <div class="field">
       <label>Dán nội dung</label>
-      <textarea id="fcBulkInput" placeholder="Tôi đã đi Hà Nội năm ngoái, I went to Hanoi last year&#10;Hôm nay trời đẹp, The weather is nice today, Thì hiện tại, Giao tiếp&#10;Tôi thích phở, I like pho, , Đồ ăn" style="min-height: 240px; font-family: monospace; font-size: 13px; line-height: 1.6;"></textarea>
+      <textarea id="fcBulkInput" placeholder="Tôi đã đi Hà Nội năm ngoái | I went to Hanoi last year&#10;Hôm nay trời đẹp | The weather is nice today | Thì hiện tại | Giao tiếp&#10;Tôi thích phở | I like pho |  |Đồ ăn" style="min-height: 240px; font-family: monospace; font-size: 13px; line-height: 1.6;"></textarea>
     </div>
 
     <div id="fcBulkPreview" style="font-size:12px; color:var(--text-muted); margin-bottom:12px; max-height:300px; overflow-y:auto; padding-right:2px;"></div>
@@ -4098,8 +4098,6 @@ input:checked + .slider:before { transform: translateX(20px); }
     <button class="save-btn" id="resetFilterBtn" style="background:#f3f4f6;color:#6b7280;box-shadow:none;margin-top:10px;">Xóa tất cả bộ lọc</button>
   </div>
 </div>
-
-<!-- Lọc Ghi chú -->
 <!-- Lọc Ghi chú -->
 <div class="overlay" id="noteFilterOverlay">
   <div class="modal">
@@ -8986,7 +8984,7 @@ function parseBulkLine(line) {
   // Nếu ít hơn → thiếu trường cuối
   // Nếu nhiều hơn 4 → gộp phần dư vào tag (giả định tag ít quan trọng)
   
-  const parts = line.split(',').map(p => p.trim());
+  const parts = line.split('|').map(p => p.trim());
   
   if (parts.length < 2) return null; // Không đủ 2 trường tối thiểu
   
@@ -9006,7 +9004,7 @@ function parseBulkLine(line) {
     tag = parts[3] || '';
   } else if (parts.length > 4) {
     // Nhiều hơn 4 → gộp phần giữa vào note, phần cuối làm tag
-    note = parts.slice(2, -1).join(', ');
+    note = parts.slice(2, -1).join('| ');
     tag = parts[parts.length - 1] || '';
   }
   
