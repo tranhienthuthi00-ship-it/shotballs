@@ -1878,7 +1878,7 @@
     <svg class="hand-icon"><use href="#icon-chart"/></svg> Bảng kê doanh thu
   </div>
   <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-    <div class="compact-card-total" id="revTotalVal" style="color:#dc2626; white-space:nowrap;">0 đ</div>
+    <div class="compact-card-total" id="revTotalVal" style="white-space:nowrap;">0 đ</div>
     <button type="button" id="btnResetRevenue" class="btn-outline btn-reset-theme" style="padding:5px 10px; font-size:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px;">
   <svg class="hand-icon" style="width:13px; height:13px;"><use href="#icon-trash"/></svg>
   Reset
@@ -7698,7 +7698,7 @@ let editBillId = null;
 let formBillRepeat = 'none';
 const REPEAT_LABEL = { none: 'Không lặp', daily: 'Hàng ngày', weekly: 'Hàng tuần', monthly: 'Hàng tháng', yearly: 'Hàng năm' };
 
-function renderBills() {
+window.renderBills = function() {
   const container = $('billsListContainer');
   if (!container) return;
 
