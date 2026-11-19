@@ -585,7 +585,7 @@
   .asset-group-toggle svg { width: 18px; height: 18px; stroke: var(--text-muted); transition: transform 0.2s; }
   .asset-group.open .asset-group-toggle svg { transform: rotate(180deg); }
   .asset-group-content { display: none; padding: 0 14px 12px; flex-direction: column; gap: 8px; }
-  .asset-group.open .asset-group-content { display: flex; }
+  .asset-group.open > .asset-group-content {   display: flex !important; }  .asset-group:not(.open) > .asset-group-content {   display: none !important; }
   .asset-item { display: flex; justify-content: space-between; align-items: center; background: var(--pink-surface); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; }
   .asset-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
   .asset-item-title { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1803,10 +1803,11 @@
 <!-- ================= TAB 4: TÀI CHÍNH ================= -->
 <div class="tab-content" id="tab-finance">
   <div class="page-dots" id="finPageDots">
-    <div class="page-dot active" data-page="0"></div>
-    <div class="page-dot" data-page="1"></div>
-    <div class="page-dot" data-page="2"></div>
-  </div>
+  <div class="page-dot active" data-page="0"></div>
+  <div class="page-dot" data-page="1"></div>
+  <div class="page-dot" data-page="2"></div>
+  <div class="page-dot" data-page="3"></div>
+</div>
 
   <div class="finance-carousel" id="finCarousel">
     <div class="finance-page" data-page="0">
@@ -1946,6 +1947,12 @@
   <button class="credit-add-btn" id="btnAddCredit">+ Thêm khoản chi</button>
 </div>
     </div>
+    <div class="finance-page" data-page="3">
+  <div class="compact-card">
+    <div class="section-title">Tổng quan tài sản</div>
+    <div id="allAssetsSummary"></div>
+  </div>
+</div>
   </div>
 </div>
 
@@ -3350,6 +3357,53 @@
 
     return { cashTotal, newCashTotal, creditTotal, bracesTotal, revenueTotal, otherAssetsTotal, loanOutTotal, loanInTotal, totalAsset };
   }
+  // ===== TÍNH TOÀN BỘ TÀI SẢN CHO TRANG 4 =====
+function calcAllAssets() {
+  let cashTotal = 0;
+  DENOMINATIONS.forEach(d => {
+    cashTotal += d * (finances.cash_counts[d] || 0);
+  });
+
+  let newCashTotal = 0;
+  DENOMINATIONS.forEach(d => {
+    newCashTotal += d * (finances.new_cash_counts[d] || 0);
+  });
+
+  let otherAssetsTotal = 0;
+  let loanOutTotal = 0;
+  let loanInTotal = 0;
+
+  finances.other_assets.forEach(a => {
+    if (a.type === 'loan_out') {
+      loanOutTotal += Number(a.value) || 0;
+    } else if (a.type === 'loan_in') {
+      loanInTotal += Number(a.value) || 0;
+    } else {
+      otherAssetsTotal += Number(a.value) || 0;
+    }
+  });
+
+  let creditTotal = 0;
+  finances.credit_expenses.forEach(c => {
+    creditTotal += Number(c.amount) || 0;
+  });
+
+  const totalAssets =
+    cashTotal + newCashTotal + otherAssetsTotal + loanOutTotal;
+
+  const totalDebt = loanInTotal + creditTotal;
+  const netWorth = totalAssets - totalDebt;
+
+  return {
+    cashTotal,
+    newCashTotal,
+    otherAssetsTotal,
+    loanOutTotal,
+    totalAssets,
+    totalDebt,
+    netWorth
+  };
+}
 
   /* ==================== TAB SWITCHER ==================== */
   function switchTab(tabId) {
@@ -5248,9 +5302,162 @@
     }
 
     if (typeof window.renderBills === 'function') {
-      window.renderBills();
-    }
+  window.renderBills();
+}
+
+// Cập nhật trang tổng quan tài sản
+renderAllAssets();
   }
+  // ===== HIỂN THỊ TỔNG QUAN TÀI SẢN TRANG 4 =====
+
+function renderAllAssets() {
+  const fin = calcAllAssets();
+
+  // Nhóm tài sản
+  const groups = {
+    bank: [],
+    other: [],
+    loan_out: [],
+    loan_in: []
+  };
+
+  finances.other_assets.forEach(a => {
+    let type = a.type;
+
+    if (type === 'stock' || type === 'gold') type = 'bank';
+
+    if (type === 'loan_out') groups.loan_out.push(a);
+    else if (type === 'loan_in') groups.loan_in.push(a);
+    else if (type === 'bank') groups.bank.push(a);
+    else groups.other.push(a);
+  });
+
+  // Danh sách tiền mặt theo mệnh giá
+  function cashRows(counts) {
+  const rows = DENOMINATIONS.filter(d => (counts[d] || 0) > 0);
+
+  if (rows.length === 0) {
+    return `<div style="font-size:12px; color:var(--text-muted); padding:8px 0;">Chưa có tiền mặt.</div>`;
+  }
+
+  return `
+    <div class="cash-list-vertical">
+      ${rows.map(d => `
+        <div class="cash-row">
+          <div class="cash-row-label">${d.toLocaleString('vi-VN')} đ</div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:12px; color:var(--text-muted);">× ${counts[d]}</span>
+            <strong style="font-size:13px;">${fmtMoney(d * counts[d])}</strong>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+  // Hiển thị từng nhóm
+  
+function renderGroup(title, items, total) {
+  return `
+    <div class="asset-group">
+      <div class="asset-group-header"
+           onclick="this.parentElement.classList.toggle('open')">
+        <div class="asset-group-title">${title}</div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="asset-group-total">${fmtMoney(total)}</div>
+          <div class="asset-group-toggle">
+            <svg class="hand-icon">
+              <use href="#icon-chevron-down"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="asset-group-content">
+        ${items.length
+          ? items.map(item => `
+              <div class="asset-item" style="cursor:default;">
+                <div class="asset-item-left">
+                  <div class="asset-item-title">${esc(item.name)}</div>
+                </div>
+                <div class="asset-item-right">${fmtMoney(item.value)}</div>
+              </div>
+            `).join('')
+          : `<div style="font-size:12px; color:var(--text-muted); padding:8px 0;">
+               Chưa có khoản nào.
+             </div>`
+        }
+      </div>
+    </div>
+  `;
+}
+function renderCashGroup(title, content, total) {
+  return `
+    <div class="asset-group">
+      <div class="asset-group-header"
+           onclick="this.parentElement.classList.toggle('open')">
+        <div class="asset-group-title">${title}</div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="asset-group-total">${fmtMoney(total)}</div>
+          <div class="asset-group-toggle">
+            <svg class="hand-icon">
+              <use href="#icon-chevron-down"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="asset-group-content">
+        ${content}
+      </div>
+    </div>
+  `;
+}
+
+  const cashTotal = cashRows(finances.cash_counts);
+  const newCashTotal = cashRows(finances.new_cash_counts);
+
+  $('allAssetsSummary').innerHTML = `
+    <div class="finance-dashboard" style="margin-bottom:16px;">
+  <div class="finance-balance-label">TỔNG TÀI SẢN</div>
+  <div class="finance-balance">${fmtMoney(fin.totalAssets)}</div>
+
+  <div class="finance-grid">
+    <div class="finance-box">
+      <div class="finance-box-label">TỔNG NỢ</div>
+      <div class="finance-box-val">${fmtMoney(fin.totalDebt)}</div>
+    </div>
+
+    <div class="finance-box">
+      <div class="finance-box-label">TÀI SẢN RÒNG</div>
+      <div class="finance-box-val">${fmtMoney(fin.netWorth)}</div>
+    </div>
+  </div>
+</div>
+
+    ${renderCashGroup('Tiền mặt', cashTotal, fin.cashTotal)}
+${renderCashGroup('Tiền mặt mới', newCashTotal, fin.newCashTotal)}
+
+    ${renderGroup('Ngân hàng', groups.bank,
+      groups.bank.reduce((s, a) => s + (Number(a.value) || 0), 0))}
+
+    ${renderGroup('Tài sản khác', groups.other,
+      groups.other.reduce((s, a) => s + (Number(a.value) || 0), 0))}
+
+    ${renderGroup('Cho vay', groups.loan_out, fin.loanOutTotal)}
+
+    ${renderGroup('Đi vay (Nợ)', groups.loan_in,
+      groups.loan_in.reduce((s, a) => s + (Number(a.value) || 0), 0))}
+
+    ${renderGroup('Chi tiêu thẻ tín dụng',
+  finances.credit_expenses.map(c => ({
+    name: c.name,
+    value: c.amount
+  })),
+  finances.credit_expenses.reduce((s, c) => s + (Number(c.amount) || 0), 0))}
+  `;
+}
+
 
   window.updateRevenueStartDate = function(newDateStr) {
     if(newDateStr) {
