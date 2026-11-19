@@ -1141,8 +1141,8 @@
     transform: none !important;
   }
 
-  body.theme-winter .greeting, body.theme-winter .compact-card-title, body.theme-winter .goal-title, body.theme-winter .bucket-title, body.theme-winter .event-title {
-    font-family: 'Caveat', cursive !important; font-size: 24px !important; color: var(--pink-primary) !important; font-weight: 700;
+    body.theme-winter .greeting, body.theme-winter .compact-card-title, body.theme-winter .goal-title, body.theme-winter .bucket-title, body.theme-winter .event-title {
+    font-family: inherit; color: var(--pink-primary) !important; font-weight: 700;
   }
   body.theme-winter .nav-item { color: #7a6b6b; }
   body.theme-winter .nav-item.active { color: var(--pink-primary) !important; }
@@ -1344,6 +1344,23 @@
     position: relative; z-index: 10;
   }
   .apple-note-card:active { transform: scale(0.98); }
+  .btn-reset-theme {
+    background-color: var(--pink-primary) !important;
+    color: var(--pink-surface) !important;
+    border-radius: 999px !important;
+    font-weight: 700 !important;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset-theme svg.hand-icon {
+    stroke: var(--pink-primary) !important;
+  }
+
+  .btn-reset-theme:active {
+    transform: scale(0.96);
+    background-color: var(--pink-bg) !important;
+  }
+
 </style>
 </head>
 <body>
@@ -1862,10 +1879,10 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
     <div class="compact-card-total" id="revTotalVal" style="white-space:nowrap;">0 đ</div>
-    <button type="button" id="btnResetRevenue" class="btn-outline" style="padding:5px 10px; font-size:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px;">
-      <svg class="hand-icon" style="width:13px; height:13px;"><use href="#icon-trash"/></svg>
-      Reset
-    </button>
+    <button type="button" id="btnResetRevenue" class="btn-outline btn-reset-theme" style="padding:5px 10px; font-size:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px;">
+  <svg class="hand-icon" style="width:13px; height:13px;"><use href="#icon-trash"/></svg>
+  Reset
+</button>
   </div>
 </div>
         <div class="revenue-table" id="revenueTable"></div>
@@ -1918,10 +1935,11 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
     <div class="compact-card-total" id="creditTotalLabel" style="color:#dc2626; white-space:nowrap;">0 đ</div>
-    <button type="button" id="btnResetCredit" class="btn-outline" style="padding:5px 10px; font-size:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px;">
-      <svg class="hand-icon" style="width:13px; height:13px;"><use href="#icon-trash"/></svg>
-      Reset
-    </button>
+    <button type="button" id="btnResetCredit" class="btn-outline btn-reset-theme" style="padding:5px 10px; font-size:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px;">
+  <svg class="hand-icon" style="width:13px; height:13px;"><use href="#icon-trash"/></svg>
+  Reset
+</button>
+
   </div>
 </div>
   <div class="credit-list" id="creditListContainer"></div>
