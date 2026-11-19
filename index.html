@@ -132,6 +132,20 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   .legend-item { display: flex; align-items: center; gap: 4px; }
   .legend-color { width: 8px; height: 8px; border-radius: 50%; }
 
+  /* Goal Widget -> Chỉnh thành thẻ dọc cho ngang hàng */
+  .goal-widget {
+    background: var(--pink-surface); border-radius: 20px; padding: 16px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
+    text-align: center;
+  }
+  .goal-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; margin-bottom: 12px;}
+  .goal-title svg { width: 18px; height: 18px; stroke: var(--pink-primary); }
+  .goal-progress-badge {
+    background: #e0e7ff; color: #4338ca; padding: 8px 12px; border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+  }
+
   /* Animated Suggest Card */
   .suggest-card {
     background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
@@ -242,39 +256,36 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
     font-family: inherit; box-shadow: var(--shadow-sm);
   }
 
-  /* ================= LIST CARDS & TAGS ================= */
-  .note-list, .diary-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
-  .note-list-card, .diary-compact-card { background: var(--pink-surface); border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s; }
-  .note-list-card { padding: 12px; display: flex; gap: 12px; align-items: flex-start; position: relative; }
-  .diary-compact-card { padding: 14px; display: flex; align-items: center; gap: 12px; }
-  .diary-compact-card.braces-card { border-left: 4px solid var(--pink-primary); }
-
-  .note-icon-box, .diary-icon-box { width: 40px; height: 40px; border-radius: 12px; background: var(--pink-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--pink-primary); }
-  .note-icon-box svg, .diary-icon-box svg { width: 20px; height: 20px; }
+  /* List Card dùng chung (thu gọn) - Thay thế Grid */
+  .note-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+  .note-list-card {
+    background: var(--pink-surface); border-radius: 16px; padding: 12px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    display: flex; gap: 12px; align-items: flex-start; cursor: pointer;
+    transition: transform 0.2s;
+    position: relative; /* Cần cho swipe */
+  }
+  .note-icon-box {
+    width: 40px; height: 40px; border-radius: 12px; background: var(--pink-bg);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    color: var(--pink-primary);
+  }
+  .note-icon-box svg { width: 20px; height: 20px; }
   .note-icon-box.cafe { background: var(--cafe-bg); color: var(--cafe-text); }
   .note-icon-box.food { background: var(--food-bg); color: var(--food-text); }
   .note-icon-box.travel { background: var(--travel-bg); color: var(--travel-text); }
   .note-icon-box.note { background: var(--note-bg); color: var(--note-text); }
   .note-icon-box.task { background: var(--task-bg); color: var(--task-text); }
   .note-icon-box.tip { background: var(--tip-bg); color: var(--tip-text); }
-  .diary-compact-card.braces-card .diary-icon-box { background: #eff6ff; color: #3b82f6; }
-
-  .note-content-box, .diary-content-box { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-  .diary-content-box { gap: 0; }
-  .note-title-text, .diary-title-text { font-size: 14.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .diary-title-text { font-size: 14px; margin-bottom: 2px; }
   
-  .note-date-text, .diary-date-text { font-size: 11px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
-  .diary-date-text { font-weight: 700; color: var(--pink-primary); }
-  .diary-compact-card.braces-card .diary-date-text { color: #2563eb; }
+  .note-content-box { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .note-title-text { font-size: 14.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   
   .note-meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 2px; }
-  .diary-date-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-  .diary-mood-text { font-size: 11px; background: var(--pink-bg); padding: 2px 6px; border-radius: 4px; color: var(--pink-dark); }
-  .diary-desc-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .diary-amount-text { font-size: 12px; font-weight: 700; color: #dc2626; margin-top: 2px; }
-  .note-desc-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.4; margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
+  .note-date-text { font-size: 11px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 3px;}
+  .note-date-text svg { width: 12px; height: 12px; }
+  
+  /* Các tag nhỏ gọn */
   .tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
   .tag svg { width: 10px; height: 10px; }
   .tag.cafe { background: var(--cafe-bg); color: var(--cafe-text); }
@@ -286,415 +297,907 @@ body.font-museomoderno { --font-family: 'MuseoModerno', cursive; }
   .tag.date { background: #f8f9fa; color: #adb5bd; }
   .tag.city { background: #f3e8ff; color: #7e22ce; }
   .tag.hashtag { background: #f0fdf4; color: #16a34a; border: 1px dashed #86efac; }
-
-  .status-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.4px; text-transform: uppercase; }
+  
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700; padding: 2px 6px;
+    border-radius: 4px; letter-spacing: 0.4px; text-transform: uppercase;
+  }
   .status-badge svg { width: 10px; height: 10px; }
   .status-badge.want { background: var(--want-bg); color: var(--want-text); }
   .status-badge.done { background: var(--done-bg); color: var(--done-text); }
 
+  .note-desc-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.4; margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* Card List cho Nhật ký / Niềng răng (Thu gọn) */
+  .diary-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+  .diary-compact-card {
+    background: var(--pink-surface); border-radius: 16px; padding: 14px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .diary-compact-card.braces-card { border-left: 4px solid var(--pink-primary); }
+  
+  .diary-icon-box {
+    width: 40px; height: 40px; border-radius: 12px; background: var(--pink-bg);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    color: var(--pink-primary);
+  }
+  .diary-compact-card.braces-card .diary-icon-box { background: #eff6ff; color: #3b82f6; }
+  .diary-icon-box svg { width: 20px; height: 20px; }
+  
+  .diary-content-box { flex: 1; min-width: 0; }
+  .diary-date-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .diary-date-text { font-size: 11px; font-weight: 700; color: var(--pink-primary); }
+  .diary-compact-card.braces-card .diary-date-text { color: #2563eb; }
+  .diary-mood-text { font-size: 11px; background: var(--pink-bg); padding: 2px 6px; border-radius: 4px; color: var(--pink-dark); }
+  
+  .diary-title-text { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;}
+  .diary-desc-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .diary-amount-text { font-size: 12px; font-weight: 700; color: #dc2626; margin-top: 2px; }
+
   /* ================= TAB NHẬT KÝ ================= */
-  .diary-page-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
-  .d-page-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-light); transition: all 0.2s; cursor: pointer; }
-  .d-page-dot.active { background: var(--pink-primary); width: 24px; border-radius: 4px; }
+  .diary-page-dots {
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 16px;
+  }
+  .d-page-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--pink-light); 
+    transition: all 0.2s; cursor: pointer;
+  }
+  .d-page-dot.active {
+    background: var(--pink-primary); width: 24px; border-radius: 4px;
+  }
 
-  .diary-carousel-wrapper { width: 100%; overflow: hidden; position: relative; }
-  .diary-carousel { display: flex; width: 200%; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
-  .diary-page { width: 50%; flex-shrink: 0; }
+  .diary-carousel-wrapper {
+    width: 100%; overflow: hidden; position: relative;
+  }
+  .diary-carousel {
+    display: flex; width: 200%; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .diary-page {
+    width: 50%; flex-shrink: 0;
+  }
 
-  .diary-view-toggle-container { display: flex; justify-content: center; align-items: center; padding: 0 16px 16px; }
-  .diary-view-toggle { display: flex; background: var(--pink-surface); border-radius: 999px; padding: 4px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); position: relative; overflow: hidden; width: 100%; max-width: 300px; }
-  .diary-view-toggle button { flex: 1; padding: 8px 0; border-radius: 999px; border: none; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.3s ease; z-index: 1; }
+  .diary-view-toggle-container {
+    display: flex; justify-content: center; align-items: center;
+    padding: 0 16px 16px;
+  }
+  .diary-view-toggle {
+    display: flex; background: var(--pink-surface); border-radius: 999px; padding: 4px; 
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    position: relative; overflow: hidden; width: 100%; max-width: 300px;
+  }
+  .diary-view-toggle button {
+    flex: 1; padding: 8px 0; border-radius: 999px; border: none; background: transparent;
+    font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-muted);
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.3s ease;
+    z-index: 1;
+  }
   .diary-view-toggle button.active { color: white; }
-  .diary-view-toggle .slider-bg { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: var(--pink-primary); border-radius: 999px; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 0; }
+  .diary-view-toggle .slider-bg {
+    position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+    background: var(--pink-primary); border-radius: 999px; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 0;
+  }
   .diary-view-toggle.calendar-active .slider-bg { transform: translateX(100%); }
 
-  /* ================= TIMELINE (GỘP CHUNG NHẬT KÝ & NIỀNG RĂNG) ================= */
-  .timeline-wrap, .braces-timeline-wrap { padding: 0 16px 20px; position: relative; }
-  .timeline-wrap::before, .braces-timeline-wrap::before { content: ''; position: absolute; top: 0; bottom: 0; left: 22px; width: 2px; background: var(--pink-light); z-index: 0; }
-  .timeline-item, .braces-timeline-item { position: relative; padding-left: 44px; margin-bottom: 20px; }
-  .timeline-dot, .braces-timeline-dot { position: absolute; left: 15px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--pink-surface); border: 3px solid var(--pink-primary); z-index: 1; box-shadow: 0 0 0 3px var(--pink-bg); }
-  .timeline-date, .braces-timeline-date { font-size: 12px; font-weight: 700; color: var(--pink-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
-  .timeline-date svg, .braces-timeline-date svg { width: 12px; height: 12px; }
-  .timeline-card, .braces-timeline-card { background: var(--pink-surface); border-radius: 16px; padding: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); position: relative; }
-  .timeline-card { cursor: pointer; }
+  /* Timeline View */
+  .timeline-wrap { padding: 0 16px 20px; position: relative; }
+  .timeline-wrap::before {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 22px;
+    width: 2px; background: var(--pink-light); z-index: 0;
+  }
+  .timeline-item {
+    position: relative; padding-left: 44px; margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+  }
+  .timeline-dot {
+    position: absolute; left: 15px; top: 6px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--pink-surface); border: 3px solid var(--pink-primary);
+    z-index: 1; box-shadow: 0 0 0 3px var(--pink-bg);
+  }
+  .timeline-date {
+    font-size: 12px; font-weight: 700; color: var(--pink-primary);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 4px;
+  }
+  .timeline-date svg { width: 12px; height: 12px; }
+  .timeline-card {
+    background: var(--pink-surface); border-radius: 16px;
+    padding: 14px; box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border); position: relative;
+    cursor: pointer;
+  }
   .timeline-card:active { transform: scale(0.98); }
-  .timeline-card::before, .braces-timeline-card::before { content: ''; position: absolute; left: -5px; top: 12px; width: 10px; height: 10px; background: var(--pink-surface); transform: rotate(45deg); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .timeline-title, .braces-timeline-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .timeline-content, .braces-timeline-content { font-size: 13px; color: var(--text-muted); line-height: 1.5; white-space: pre-wrap; font-weight: 500; }
-  .timeline-mood { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: var(--pink-bg); border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--pink-dark); margin-top: 8px; }
-  .timeline-mood svg { width: 12px; height: 12px; }
-  .braces-timeline-amount { font-size: 15px; font-weight: 700; color: #dc2626; margin-bottom: 6px; }
+  .timeline-card::before {
+    content: ''; position: absolute; left: -5px; top: 12px;
+    width: 10px; height: 10px; background: var(--pink-surface);
+    transform: rotate(45deg); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .timeline-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .timeline-content { font-size: 13px; color: var(--text-muted); line-height: 1.5; white-space: pre-wrap; font-weight: 500;}
+  .timeline-mood {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; background: var(--pink-bg); border-radius: 999px;
+    font-size: 11px; font-weight: 600; color: var(--pink-dark); margin-top: 8px;
+  }
+  .timeline-mood svg { width: 12px; height: 12px;}
 
-  .timeline-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; opacity: 0.4; transition: opacity 0.2s; }
+  .timeline-actions {
+    position: absolute; top: 12px; right: 12px;
+    display: flex; gap: 8px; opacity: 0.4; transition: opacity 0.2s;
+  }
   .timeline-item:hover .timeline-actions { opacity: 1; }
-  .timeline-actions .action-btn { background: var(--pink-bg); border: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--pink-primary); }
+  .timeline-actions .action-btn {
+    background: var(--pink-bg); border: none; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--pink-primary);
+  }
   .timeline-actions .action-btn svg { width: 12px; height: 12px; }
 
-  /* Braces Dashboard */
-  .braces-dashboard-card { background: linear-gradient(135deg, var(--pink-surface), var(--pink-bg)); border-radius: 20px; padding: 16px; margin: 0 16px 20px; border: 1px solid var(--pink-light); box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+  /* Braces Specific */
+  .braces-dashboard-card {
+    background: linear-gradient(135deg, var(--pink-surface), var(--pink-bg));
+    border-radius: 20px; padding: 16px; margin-bottom: 20px;
+    border: 1px solid var(--pink-light); box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 0 16px 20px;
+  }
   .braces-dashboard-card .stat-box { flex: 1; text-align: center; }
   .braces-dashboard-card .stat-val { font-size: 20px; font-weight: 700; color: var(--pink-primary); margin-bottom: 2px; }
   .braces-dashboard-card .stat-lbl { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
   .braces-dashboard-card .divider { width: 1px; height: 40px; background: var(--pink-light); }
 
-  /* ================= CALENDAR VIEW ================= */
+  .braces-timeline-wrap { padding: 0 16px 20px; position: relative; }
+  .braces-timeline-wrap::before {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 22px;
+    width: 2px; background: var(--pink-light); z-index: 0;
+  }
+  .braces-timeline-item {
+    position: relative; padding-left: 44px; margin-bottom: 20px;
+  }
+  .braces-timeline-dot {
+    position: absolute; left: 15px; top: 6px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--pink-surface); border: 3px solid var(--pink-primary);
+    z-index: 1; box-shadow: 0 0 0 3px var(--pink-bg);
+  }
+  .braces-timeline-date {
+    font-size: 12px; font-weight: 700; color: var(--pink-primary);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 4px;
+  }
+  .braces-timeline-date svg { width: 12px; height: 12px; }
+  .braces-timeline-card {
+    background: var(--pink-surface); border-radius: 16px;
+    padding: 14px; box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border); position: relative;
+  }
+  .braces-timeline-card::before {
+    content: ''; position: absolute; left: -5px; top: 12px;
+    width: 10px; height: 10px; background: var(--pink-surface);
+    transform: rotate(45deg); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .braces-timeline-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .braces-timeline-amount { font-size: 15px; font-weight: 700; color: #dc2626; margin-bottom: 6px; }
+  .braces-timeline-content { font-size: 13px; color: var(--text-muted); line-height: 1.5; white-space: pre-wrap; font-weight: 500;}
+
+  /* Calendar View */
   .calendar-wrap { padding: 0 12px 20px; }
-  .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px; }
-  .calendar-month-year { font-family: var(--font-family); font-size: 20px; font-weight: 700; color: var(--text); display: flex; align-items: baseline; gap: 6px; }
-  .calendar-month-year span { color: var(--pink-primary); font-size: 20px; font-weight: 700; }
+  .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px;}
+  .calendar-month-year {
+    font-family: var(--font-family);
+    font-size: 20px; font-weight: 700; color: var(--text);
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .calendar-month-year span { color: var(--pink-primary); font-size: 20px; font-weight: 700;}
   .calendar-nav { display: flex; gap: 8px; }
-  .calendar-nav button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: var(--pink-surface); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); }
+  .calendar-nav button {
+    width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--pink-surface); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-muted);
+  }
   .calendar-nav button:active { background: var(--pink-bg); }
   .calendar-nav button svg { width: 16px; height: 16px; }
-
-  .calendar-grid { background: var(--pink-surface); border-radius: 20px; padding: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); width: 100%; }
-  .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 8px; }
-  .calendar-weekdays div { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0; }
+  
+  .calendar-grid {
+    background: var(--pink-surface); border-radius: 20px; padding: 8px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    width: 100%;
+  }
+  .calendar-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
+    margin-bottom: 8px;
+  }
+  .calendar-weekdays div {
+    font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 8px 0;
+  }
   .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-
-  .cal-day { aspect-ratio: 1; min-height: 44px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 4px 0; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s; position: relative; }
+  
+  .cal-day {
+    aspect-ratio: 1; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: 4px 0; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer;
+    transition: all 0.2s; position: relative;
+  }
   .cal-day:hover { background: var(--pink-bg); }
   .cal-day.other-month { color: #d1d5db; cursor: default; }
   .cal-day.other-month:hover { background: transparent; }
   .cal-day.today { background: var(--pink-primary); color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
   .cal-day.today .cal-dot { background: white !important; }
+  /* Badge trà sữa — nằm chính giữa ô ngày */
+  .cal-milktea-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 14px;
+    margin: 1px 0;
+    color: var(--pink-primary);
+    filter: none; /* Tắt hiệu ứng rung của theme bút sáp để icon sắc nét */
+  }
+  .cal-milktea-badge svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+  }
+  .cal-day.today .cal-milktea-badge { 
+    color: #ffffff; /* Đổi sang màu trắng nếu là ngày hôm nay (nền đậm) */
+  }
+  
+  /* Đảm bảo ô ngày đủ không gian chứa icon và dấu chấm */
+  .cal-day {
+    min-height: 44px; /* Thêm dòng này để ô không bị bóp méo */
+  }
   .cal-day-num { margin-bottom: 2px; }
   .cal-day-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; margin-top: 2px; }
   .cal-dot { width: 4px; height: 4px; border-radius: 50%; }
 
-  .cal-milktea-badge { display: flex; align-items: center; justify-content: center; width: 100%; height: 14px; margin: 1px 0; color: var(--pink-primary); filter: none; }
-  .cal-milktea-badge svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2.5; }
-  .cal-day.today .cal-milktea-badge { color: #ffffff; }
-
-  .cal-day-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
-  .cal-day-list-item { background: var(--pink-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border); cursor: pointer; }
+  .cal-day-list {
+    margin-top: 16px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .cal-day-list-item {
+    background: var(--pink-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+    cursor: pointer;
+  }
 
   /* ================= TAB KHÁC (GRID) ================= */
   /* ===== ICON KIẾN THỨC ===== */
-  .other-card-icon.knowledge { background: #ecfeff; stroke: #0891b2; }
+  .other-card-icon.knowledge { background: #ecfeff; }
+  .other-card-icon.knowledge svg { stroke: #0891b2; }
+  .note-icon-box.knowledge { background: #ecfeff; color: #0891b2; }
   .tag.knowledge { background: #ecfeff; color: #0891b2; }
-
-  /* ===== BIẾN MODAL NOTE THÀNH TRANG GIẤY ===== */
-  #noteOverlay .modal { background: #fefcf5 !important; }
-  #noteOverlay .modal h2 { color: var(--pink-dark) !important; font-family: 'Caveat', 'Quicksand', sans-serif !important; font-size: 22px !important; }
-
-  /* ===== GRID THẺ BÀI (Note, Task, Tip, Goal, Place, Event) ===== */
-  .other-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
-  .other-card { background: var(--pink-surface); border-radius: 20px; padding: 20px 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-align: center; }
-  .other-card:active { transform: scale(0.96); }
-  .other-card-icon { width: 48px; height: 48px; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; }
-  .other-card-icon svg { width: 24px; height: 24px; }
   
-  /* Màu Icon từng loại */
-  .other-card-icon.note { background: #f3e8ff; stroke: #9333ea; }
-  .other-card-icon.task { background: #eff6ff; stroke: #2563eb; }
-  .other-card-icon.tip { background: #fff7ed; stroke: #ea580c; }
-  .other-card-icon.goal { background: #fdf2f8; stroke: #ec4899; }
-  .other-card-icon.place { background: #eff6ff; stroke: #3b82f6; }
-  .other-card-icon.event { background: #fef2f2; stroke: #ef4444; }
-
+  /* ===== GIAO DIỆN SÁCH CHO KIẾN THỨC ===== */
+  #listNotes.knowledge-bookshelf {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 0 16px;
+  }
+  
+  .book-card {
+    position: relative;
+    background: var(--pink-surface);
+    border-radius: 6px 14px 14px 6px;
+    padding: 16px 14px 16px 26px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    height: 160px; /* Cố định chiều cao để bằng nhau */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+    overflow: hidden; /* Cắt phần thừa nếu chữ quá dài */
+  }
+  .book-card:active { transform: scale(0.96) rotate(-1deg); }
+  
+  /* Gáy sách - Dùng biến màu chung để đổi theo Theme */
+  .book-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 14px;
+    background: var(--pink-primary);
+    border-radius: 6px 0 0 6px;
+  }
+  /* Các đường chỉ khâu trên gáy */
+  .book-card::after {
+    content: '';
+    position: absolute;
+    left: 4px; top: 12px; bottom: 12px;
+    width: 2px;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.6) 0px,
+      rgba(255,255,255,0.6) 4px,
+      transparent 4px,
+      transparent 10px
+    );
+  }
+  
+  .book-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--pink-dark);
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Tối đa 3 dòng, dài quá sẽ có dấu ... */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3;
+  }
+  .book-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; padding-top: 8px; }
+  .book-date { font-size: 10px; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+  
+  /* Tinh chỉnh cho các Theme đặc biệt */
+  body.theme-crayon .book-card::before {
+    background: repeating-linear-gradient(45deg, #e63946, #e63946 4px, #f77f00 4px, #f77f00 8px);
+    border-right: 2px solid #2b2d42;
+  }
+  body.theme-crayon .book-card {
+    border: 2.5px solid #2b2d42;
+    box-shadow: 4px 4px 0px rgba(43,45,66,0.4);
+  }
+  
+  body.theme-notion .book-card {
+    border: 2.5px solid #d4b895;
+    box-shadow: 4px 4px 0px #d4b895;
+  }
+  
+  
+  body.theme-winter .book-card::before {
+    background: repeating-linear-gradient(180deg, #a32a36, #a32a36 6px, #2a4365, #2a4365 12px);
+  }
+  
+  /* Hiệu ứng mở sách */
+  @keyframes openBook {
+    0% { transform: perspective(1200px) rotateY(-90deg); opacity: 0; }
+    100% { transform: perspective(1200px) rotateY(0deg); opacity: 1; }
+  }
+  /* ===== BIẾN MODAL NOTE THÀNH TRANG GIẤY ===== */
+  #noteOverlay .modal {
+    background: #fefcf5 !important;
+  }
+  #noteOverlay .modal h2 {
+    color: var(--pink-dark) !important;
+    font-family: 'Caveat', 'Quicksand', sans-serif !important;
+    font-size: 22px !important;
+  }
+  
+   .other-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px;
+  }
+  .other-card {
+    background: var(--pink-surface); border-radius: 20px; padding: 20px 16px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .other-card:active { transform: scale(0.96); }
+  .other-card-icon {
+    width: 48px; height: 48px; border-radius: 16px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .other-card-icon.note { background: #f3e8ff; }
+  .other-card-icon.note svg { stroke: #9333ea; }
+  .other-card-icon.task { background: #eff6ff; }
+  .other-card-icon.task svg { stroke: #2563eb; }
+  .other-card-icon.tip { background: #fff7ed; }
+  .other-card-icon.tip svg { stroke: #ea580c; }
+  .other-card-icon.goal { background: #fdf2f8; }
+  .other-card-icon.goal svg { stroke: #ec4899; }
+  .other-card-icon.place { background: #eff6ff; }
+  .other-card-icon.place svg { stroke: #3b82f6; }
+  .other-card-icon.event { background: #fef2f2; }
+  .other-card-icon.event svg { stroke: #ef4444; }
+  .other-card-icon svg { width: 24px; height: 24px; }
   .other-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
   .other-card-count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 
-  /* ===== SUB-VIEW HEADER (Tiêu đề trang con & Nút Back) ===== */
-  .sub-view-header { display: flex; align-items: center; gap: 12px; padding: 0 16px 16px; }
-  .back-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--pink-surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); box-shadow: var(--shadow-sm); }
+  /* List Container (Khi click vào card) */
+  .sub-view-header {
+    display: flex; align-items: center; gap: 12px; padding: 0 16px 16px;
+  }
+  .back-btn {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--pink-surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
   .back-btn svg { width: 20px; height: 20px; }
   .sub-view-title { font-size: 20px; font-weight: 700; color: var(--pink-dark); }
 
-  /* ===== BUCKET LIST (Mục tiêu) ===== */
-  .bucket-list-container { background: var(--pink-surface); border-radius: 24px; padding: 20px; margin: 0 16px 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+  /* Bucket List View (inside Others) */
+  .bucket-list-container {
+    background: var(--pink-surface); border-radius: 24px; padding: 20px;
+    margin: 0 16px 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+  }
   .bucket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .bucket-title { font-size: 20px; font-weight: 700; color: var(--text); }
-  .bucket-progress { font-size: 13px; font-weight: 600; color: #6366f1; background: #e0e7ff; padding: 4px 12px; border-radius: 999px; }
-  .bucket-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-  
-  .bucket-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-  .bucket-item-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--text-muted); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+  .bucket-progress { 
+    font-size: 13px; font-weight: 600; color: #6366f1; background: #e0e7ff; 
+    padding: 4px 12px; border-radius: 999px;
+  }
+  .bucket-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
+  }
+  .bucket-item {
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .bucket-item-check {
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--text-muted);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: all 0.2s;
+  }
   .bucket-item-check svg { width: 10px; height: 10px; stroke: white; opacity: 0; }
   .bucket-item.done .bucket-item-check { background: #6366f1; border-color: #6366f1; }
   .bucket-item.done .bucket-item-check svg { opacity: 1; }
-  
-  .bucket-item-text { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: none; background: transparent; outline: none; width: 100%; padding: 2px 0; border-bottom: 1px dashed transparent; }
+  .bucket-item-text { 
+    font-size: 13px; font-weight: 500; color: var(--text); 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+    border: none; background: transparent; outline: none; width: 100%; padding: 2px 0;
+    border-bottom: 1px dashed transparent;
+  }
   .bucket-item.done .bucket-item-text { text-decoration: line-through; color: var(--text-muted); }
   .bucket-item-text:focus { border-bottom-color: var(--pink-primary); }
   
-  .bucket-add-row { display: flex; gap: 8px; align-items: center; border: 1px solid var(--border); border-radius: 999px; padding: 4px 4px 4px 16px; }
-  .bucket-add-row input { flex: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 14px; color: var(--text); }
+  .bucket-add-row {
+    display: flex; gap: 8px; align-items: center;
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 4px 4px 16px;
+  }
+  .bucket-add-row input {
+    flex: 1; border: none; outline: none; background: transparent;
+    font-family: inherit; font-size: 14px; color: var(--text);
+  }
   .bucket-add-row input::placeholder { color: var(--text-muted); }
-  .bucket-add-btn { background: #6366f1; color: white; border: none; padding: 10px 20px; border-radius: 999px; font-weight: 600; font-size: 14px; cursor: pointer; font-family: inherit; }
+  .bucket-add-btn {
+    background: #6366f1; color: white; border: none; padding: 10px 20px;
+    border-radius: 999px; font-weight: 600; font-size: 14px; cursor: pointer; font-family: inherit;
+  }
 
-  /* ===== SỰ KIỆN / DEADLINE ===== */
+  /* Sự kiện / Deadline (Card format) */
   .event-list { padding: 0 16px; display: flex; flex-direction: column; gap: 14px; }
-  .event-card { display: flex; align-items: center; gap: 16px; background: var(--pink-surface); border-radius: 20px; padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); position: relative; overflow: hidden; cursor: pointer; }
-  .event-date-box { width: 60px; height: 60px; border-radius: 16px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: 700; }
+  .event-card {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--pink-surface); border-radius: 20px; padding: 16px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+    cursor: pointer;
+  }
+  .event-date-box {
+    width: 60px; height: 60px; border-radius: 16px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; font-weight: 700;
+  }
   .event-month { font-size: 11px; text-transform: uppercase; opacity: 0.9; }
   .event-day { font-size: 22px; line-height: 1.1; }
-  
-  .event-info { flex: 1; min-width: 0; padding-right: 12px; }
-  .event-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+  .event-info { flex: 1; min-width: 0; padding-right: 12px;}
+  .event-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px;}
   .event-desc { font-size: 12.5px; font-weight: 600; }
   .event-desc.urgent { color: #dc2626; }
   .event-desc.normal { color: #16a34a; }
   .event-desc.past { color: var(--text-muted); }
   
-  .event-icon-right { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; background: rgba(255,255,255,0.4); }
+  /* Icon Sự kiện bên phải */
+  .event-icon-right { 
+    display: flex; align-items: center; justify-content: center; 
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    background: rgba(255,255,255,0.4);
+  }
   .event-icon-right svg { width: 24px; height: 24px; }
+
   /* ================= TAB TÀI CHÍNH ==================== */
-.finance-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding: 0 16px 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-.finance-carousel::-webkit-scrollbar { display: none; }
-.finance-page { min-width: calc(100% - 32px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 16px; }
+  .finance-carousel {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px;
+    padding: 0 16px 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .finance-carousel::-webkit-scrollbar { display: none; }
+  .finance-page {
+    min-width: calc(100% - 32px); scroll-snap-align: center;
+    display: flex; flex-direction: column; gap: 16px;
+  }
 
-/* Page Dots */
-.page-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
-.page-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-light); transition: all 0.2s; cursor: pointer; }
-.page-dot.active { background: var(--pink-primary); width: 24px; border-radius: 4px; }
+  /* Page Dots */
+  .page-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+  .page-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-light); transition: all 0.2s; cursor: pointer; }
+  .page-dot.active { background: var(--pink-primary); width: 24px; border-radius: 4px; }
 
-/* Dashboard Tổng quan */
-.finance-dashboard { background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark)); color: white; border-radius: 24px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-.finance-balance-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 4px; }
-.finance-balance { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
-.finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.finance-box { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 12px; backdrop-filter: blur(4px); }
-.finance-box-label { font-size: 10.5px; font-weight: 600; opacity: 0.9; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
-.finance-box-val { font-size: 14px; font-weight: 700; }
+  .finance-dashboard {
+    background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
+    color: white; border-radius: 24px; padding: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .finance-balance-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 4px;}
+  .finance-balance { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .finance-box { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 12px; backdrop-filter: blur(4px); }
+  .finance-box-label { font-size: 10.5px; font-weight: 600; opacity: 0.9; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+  .finance-box-val { font-size: 14px; font-weight: 700; }
 
-/* Thẻ chung (Dự tính lương & Compact Card) */
-.salary-card, .compact-card { background: var(--pink-surface); border-radius: 20px; padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
-.compact-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.compact-card-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.compact-card-title svg { width: 16px; height: 16px; stroke: var(--pink-primary); }
-.compact-card-total { font-size: 16px; font-weight: 700; color: var(--pink-primary); }
+  /* Dự tính lương */
+  .salary-card {
+    background: var(--pink-surface); border-radius: 20px; padding: 16px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+  }
+  .salary-section-title { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+  .salary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px;}
+  .salary-label { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+  .salary-input-wrap { display: flex; align-items: center; border-bottom: 1.5px solid var(--border); padding-bottom: 4px; flex-shrink: 0;}
+  .salary-input-wrap input { 
+    border: none; outline: none; background: transparent; font-family: inherit; 
+    font-size: 15px; font-weight: 700; color: var(--pink-primary); text-align: right; width: 120px; 
+  }
+  .salary-input-wrap input.expense-input-name { color: var(--text); font-size: 14px; width: 100px; text-align: left; font-weight: 500;}
+  .salary-del-btn { color: #f43f5e; cursor: pointer; display: flex; align-items: center; margin-left: 6px; }
+  .salary-result { 
+    background: var(--pink-bg); padding: 12px; border-radius: 12px; text-align: center; 
+    font-size: 16px; font-weight: 700; color: var(--pink-dark); margin-top: 16px;
+  }
+  .salary-add-btn {
+    width: 100%; padding: 10px; border-radius: 12px; border: 1.5px dashed var(--pink-light);
+    background: transparent; color: var(--pink-primary); font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; margin-top: 8px; margin-bottom: 16px;
+  }
 
-/* Dự tính lương */
-.salary-section-title { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-.salary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; }
-.salary-label { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.salary-input-wrap { display: flex; align-items: center; border-bottom: 1.5px solid var(--border); padding-bottom: 4px; flex-shrink: 0; }
-.salary-input-wrap input { border: none; outline: none; background: transparent; font-family: inherit; font-size: 15px; font-weight: 700; color: var(--pink-primary); text-align: right; width: 120px; }
-.salary-input-wrap input.expense-input-name { color: var(--text); font-size: 14px; width: 100px; text-align: left; font-weight: 500; }
-.salary-del-btn { color: #f43f5e; cursor: pointer; display: flex; align-items: center; margin-left: 6px; }
-.salary-result { background: var(--pink-bg); padding: 12px; border-radius: 12px; text-align: center; font-size: 16px; font-weight: 700; color: var(--pink-dark); margin-top: 16px; }
-.salary-add-btn, .credit-add-btn { width: 100%; padding: 10px; border-radius: 12px; border: 1.5px dashed var(--pink-light); background: transparent; color: var(--pink-primary); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+  /* Compact Cash Card (List format) */
+  .compact-card {
+    background: var(--pink-surface); border-radius: 20px; padding: 16px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+  }
+  .compact-card-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+  }
+  .compact-card-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px;}
+  .compact-card-title svg { width: 16px; height: 16px; stroke: var(--pink-primary); }
+  .compact-card-total { font-size: 16px; font-weight: 700; color: var(--pink-primary); }
+  
+  /* Cash List (Vertical) */
+  .cash-list-vertical { display: flex; flex-direction: column; gap: 8px; }
+  .cash-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px; background: var(--pink-bg); border-radius: 10px; border: 1px solid var(--border);
+  }
+  .cash-row-label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .cash-row-input-wrap { display: flex; align-items: center; gap: 8px; }
+  .cash-row-x { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .cash-row-input {
+    width: 60px; text-align: center; border: none; background: transparent;
+    font-family: inherit; font-size: 14px; font-weight: 700; color: var(--text); outline: none;
+  }
+  .cash-row-input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
-/* Bảng kê Tiền mặt & Thẻ tín dụng */
-.cash-list-vertical, .credit-list { display: flex; flex-direction: column; gap: 8px; }
-.cash-row, .credit-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--pink-bg); border-radius: 10px; border: 1px solid var(--border); }
-.cash-row-label { font-size: 13px; font-weight: 600; color: var(--text); }
-.cash-row-input-wrap { display: flex; align-items: center; gap: 8px; }
-.cash-row-x { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-.cash-row-input { width: 60px; text-align: center; border: none; background: transparent; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--text); outline: none; }
-.cash-row-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  /* Credit Table */
+  .credit-list { display: flex; flex-direction: column; gap: 8px; }
+  .credit-row {
+    display: flex; gap: 8px; align-items: center; background: var(--pink-bg); padding: 10px;
+    border-radius: 12px; border: 1px solid var(--border);
+  }
+  .credit-row input { border: none; background: transparent; font-family: inherit; font-size: 13px; font-weight: 500; outline: none; color: var(--text); }
+  .credit-row .c-name { flex: 1; min-width: 0; }
+  .credit-row .c-amount { width: 80px; text-align: right; font-weight: 700; color: var(--text); }
+  .credit-row .c-del { color: #f43f5e; cursor: pointer; }
+  .credit-row .c-del svg { width: 16px; height: 16px; }
+  .credit-add-btn {
+    width: 100%; padding: 10px; border-radius: 12px; border: 1.5px dashed var(--pink-light);
+    background: transparent; color: var(--pink-primary); font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; margin-top: 8px;
+  }
 
-.credit-row { justify-content: flex-start; gap: 8px; padding: 10px; border-radius: 12px; }
-.credit-row input { border: none; background: transparent; font-family: inherit; font-size: 13px; font-weight: 500; outline: none; color: var(--text); }
-.credit-row .c-name { flex: 1; min-width: 0; }
-.credit-row .c-amount { width: 80px; text-align: right; font-weight: 700; color: var(--text); }
-.credit-row .c-del { color: #f43f5e; cursor: pointer; }
-.credit-row .c-del svg { width: 16px; height: 16px; }
+  /* Bảng kê doanh thu - Đã cập nhật để chọn ngày và format tiền */
+  .revenue-table { display: flex; flex-direction: column; gap: 8px; }
+  .rev-row { display: flex; gap: 8px; align-items: center; }
+  .rev-row.header { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  
+  .rev-col-date { width: 110px; flex-shrink: 0; }
+  .rev-col-amount { flex: 1; min-width: 0; }
+  
+  .rev-row input { 
+    width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border);
+    font-family: inherit; font-size: 12.5px; font-weight: 500; background: var(--pink-bg); outline: none; transition: all 0.2s; color: var(--text);
+    text-align: left; /* Canh lề trái */
+  }
+  .rev-row input:focus { border-color: var(--pink-primary); background: var(--pink-surface); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+  .rev-row input[type="text"].currency-input { text-align: right; }
+  
+  /* Ô hiển thị ngày (giả lập input) */
+  .rev-date-display {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    background: var(--pink-bg);
+    color: var(--text);
+    text-align: left;
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 35px; /* Đảm bảo chiều cao giống input */
+  }
 
-/* Bảng kê doanh thu */
-.revenue-table { display: flex; flex-direction: column; gap: 8px; }
-.rev-row { display: flex; gap: 8px; align-items: center; }
-.rev-row.header { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
-.rev-col-date { width: 110px; flex-shrink: 0; }
-.rev-col-amount { flex: 1; min-width: 0; }
-.rev-row input, .rev-date-display { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); font-family: inherit; font-size: 12.5px; font-weight: 500; background: var(--pink-bg); outline: none; transition: all 0.2s; color: var(--text); text-align: left; }
-.rev-row input:focus { border-color: var(--pink-primary); background: var(--pink-surface); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
-.rev-row input[type="text"].currency-input { text-align: right; }
-.rev-date-display { position: relative; display: flex; align-items: center; min-height: 35px; }
-.rev-date-input-hidden { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+  /* Input date thật (trong suốt, đè lên trên) */
+  .rev-date-input-hidden {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+  }
 
-/* Nút Sao lưu */
-.backup-bar { display: flex; gap: 10px; }
-.backup-btn { flex: 1; padding: 12px; border-radius: 14px; border: 1.5px dashed var(--pink-light); background: var(--pink-surface); font-family: inherit; font-size: 13px; font-weight: 700; color: var(--pink-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
-.backup-btn:active { transform: scale(0.97); background: var(--pink-bg); }
-.backup-btn svg { width: 16px; height: 16px; }
+  /* Nút Sao lưu */
+  .backup-bar { display: flex; gap: 10px; }
+  .backup-btn {
+    flex: 1; padding: 12px; border-radius: 14px; border: 1.5px dashed var(--pink-light);
+    background: var(--pink-surface); font-family: inherit; font-size: 13px; font-weight: 700;
+    color: var(--pink-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.2s;
+  }
+  .backup-btn:active { transform: scale(0.97); background: var(--pink-bg); }
+  .backup-btn svg { width: 16px; height: 16px; }
 
-/* Tài sản & Khoản nợ khác */
-.asset-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.btn-small { padding: 6px 12px; border-radius: 999px; border: none; background: var(--pink-primary); color: white; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; box-shadow: var(--shadow-sm); }
-.asset-group { background: var(--pink-bg); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
-.asset-group-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; cursor: pointer; background: var(--pink-surface); }
-.asset-group-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.asset-group-title svg { width: 16px; height: 16px; stroke: var(--pink-primary); }
-.asset-group-total { font-size: 14px; font-weight: 700; color: var(--pink-primary); }
-.asset-group-toggle svg { width: 18px; height: 18px; stroke: var(--text-muted); transition: transform 0.2s; }
-.asset-group.open .asset-group-toggle svg { transform: rotate(180deg); }
-.asset-group-content { display: none; padding: 0 14px 12px; flex-direction: column; gap: 8px; }
-.asset-group.open .asset-group-content { display: flex; }
-.asset-item { display: flex; justify-content: space-between; align-items: center; background: var(--pink-surface); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; }
-.asset-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.asset-item-title { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.asset-item-right { font-size: 13px; font-weight: 700; color: var(--text); margin-right: 8px; }
-.asset-item-del { color: #f43f5e; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.asset-item-del svg { width: 16px; height: 16px; }
+  /* Asset Lists -> Toggle */
+  .asset-list-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+  }
 
-/* Nút gạt (Toggle Switch) */
-.toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
-.toggle-label { font-size: 14px; font-weight: 600; color: var(--text); }
-.toggle-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; inset: 0; background-color: #d1d5db; transition: .4s; border-radius: 24px; }
-.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: var(--pink-primary); }
-input:checked + .slider:before { transform: translateX(20px); }
+  /* Thêm CSS bo góc cho nút + Thêm */
+  .btn-small {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: none;
+    background: var(--pink-primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: var(--shadow-sm);
+  }
+  .asset-group {
+    background: var(--pink-bg); border-radius: 12px; padding: 0; margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden;
+  }
+  .asset-group-header {
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; cursor: pointer; background: var(--pink-surface);
+  }
+  .asset-group-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px;}
+  .asset-group-title svg { width: 16px; height: 16px; stroke: var(--pink-primary); }
+  .asset-group-total { font-size: 14px; font-weight: 700; color: var(--pink-primary); }
+  .asset-group-toggle svg { width: 18px; height: 18px; stroke: var(--text-muted); transition: transform 0.2s; }
+  .asset-group.open .asset-group-toggle svg { transform: rotate(180deg); }
+  
+  .asset-group-content {
+    display: none; padding: 0 14px 12px; flex-direction: column; gap: 8px;
+  }
+  .asset-group.open .asset-group-content { display: flex; }
+
+  .asset-item {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--pink-surface); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .asset-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;}
+  .asset-item-title { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .asset-item-right { font-size: 13px; font-weight: 700; color: var(--text); margin-right: 8px;}
+  .asset-item-del { color: #f43f5e; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .asset-item-del svg { width: 16px; height: 16px; }
+
+  /* Toggle Switch */
+  .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+  .toggle-label { font-size: 14px; font-weight: 600; color: var(--text); }
+  .toggle-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d1d5db; transition: .4s; border-radius: 24px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+  input:checked + .slider { background-color: var(--pink-primary); }
+  input:checked + .slider:before { transform: translateX(20px); }
+
   /* ================= BOTTOM NAVIGATION ================= */
-.bottom-nav {
-  position: fixed; bottom: var(--nav-margin); left: 50%; transform: translateX(-50%);
-  width: calc(100% - 24px); max-width: 500px; height: var(--nav-height);
-  background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  display: flex; justify-content: space-around; align-items: center;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.1); border-radius: 36px; z-index: 100; padding: 0 4px; border: 1px solid rgba(255,255,255,1);
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px; color: #9ca3af; cursor: pointer; transition: all 0.2s; font-size: 10px; font-weight: 600; padding: 8px 0;
-}
-.nav-item svg { width: 20px; height: 20px; transition: all 0.2s; stroke: currentColor; }
-.nav-item.active { color: var(--pink-primary); }
-.nav-item.active svg { stroke: var(--pink-primary); fill: rgba(0,0,0,0.05); transform: translateY(-2px); }
+  .bottom-nav {
+    position: fixed; bottom: var(--nav-margin); left: 50%; transform: translateX(-50%);
+    width: calc(100% - 24px); max-width: 500px; height: var(--nav-height);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    display: flex; justify-content: space-around; align-items: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    border-radius: 36px; z-index: 100; padding: 0 4px;
+    border: 1px solid rgba(255,255,255,1);
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; color: #9ca3af; cursor: pointer; transition: all 0.2s;
+    font-size: 10px; font-weight: 600; padding: 8px 0;
+  }
+  .nav-item svg { width: 20px; height: 20px; transition: all 0.2s; stroke: currentColor; }
+  .nav-item.active { color: var(--pink-primary); }
+  .nav-item.active svg { stroke: var(--pink-primary); fill: rgba(0,0,0,0.05); transform: translateY(-2px); }
 
-.fab {
-  position: fixed; bottom: calc(var(--nav-bottom) + 10px); right: 16px; z-index: 90;
-  width: 52px; height: 52px; border-radius: 50%; background: var(--pink-primary); color: white; border: none; cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; transition: transform 0.2s;
-}
-.fab svg { width: 24px; height: 24px; }
-.fab:active { transform: scale(0.9) rotate(90deg); }
+  .fab {
+    position: fixed; bottom: calc(var(--nav-bottom) + 10px); right: 16px; z-index: 90;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--pink-primary); color: white; border: none; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center; transition: transform 0.2s;
+  }
+  .fab svg { width: 24px; height: 24px; }
+  .fab:active { transform: scale(0.9) rotate(90deg); }
 
-/* ================= MODALS & OVERLAYS ================= */
-.overlay {
-  position: fixed; inset: 0; background: rgba(31,31,46,0.4); z-index: 200; display: none;
-  align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-}
-.overlay.show { display: flex; animation: fadeIn 0.22s; }
-.modal {
-  background: var(--pink-surface); width: 100%; max-width: 540px; border-radius: 32px 32px 0 0;
-  padding: 12px 22px 32px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.32,0.72,0,1);
-}
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal-handle { width: 44px; height: 5px; background: var(--pink-light); border-radius: 999px; margin: 8px auto 20px; }
-.modal h2 { font-size: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--pink-dark); }
-.modal h2 button { background: var(--pink-bg); border: none; width: 34px; height: 34px; border-radius: 50%; color: var(--pink-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.modal h2 button svg { width: 18px; height: 18px; }
+  /* ================= MODALS ================= */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(31,31,46,0.4);
+    z-index: 200; display: none; align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .overlay.show { display: flex; animation: fadeIn 0.22s; }
+  .modal {
+    background: var(--pink-surface); width: 100%; max-width: 540px;
+    border-radius: 32px 32px 0 0; padding: 12px 22px 32px;
+    max-height: 90vh; overflow-y: auto;
+    animation: slideUp 0.3s cubic-bezier(0.32,0.72,0,1);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 44px; height: 5px; background: var(--pink-light); border-radius: 999px; margin: 8px auto 20px; }
+  .modal h2 { font-size: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--pink-dark); }
+  .modal h2 button { background: var(--pink-bg); border: none; width: 34px; height: 34px; border-radius: 50%; color: var(--pink-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .modal h2 button svg { width: 18px; height: 18px; }
 
-/* ================= FORMS & INPUTS ================= */
-.field { margin-bottom: 16px; }
-.field label { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-.field input, .field textarea, .field select { 
-  width: 100%; padding: 14px 16px; border-radius: 16px; border: 1.5px solid var(--border); 
-  font-size: 15px; font-family: inherit; background: var(--pink-bg); outline: none; transition: all 0.2s; 
-  color: var(--text); font-weight: 500; line-height: 1.4; min-height: 48px; appearance: none; -webkit-appearance: none;
-}
-.field input[type="date"] { display: flex; align-items: center; }
-.field input[type="date"]::-webkit-date-and-time-value { text-align: left; }
-.field input:focus, .field textarea:focus, .field select:focus { 
-  border-color: var(--pink-primary); background: var(--pink-surface); box-shadow: 0 0 0 4px rgba(0,0,0,0.05); 
-}
-.field textarea { resize: vertical; min-height: 100px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  
+  .field input, .field textarea, .field select { 
+    width: 100%; padding: 14px 16px; border-radius: 16px; border: 1.5px solid var(--border); 
+    font-size: 15px; font-family: inherit; background: var(--pink-bg); outline: none; transition: all 0.2s; 
+    color: var(--text); font-weight: 500; line-height: 1.4; min-height: 48px; 
+    appearance: none; -webkit-appearance: none;
+  }
+  .field input[type="date"] { display: flex; align-items: center; }
+  .field input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+  
+  .field input:focus, .field textarea:focus, .field select:focus { 
+    border-color: var(--pink-primary); background: var(--pink-surface); box-shadow: 0 0 0 4px rgba(0,0,0,0.05); 
+  }
+  .field textarea { resize: vertical; min-height: 100px; }
 
-.picker { display: flex; gap: 10px; flex-wrap: wrap; }
-.picker .opt {
-  flex: 1; min-width: calc(33.33% - 10px); padding: 12px 8px; border-radius: 14px; text-align: center;
-  border: 1.5px solid var(--border); background: var(--pink-bg); cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-muted); transition: all 0.2s;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-}
-.picker .opt svg { width: 20px; height: 20px; }
-.picker .opt.active { border-color: var(--pink-primary); background: var(--pink-surface); color: var(--pink-primary); transform: scale(1.02); box-shadow: var(--shadow-sm); }
-.picker.status .opt.active.want-opt { border-color: #f43f5e; background: #fff1f2; color: #f43f5e; }
-.picker.status .opt.active.done-opt { border-color: #10b981; background: #ecfdf5; color: #10b981; }
+  .picker { display: flex; gap: 10px; flex-wrap: wrap; }
+  .picker .opt {
+    flex: 1; min-width: calc(33.33% - 10px); padding: 12px 8px; border-radius: 14px; text-align: center;
+    border: 1.5px solid var(--border); background: var(--pink-bg); cursor: pointer;
+    font-size: 12px; font-weight: 600; color: var(--text-muted); transition: all 0.2s;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .picker .opt svg { width: 20px; height: 20px; }
+  .picker .opt.active { border-color: var(--pink-primary); background: var(--pink-surface); color: var(--pink-primary); transform: scale(1.02); box-shadow: var(--shadow-sm); }
+  .picker.status .opt.active.want-opt { border-color: #f43f5e; background: #fff1f2; color: #f43f5e; }
+  .picker.status .opt.active.done-opt { border-color: #10b981; background: #ecfdf5; color: #10b981; }
 
-/* Rating Picker */
-.rating-picker { display: flex; flex-direction: row; gap: 12px; align-items: center; justify-content: center; padding: 8px 0; }
-.rating-picker .star-btn { cursor: pointer; transition: transform 0.15s; display: flex; align-items: center; justify-content: center; }
-.rating-picker .star-btn:active { transform: scale(0.9); }
-.rating-picker .star-btn svg { width: 32px; height: 32px; fill: none; stroke: #d1d5db; transition: all 0.15s; }
-.rating-picker .star-btn.on svg { fill: #f59e0b; stroke: #f59e0b; }
+  /* Rating Picker hàng ngang */
+  .rating-picker { display: flex; flex-direction: row; gap: 12px; align-items: center; justify-content: center; padding: 8px 0; }
+  .rating-picker .star-btn { cursor: pointer; transition: transform 0.15s; display: flex; align-items: center; justify-content: center; }
+  .rating-picker .star-btn:active { transform: scale(0.9); }
+  .rating-picker .star-btn svg { width: 32px; height: 32px; fill: none; stroke: #d1d5db; transition: all 0.15s; }
+  .rating-picker .star-btn.on svg { fill: #f59e0b; stroke: #f59e0b; }
 
-/* Range slider */
-.range-wrap { margin-top: 8px; }
-.range-wrap input[type="range"] { width: 100%; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; background: var(--pink-bg); outline: none; padding: 0; min-height: auto; border: none; box-shadow: none; }
-.range-wrap input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--pink-primary); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-.range-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-weight: 600; margin-top: 6px; }
+  /* Range slider */
+  .range-wrap { margin-top: 8px; }
+  .range-wrap input[type="range"] {
+    width: 100%; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px;
+    background: var(--pink-bg); outline: none; padding: 0; min-height: auto;
+    border: none; box-shadow: none;
+  }
+  .range-wrap input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--pink-primary); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .range-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-weight: 600; margin-top: 6px; }
 
-/* ================= BUTTONS & MENUS ================= */
-.save-btn {
-  width: 100%; padding: 16px; border-radius: 18px; border: none; background: var(--pink-primary); color: white; font-size: 16px; font-weight: 700;
-  cursor: pointer; margin-top: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; transition: transform 0.15s;
-}
-.save-btn svg { width: 20px; height: 20px; }
-.save-btn:active { transform: scale(0.97); }
+  .save-btn {
+    width: 100%; padding: 16px; border-radius: 18px; border: none;
+    background: var(--pink-primary); color: white; font-size: 16px; font-weight: 700;
+    cursor: pointer; margin-top: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: inherit; transition: transform 0.15s;
+  }
+  .save-btn svg { width: 20px; height: 20px; }
+  .save-btn:active { transform: scale(0.97); }
 
-.sort-wrapper { position: relative; }
-.sort-menu {
-  position: absolute; right: 0; top: calc(100% + 8px); background: var(--pink-surface); border-radius: 18px; box-shadow: var(--shadow-lg);
-  padding: 8px; min-width: 200px; z-index: 80; display: none; animation: popIn 0.2s; border: 1px solid var(--border);
-}
-.sort-menu.show { display: block; }
-@keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.sort-menu button {
-  width: 100%; padding: 12px 16px; border: none; background: none; text-align: left; font-size: 13.5px; font-weight: 600; color: var(--text);
-  border-radius: 12px; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 10px;
-}
-.sort-menu button.active { background: var(--pink-bg); color: var(--pink-primary); }
-.sort-menu button .check { margin-left: auto; opacity: 0; color: var(--pink-primary); font-weight: 800; }
-.sort-menu button.active .check { opacity: 1; }
+  .sort-wrapper { position: relative; }
+  .sort-menu {
+    position: absolute; right: 0; top: calc(100% + 8px);
+    background: var(--pink-surface); border-radius: 18px; box-shadow: var(--shadow-lg);
+    padding: 8px; min-width: 200px; z-index: 80; display: none; animation: popIn 0.2s; border: 1px solid var(--border);
+  }
+  .sort-menu.show { display: block; }
+  @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .sort-menu button {
+    width: 100%; padding: 12px 16px; border: none; background: none;
+    text-align: left; font-size: 13.5px; font-weight: 600; color: var(--text);
+    border-radius: 12px; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 10px;
+  }
+  .sort-menu button.active { background: var(--pink-bg); color: var(--pink-primary); }
+  .sort-menu button .check { margin-left: auto; opacity: 0; color: var(--pink-primary); font-weight: 800; }
+  .sort-menu button.active .check { opacity: 1; }
 
-.chip-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-.chip { padding: 9px 15px; border-radius: 999px; background: var(--pink-bg); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
-.chip.active { background: var(--pink-primary); border-color: var(--pink-primary); color: white; }
+  .chip-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .chip {
+    padding: 9px 15px; border-radius: 999px; background: var(--pink-bg);
+    border: 1px solid var(--border); font-size: 13px; font-weight: 600;
+    color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .chip.active { background: var(--pink-primary); border-color: var(--pink-primary); color: white; }
 
-/* ================= CONFIRM & ACTION MENUS ================= */
-.action-menu-overlay, .confirm-overlay { position: fixed; inset: 0; background: rgba(31,31,46,0.4); display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-.action-menu-overlay { z-index: 250; }
-.confirm-overlay { z-index: 400; backdrop-filter: blur(8px); padding: 24px; }
-.action-menu-overlay.show, .confirm-overlay.show { display: flex; animation: fadeIn 0.2s; }
+  .action-menu-overlay {
+    position: fixed; inset: 0; background: rgba(31,31,46,0.4);
+    z-index: 250; display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .action-menu-overlay.show { display: flex; animation: fadeIn 0.2s; }
+  .action-menu {
+    background: var(--pink-surface); width: 280px; border-radius: 24px;
+    padding: 20px; animation: popIn 0.2s;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .action-menu button {
+    padding: 14px; border-radius: 14px; border: none; font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-family: inherit;
+  }
+  .action-menu button.edit-btn { background: var(--pink-bg); color: var(--pink-primary); }
+  .action-menu button.del-btn { background: #fef2f2; color: #dc2626; }
+  .action-menu button.cancel-btn { background: var(--pink-bg); color: var(--text-muted); margin-top: 4px; }
 
-.action-menu, .confirm-box { background: var(--pink-surface); animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1); box-shadow: var(--shadow-lg); }
-.action-menu { width: 280px; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-.confirm-box { border-radius: 28px; padding: 28px; max-width: 320px; width: 100%; text-align: center; }
+  .toast {
+    position: fixed; bottom: calc(var(--nav-bottom) + 20px); left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: var(--pink-surface); padding: 14px 26px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none;
+    transition: all 0.35s; z-index: 300; white-space: nowrap; box-shadow: var(--shadow-lg);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-.action-menu button, .confirm-actions button { border: none; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; }
-.action-menu button { padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; gap: 8px; }
-.action-menu button.edit-btn { background: var(--pink-bg); color: var(--pink-primary); }
-.action-menu button.del-btn { background: #fef2f2; color: #dc2626; }
-.action-menu button.cancel-btn { background: var(--pink-bg); color: var(--text-muted); margin-top: 4px; }
+  .confirm-overlay { position: fixed; inset: 0; background: rgba(31,31,46,0.4); z-index: 400; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 24px; }
+  .confirm-overlay.show { display: flex; animation: fadeIn 0.2s; }
+  .confirm-box { background: var(--pink-surface); border-radius: 28px; padding: 28px; max-width: 320px; width: 100%; text-align: center; animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1); box-shadow: var(--shadow-lg); }
+  .confirm-box .ico { display: flex; justify-content: center; margin-bottom: 16px; color: var(--pink-primary); }
+  .confirm-box .ico svg { width: 48px; height: 48px; }
+  .confirm-box h4 { font-size: 18px; margin-bottom: 10px; font-weight: 700; color: var(--text); }
+  .confirm-box p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; font-weight: 500;}
+  .confirm-actions { display: flex; gap: 12px; }
+  .confirm-actions button { flex: 1; padding: 14px; border-radius: 16px; border: none; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .confirm-actions .cancel { background: var(--pink-bg); color: var(--text-muted); }
+  .confirm-actions .confirm { background: var(--pink-primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-.confirm-box .ico { display: flex; justify-content: center; margin-bottom: 16px; color: var(--pink-primary); }
-.confirm-box .ico svg { width: 48px; height: 48px; }
-.confirm-box h4 { font-size: 18px; margin-bottom: 10px; font-weight: 700; color: var(--text); }
-.confirm-box p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; font-weight: 500; }
-.confirm-actions { display: flex; gap: 12px; }
-.confirm-actions button { flex: 1; padding: 14px; border-radius: 16px; font-size: 14.5px; font-weight: 700; }
-.confirm-actions .cancel { background: var(--pink-bg); color: var(--text-muted); }
-.confirm-actions .confirm { background: var(--pink-primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .empty { text-align: center; padding: 40px 24px; color: var(--text-muted); }
+  .empty .icon-wrap {
+    width: 80px; height: 80px; border-radius: 26px; margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--pink-surface), var(--pink-bg));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-md); border: 2px dashed var(--pink-light);
+  }
+  .empty .icon-wrap svg { width: 40px; height: 40px; stroke: var(--pink-primary); }
+  .empty h3 { font-size: 17px; color: var(--pink-dark); margin-bottom: 8px; font-weight: 700; }
+  .empty p { font-size: 13.5px; line-height: 1.6; max-width: 260px; margin: 0 auto; font-weight: 500; }
 
-/* ================= TOAST & EMPTY STATE ================= */
-.toast { position: fixed; bottom: calc(var(--nav-bottom) + 20px); left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: var(--pink-surface); padding: 14px 26px; border-radius: 999px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.35s; z-index: 300; white-space: nowrap; box-shadow: var(--shadow-lg); }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .autocomplete-wrap { position: relative; }
+  .autocomplete-list {
+    position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+    background: var(--pink-surface); border-radius: 12px; box-shadow: var(--shadow-lg);
+    max-height: 180px; overflow-y: auto; z-index: 10; border: 1px solid var(--border);
+    display: none;
+  }
+  .autocomplete-list.show { display: block; }
+  .autocomplete-list div { padding: 12px 16px; font-size: 14px; cursor: pointer; color: var(--text); font-weight: 500;}
+  .autocomplete-list div:hover { background: var(--pink-bg); color: var(--pink-primary); }
 
-.empty { text-align: center; padding: 40px 24px; color: var(--text-muted); }
-.empty .icon-wrap { width: 80px; height: 80px; border-radius: 26px; margin: 0 auto 20px; background: linear-gradient(135deg, var(--pink-surface), var(--pink-bg)); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); border: 2px dashed var(--pink-light); }
-.empty .icon-wrap svg { width: 40px; height: 40px; stroke: var(--pink-primary); }
-.empty h3 { font-size: 17px; color: var(--pink-dark); margin-bottom: 8px; font-weight: 700; }
-.empty p { font-size: 13.5px; line-height: 1.6; max-width: 260px; margin: 0 auto; font-weight: 500; }
+  /* Detail Modal for Place/Note */
+  .detail-modal-body { padding: 0 0 20px; }
+  .detail-modal-title { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.3;}
+  .detail-modal-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .detail-modal-content { font-size: 15px; color: var(--text); line-height: 1.6; white-space: pre-wrap; background: var(--pink-bg); padding: 16px; border-radius: 16px; border: 1px solid var(--border);}
+  .detail-modal-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--pink-primary); font-weight: 700; text-decoration: none; margin-top: 16px; padding: 10px 16px; background: var(--pink-bg); border-radius: 12px; border: 1px solid var(--border);}
 
-/* ================= AUTOCOMPLETE & DETAIL MODAL ================= */
-.autocomplete-wrap { position: relative; }
-.autocomplete-list { position: absolute; left: 0; right: 0; top: calc(100% + 4px); background: var(--pink-surface); border-radius: 12px; box-shadow: var(--shadow-lg); max-height: 180px; overflow-y: auto; z-index: 10; border: 1px solid var(--border); display: none; }
-.autocomplete-list.show { display: block; }
-.autocomplete-list div { padding: 12px 16px; font-size: 14px; cursor: pointer; color: var(--text); font-weight: 500; }
-.autocomplete-list div:hover { background: var(--pink-bg); color: var(--pink-primary); }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.detail-modal-body { padding: 0 0 20px; }
-.detail-modal-title { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.3; }
-.detail-modal-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.detail-modal-content { font-size: 15px; color: var(--text); line-height: 1.6; white-space: pre-wrap; background: var(--pink-bg); padding: 16px; border-radius: 16px; border: 1px solid var(--border); }
-.detail-modal-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--pink-primary); font-weight: 700; text-decoration: none; margin-top: 16px; padding: 10px 16px; background: var(--pink-bg); border-radius: 12px; border: 1px solid var(--border); }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   /* ============================================================
      THEME CRAYON — Bút sáp màu vẽ tay
      ============================================================ */
@@ -1561,9 +2064,11 @@ input:checked + .slider:before { transform: translateX(20px); }
   /* ===== GIAO DIỆN THẺ BÀI CHO ĐỊA ĐIỂM ===== */
   #listPlaces.place-card-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     padding: 0 16px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .place-card-item {
     background: var(--pink-surface);
@@ -1576,8 +2081,13 @@ input:checked + .slider:before { transform: translateX(20px); }
     gap: 8px;
     cursor: pointer;
     transition: transform 0.2s;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
   .place-card-item:active { transform: scale(0.96); }
+
 /* ===== STAMP "ĐÃ ĐI" — HÌNH TRÒN CON DẤU ===== */
 @keyframes stampAppear {
   0%   { transform: rotate(-14deg) scale(0);     opacity: 0; }
@@ -1647,6 +2157,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   font-size: 10px;
   line-height: 1.05;
 }
+
 /* ===== LÀM XÁM ĐỊA ĐIỂM ĐÃ ĐI ===== */
 
 /* --- Giao diện Danh sách --- */
@@ -1675,7 +2186,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   opacity: 0.85;
 }
 
-/* --- Giao diện Thẻ bài --- */
+/* --- Giao diện Thẻ bài (Đã làm xám) --- */
 .place-card-item.is-done .place-card-image {
   background: #e5e7eb !important;
   border-color: #d1d5db !important;
@@ -1702,72 +2213,79 @@ input:checked + .slider:before { transform: translateX(20px); }
   color: #9ca3af !important;
   opacity: 0.75;
 }
-  .place-card-image {
-    background: var(--pink-bg);
-    border: 2px solid var(--pink-surface);
-    border-radius: 10px;
-    height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: inset 0 0 0 1.5px var(--pink-light);
-  }
-  .place-card-image svg {
-    width: 40px;
-    height: 40px;
-    stroke: var(--pink-dark);
-    stroke-width: 1.5;
-  }
-  .place-card-title-bar {
-    background: var(--pink-primary);
-    color: white;
-    border-radius: 999px;
-    padding: 6px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-  }
-  .place-card-title-bar .stars {
-    display: flex;
-    gap: 1px;
-  }
-  .place-card-title-bar .stars svg {
-    width: 10px;
-    height: 10px;
-  }
-  .place-card-desc {
-    background: #fffdf5;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 11px;
-    color: var(--text);
-    line-height: 1.4;
-    text-align: center;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .place-card-footer {
-    text-align: center;
-    font-size: 10px;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
-  .place-card-desc, .place-card-title-bar {
-    font-family: inherit;
-  }
+
+.place-card-image {
+  background: var(--pink-bg);
+  border: 2px solid var(--pink-surface);
+  border-radius: 10px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 0 0 0 1.5px var(--pink-light);
+}
+.place-card-image svg {
+  width: 40px;
+  height: 40px;
+  stroke: var(--pink-dark);
+  stroke-width: 1.5;
+}
+.place-card-title-bar {
+  background: var(--pink-primary);
+  color: white;
+  border-radius: 999px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 42px;
+  justify-content: center;
+  word-break: break-word;
+}
+.place-card-title-bar .stars {
+  display: flex;
+  gap: 1px;
+}
+.place-card-title-bar .stars svg {
+  width: 10px;
+  height: 10px;
+}
+.place-card-desc {
+  background: #fffdf5;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 11px;
+  color: var(--text);
+  line-height: 1.4;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+.place-card-footer {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+.place-card-desc, .place-card-title-bar {
+  font-family: inherit;
+}
+
   /* Màu cho theme Bút sáp */
   body.theme-crayon .place-card-item { border-color: #457b9d; }
   body.theme-crayon .place-card-image { background: #ffb703; border-color: #fffdf5; box-shadow: inset 0 0 0 2px #457b9d; }
@@ -4005,10 +4523,10 @@ input:checked + .slider:before { transform: translateX(20px); }
     <h2>Thêm hàng loạt <button id="closeFcBulkModal"><svg class="hand-icon"><use href="#icon-x"/></svg></button></h2>
 
     <div style="font-size:12.5px; color:var(--text-muted); background:var(--pink-bg); padding:12px; border-radius:12px; margin-bottom:16px; line-height:1.7;">
-  <b>Định dạng:</b> Mỗi dòng = 1 thẻ, các trường cách nhau bởi dấu gạch đứng<br>
-  <code style="background:var(--pink-surface); padding:3px 8px; border-radius:4px; font-size:12px; display:block; margin:6px 0;">câu Việt | câu Anh | ghi chú | tag</code>
+  <b>Định dạng:</b> Mỗi dòng = 1 thẻ, các trường cách nhau bởi dấu phẩy<br>
+  <code style="background:var(--pink-surface); padding:3px 8px; border-radius:4px; font-size:12px; display:block; margin:6px 0;">câu Việt, câu Anh, ghi chú, tag</code>
   <span style="font-size:11.5px;">
-    • Tối thiểu <b>2 trường</b> (câu Việt | câu Anh)<br>
+    • Tối thiểu <b>2 trường</b> (câu Việt, câu Anh)<br>
     • Có thể nhập <b>2, 3 hoặc 4 trường</b> — trường thiếu để trống<br>
     • <b>Ghi chú</b> và <b>tag</b> là tuỳ chọn
   </span>
@@ -4016,7 +4534,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
     <div class="field">
       <label>Dán nội dung</label>
-      <textarea id="fcBulkInput" placeholder="Tôi đã đi Hà Nội năm ngoái | I went to Hanoi last year&#10;Hôm nay trời đẹp | The weather is nice today | Thì hiện tại | Giao tiếp&#10;Tôi thích phở | I like pho |  |Đồ ăn" style="min-height: 240px; font-family: monospace; font-size: 13px; line-height: 1.6;"></textarea>
+      <textarea id="fcBulkInput" placeholder="Tôi đã đi Hà Nội năm ngoái, I went to Hanoi last year&#10;Hôm nay trời đẹp, The weather is nice today, Thì hiện tại, Giao tiếp&#10;Tôi thích phở, I like pho, , Đồ ăn" style="min-height: 240px; font-family: monospace; font-size: 13px; line-height: 1.6;"></textarea>
     </div>
 
     <div id="fcBulkPreview" style="font-size:12px; color:var(--text-muted); margin-bottom:12px; max-height:300px; overflow-y:auto; padding-right:2px;"></div>
@@ -4098,6 +4616,8 @@ input:checked + .slider:before { transform: translateX(20px); }
     <button class="save-btn" id="resetFilterBtn" style="background:#f3f4f6;color:#6b7280;box-shadow:none;margin-top:10px;">Xóa tất cả bộ lọc</button>
   </div>
 </div>
+
+<!-- Lọc Ghi chú -->
 <!-- Lọc Ghi chú -->
 <div class="overlay" id="noteFilterOverlay">
   <div class="modal">
@@ -4789,7 +5309,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   'use strict';
 
   const CITIES = [
-    'An Giang','Bà Rịa - Vũng Tàu','Bắc Giang','Bắc Kạn','Bạc Liêu','Bắc Ninh',
+    'An Giang','Hội An','Bắc Giang','Bắc Kạn','Bạc Liêu','Bắc Ninh',
     'Bến Tre','Bình Định','Bình Dương','Bình Phước','Bình Thuận','Cà Mau',
     'Cao Bằng','Đắk Lắk','Đắk Nông','Điện Biên','Đồng Nai','Đồng Tháp',
     'Gia Lai','Hà Giang','Hà Nam','Hà Nội','Hà Tĩnh','Hải Dương','Hải Phòng',
@@ -5747,20 +6267,22 @@ const NOTE_STATUS = {
       (p.note||'').toLowerCase().includes(q)
     ).slice(0, 3);
 
-    if (matchedPlaces.length > 0) {
+        if (matchedPlaces.length > 0) {
       html += `<div class="search-res-category">Địa điểm</div>`;
       matchedPlaces.forEach(p => {
         html += `
-          <div class="search-res-item" onclick="searchGoTo('place', '${p.id}')">
-            <svg class="hand-icon" style="width:16px;height:16px; stroke:var(--pink-primary);"><use href="#icon-map"/></svg>
-            <div style="flex:1; min-width:0;">
-              <div class="search-res-title">${esc(p.name)}</div>
-              <div class="search-res-desc">${esc(p.city || '')}</div>
+          <div class="search-res-item" onclick="searchGoTo('place', '${p.id}')" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+              <svg class="hand-icon" style="width:16px;height:16px; stroke:var(--pink-primary); flex-shrink: 0;"><use href="#icon-map"/></svg>
+              <div class="search-res-title" style="font-weight: 600;">${esc(p.name)}</div>
             </div>
+            ${p.note ? `<div style="font-size: 11px; color: var(--text); padding-left: 24px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${esc(p.note)}</div>` : ''}
+            ${p.address || p.city ? `<div style="font-size: 10px; color: var(--pink-dark); padding-left: 24px;">📍 ${esc(p.address || '')} ${p.address && p.city ? '- ' : ''}${esc(p.city || '')}</div>` : ''}
           </div>
         `;
       });
     }
+
 
     const matchedDiaries = diaries.filter(d => 
   (d.title||'').toLowerCase().includes(q) || 
@@ -7578,21 +8100,38 @@ if (Array.isArray(data.flashcards)) {
       }
     }
     
-    // Tải mức ưu tiên cũ (nếu đang sửa)
+        // Tải mức ưu tiên và lặp lại cũ (nếu đang sửa) hoặc mặc định
     if (id) {
       const n = notes.find(x => x.id === id);
       formTaskPriority = n.priority || 2;
       formTaskRepeat = n.repeat || 'none';
-      document.querySelectorAll('#taskRepeatPicker .opt').forEach(o => {
-        o.classList.toggle('active', o.dataset.repeat === formTaskRepeat);
-      });
     } else {
-      formTaskPriority = 2;       formTaskRepeat = 'none';       document.querySelectorAll('#taskRepeatPicker .opt').forEach(o => {         o.classList.toggle('active', o.dataset.repeat === 'none');       });
+      formTaskPriority = 2;
+      formTaskRepeat = 'none';
     }
     
+    // Đánh dấu active cho mức ưu tiên
     document.querySelectorAll('#taskPriorityPicker .opt').forEach(o => {
       o.classList.toggle('active', Number(o.dataset.p) === formTaskPriority);
+      // Gắn sự kiện click (chỉ gắn 1 lần hoặc định nghĩa gọn ở đây)
+      o.onclick = () => {
+        document.querySelectorAll('#taskPriorityPicker .opt').forEach(el => el.classList.remove('active'));
+        o.classList.add('active');
+        formTaskPriority = Number(o.dataset.p);
+      };
     });
+
+    // Đánh dấu active cho lặp lại
+    document.querySelectorAll('#taskRepeatPicker .opt').forEach(o => {
+      o.classList.toggle('active', o.dataset.repeat === formTaskRepeat);
+      // Gắn sự kiện click
+      o.onclick = () => {
+        document.querySelectorAll('#taskRepeatPicker .opt').forEach(el => el.classList.remove('active'));
+        o.classList.add('active');
+        formTaskRepeat = o.dataset.repeat;
+      };
+    });
+
     
     $('noteOverlay').classList.add('show');
     setTimeout(() => $('noteTitle').focus(), 300);
@@ -8984,7 +9523,7 @@ function parseBulkLine(line) {
   // Nếu ít hơn → thiếu trường cuối
   // Nếu nhiều hơn 4 → gộp phần dư vào tag (giả định tag ít quan trọng)
   
-  const parts = line.split('|').map(p => p.trim());
+  const parts = line.split(',').map(p => p.trim());
   
   if (parts.length < 2) return null; // Không đủ 2 trường tối thiểu
   
@@ -9004,7 +9543,7 @@ function parseBulkLine(line) {
     tag = parts[3] || '';
   } else if (parts.length > 4) {
     // Nhiều hơn 4 → gộp phần giữa vào note, phần cuối làm tag
-    note = parts.slice(2, -1).join('| ');
+    note = parts.slice(2, -1).join(', ');
     tag = parts[parts.length - 1] || '';
   }
   
@@ -9571,476 +10110,294 @@ loadFcSettings();
   loadFlashcards();
   switchTab('home');
 
-  //// --- BẮT ĐẦU CODE NHẮC NHỞ (HỌC TẬP & THANH TOÁN) ---
-  
-  // 1. Hàm kiểm tra và hiển thị nhắc nhở thanh toán
-  // 1. Hàm kiểm tra và hiển thị nhắc nhở thanh toán
-  function showPaymentReminder() {
-    let displayBills = bills.filter(b => !b.deletedAt);
-    
-    // Lấy thêm bill thẻ tín dụng ảo (nếu có)
-    const fin = calcFinance();
-    if (fin.creditTotal > 0) {
-      let ccBill = bills.find(b => b.id === 'bill_credit_card');
-      if (!ccBill) {
-        ccBill = { id: 'bill_credit_card', name: 'Thẻ tín dụng', amount: fin.creditTotal, dueDate: toLocalDateStr(new Date()), repeat: 'monthly', isVirtual: true };
-      } else {
-        ccBill.amount = fin.creditTotal;
-      }
-      const idx = displayBills.findIndex(b => b.id === 'bill_credit_card');
-      if (idx >= 0) displayBills[idx] = ccBill;
-      else displayBills.push(ccBill);
-    }
+  // --- BẮT ĐẦU CODE NHẮC NHỞ (HỌC TẬP & THANH TOÁN) ---
+function toLocalDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 
-    // Lọc các bill sắp đến hạn (<= 3 ngày) hoặc quá hạn và chưa thanh toán
-    const urgentBills = displayBills.filter(b => {
-      const st = getBillStatus(b);
-      if (st.isPaid) return false;
-      return daysUntil(st.nextDue) <= 7;
-    }).sort((a, b) => {
-      // Ưu tiên bill quá hạn / gần ngày nhất lên đầu
-      return daysUntil(getBillStatus(a).nextDue) - daysUntil(getBillStatus(b).nextDue);
-    });
-
-    if (urgentBills.length > 0) {
-      $('reminderBillCount').textContent = urgentBills.length;
-      
-      // Render danh sách bill
-      const listHtml = urgentBills.map(b => {
-        const st = getBillStatus(b);
-        const diff = daysUntil(st.nextDue);
-        
-        let statusText = '';
-        let statusColor = 'var(--pink-dark)'; // Màu chữ mặc định theo theme
-        
-        if (diff < 0) {
-          statusText = `Quá hạn ${Math.abs(diff)} ngày`;
-          statusColor = '#dc2626'; // Đỏ báo động (chỉ dùng cho chữ cảnh báo)
-        } else if (diff === 0) {
-          statusText = `Hạn chót HÔM NAY`;
-          statusColor = '#dc2626';
-        } else {
-          statusText = `Còn ${diff} ngày`;
-          statusColor = '#d97706'; // Cam
-        }
-
-        return `
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border); padding: 8px 0; last:border-none;">
-            <div style="flex: 1; min-width: 0; padding-right: 8px;">
-              <div style="font-size: 13.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${esc(b.name)}</div>
-              <div style="font-size: 11.5px; font-weight: 600; color: ${statusColor}; margin-top: 2px;">${statusText}</div>
-            </div>
-            <div style="font-size: 13px; font-weight: 700; color: var(--pink-primary); white-space: nowrap;">${fmtMoney(b.amount)}</div>
-          </div>
-        `;
-      }).join('');
-
-      $('reminderBillList').innerHTML = listHtml;
-      
-      setTimeout(() => {
-        $('paymentReminderOverlay').classList.add('show');
-      }, 500);
-    }
+function getNextDueDate(bill) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  let d = new Date(bill.dueDate); d.setHours(0, 0, 0, 0);
+  if (bill.repeat === 'none') return bill.dueDate;
+  let guard = 0;
+  while (d < today && guard < 2000) {
+    if (bill.repeat === 'daily') d.setDate(d.getDate() + 1);
+    else if (bill.repeat === 'weekly') d.setDate(d.getDate() + 7);
+    else if (bill.repeat === 'monthly') d.setMonth(d.getMonth() + 1);
+    else if (bill.repeat === 'yearly') d.setFullYear(d.getFullYear() + 1);
+    guard++;
   }
+  return toLocalDateStr(d);
+}
 
-  // 2. Hàm kiểm tra nhắc nhở Học tiếng Anh (sẽ gọi đến Thanh toán nếu không có thẻ)
-  function checkStudyReminder() {
+function daysUntil(dateStr) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const target = new Date(dateStr); target.setHours(0, 0, 0, 0);
+  return Math.round((target - today) / 86400000);
+}
+
+function getBillStatus(bill) {
+  const nextDue = getNextDueDate(bill);
+  const isPaid = bill.paidForDueDate === nextDue;
+  if (isPaid) return { cls: 'paid', label: '✓ Đã trả', nextDue, isPaid };
+
+  const diff = daysUntil(nextDue);
+  if (diff < 0) return { cls: 'overdue', label: `Quá hạn ${Math.abs(diff)} ngày`, nextDue, isPaid };
+  if (diff === 0) return { cls: 'upcoming', label: 'Hôm nay', nextDue, isPaid };
+  if (diff <= 3) return { cls: 'upcoming', label: `Còn ${diff} ngày`, nextDue, isPaid };
+  if (diff <= 7) return { cls: 'soon', label: `Còn ${diff} ngày`, nextDue, isPaid };
+  return { cls: 'normal', label: `Còn ${diff} ngày`, nextDue, isPaid };
+}
+
+// Gom danh sách bills + bill thẻ tín dụng ảo dùng chung cho cả Nhắc nhở & Render Bills
+function getDisplayBills(includeDeleted = false) {
+  let list = includeDeleted ? bills.slice() : bills.filter(b => !b.deletedAt);
+  const fin = typeof calcFinance === 'function' ? calcFinance() : { creditTotal: 0 };
+
+  if (fin.creditTotal > 0) {
+    const existing = bills.find(b => b.id === 'bill_credit_card');
+    const ccBill = existing
+      ? { ...existing, amount: fin.creditTotal }
+      : { id: 'bill_credit_card', name: 'Thẻ tín dụng', amount: fin.creditTotal, dueDate: toLocalDateStr(new Date()), repeat: 'monthly', isVirtual: true };
+
+    const idx = list.findIndex(b => b.id === 'bill_credit_card');
+    if (idx >= 0) list[idx] = ccBill;
+    else list.push(ccBill);
+  }
+  return list;
+}
+
+function showPaymentReminder() {
+  const urgentBills = getDisplayBills(false)
+    .filter(b => !getBillStatus(b).isPaid && daysUntil(getBillStatus(b).nextDue) <= 7)
+    .sort((a, b) => daysUntil(getBillStatus(a).nextDue) - daysUntil(getBillStatus(b).nextDue));
+
+  if (!urgentBills.length) return;
+
+  $('reminderBillCount').textContent = urgentBills.length;
+  $('reminderBillList').innerHTML = urgentBills.map(b => {
+    const st = getBillStatus(b);
+    const diff = daysUntil(st.nextDue);
+    const statusText = diff < 0 ? `Quá hạn ${Math.abs(diff)} ngày` : diff === 0 ? 'Hạn chót HÔM NAY' : `Còn ${diff} ngày`;
+    const statusColor = diff <= 0 ? '#dc2626' : '#d97706';
+
+    return `
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed var(--border); padding:8px 0;">
+        <div style="flex:1; min-width:0; padding-right:8px;">
+          <div style="font-size:13.5px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(b.name)}</div>
+          <div style="font-size:11.5px; font-weight:600; color:${statusColor}; margin-top:2px;">${statusText}</div>
+        </div>
+        <div style="font-size:13px; font-weight:700; color:var(--pink-primary); white-space:nowrap;">${fmtMoney(b.amount)}</div>
+      </div>`;
+  }).join('');
+
+  setTimeout(() => $('paymentReminderOverlay').classList.add('show'), 500);
+}
+
+function checkStudyReminder() {
   if (typeof getDueCards === 'function' && typeof flashcards !== 'undefined') {
     const dueCards = getDueCards();
-    
-    // Đếm số từ MỚI (chưa từng học, reps == 0)
-    const newCardsCount = dueCards.filter(c => !c.sr || c.sr.reps === 0).length;
-    
-    // Đếm số từ CẦN ÔN (đã học nhưng đến hạn)
-    const reviewCardsCount = dueCards.length - newCardsCount;
-    
-    const totalDue = dueCards.length;
-    
-    if (totalDue > 0) {
-      // Cập nhật lên UI
-      const newEl = $('reminderNewCount');
-      const dueEl = $('reminderDueCount');
-      const totalEl = $('reminderTotalCount');
-      
-      if (newEl) newEl.textContent = newCardsCount;
-      if (dueEl) dueEl.textContent = reviewCardsCount;
-      if (totalEl) totalEl.textContent = totalDue;
-      
-      setTimeout(() => {
-        $('studyReminderOverlay').classList.add('show');
-      }, 1000); 
+    if (dueCards.length > 0) {
+      const newCount = dueCards.filter(c => !c.sr || c.sr.reps === 0).length;
+      if ($('reminderNewCount')) $('reminderNewCount').textContent = newCount;
+      if ($('reminderDueCount')) $('reminderDueCount').textContent = dueCards.length - newCount;
+      if ($('reminderTotalCount')) $('reminderTotalCount').textContent = dueCards.length;
+      setTimeout(() => $('studyReminderOverlay').classList.add('show'), 1000);
       return;
     }
   }
-  // Không có thẻ -> Chuyển sang nhắc thanh toán
   showPaymentReminder();
 }
 
-  // 3. Sự kiện nút Nhắc nhở Học tiếng Anh
-  $('btnRemindLater').addEventListener('click', () => {
-    $('studyReminderOverlay').classList.remove('show');
-    // Tắt nhắc học -> Hiện nhắc thanh toán
-    setTimeout(showPaymentReminder, 500);
-  });
+$('btnRemindLater').addEventListener('click', () => {
+  $('studyReminderOverlay').classList.remove('show');
+  setTimeout(showPaymentReminder, 500);
+});
 
-  $('btnRemindNow').addEventListener('click', () => {
-    $('studyReminderOverlay').classList.remove('show');
-    document.querySelector('.nav-item[data-tab="study"]').click();
-    setTimeout(() => {
-      if (typeof startStudySession === 'function') startStudySession();
-      // Vẫn kiểm tra thanh toán sau khi chuyển tab
-      setTimeout(showPaymentReminder, 1000);
-    }, 300);
-  });
+$('btnRemindNow').addEventListener('click', () => {
+  $('studyReminderOverlay').classList.remove('show');
+  document.querySelector('.nav-item[data-tab="study"]').click();
+  setTimeout(() => {
+    if (typeof startStudySession === 'function') startStudySession();
+    setTimeout(showPaymentReminder, 1000);
+  }, 300);
+});
 
-  // 4. Sự kiện nút Nhắc nhở Thanh toán
-  $('btnPaymentLater').addEventListener('click', () => {
-    $('paymentReminderOverlay').classList.remove('show');
-  });
+$('btnPaymentLater').addEventListener('click', () => $('paymentReminderOverlay').classList.remove('show'));
+$('btnPaymentNow').addEventListener('click', () => {
+  $('paymentReminderOverlay').classList.remove('show');
+  document.querySelector('.nav-item[data-tab="finance"]').click();
+});
 
-  $('btnPaymentNow').addEventListener('click', () => {
-    $('paymentReminderOverlay').classList.remove('show');
-    // Chuyển sang tab Tài chính
-    document.querySelector('.nav-item[data-tab="finance"]').click();
-  });
+checkStudyReminder();
+// --- KẾT THÚC CODE NHẮC NHỞ ---
 
-  // 5. Kích hoạt kiểm tra ngay khi mở app
-  checkStudyReminder();
-  // --- KẾT THÚC CODE NHẮC NHỞ ---
+/* ============================================================
+   KHOẢN PHẢI TRẢ SẮP TỚI (BILLS)
+   ============================================================ */
+let editBillId = null;
+let formBillRepeat = 'none';
+const REPEAT_LABEL = { none: 'Không lặp', daily: 'Hàng ngày', weekly: 'Hàng tuần', monthly: 'Hàng tháng', yearly: 'Hàng năm' };
 
-  /* ============================================================
-     KHOẢN PHẢI TRẢ SẮP TỚI (BILLS)
-     ============================================================ */
-  let editBillId = null;
-  let formBillRepeat = 'none';
-  // Hàm chuyển Date object sang chuỗi YYYY-MM-DD theo giờ địa phương (không bị lùi ngày)
-  function toLocalDateStr(d) {
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+function renderBills() {
+  const container = $('billsListContainer');
+  if (!container) return;
+
+  const displayBills = getDisplayBills(true);
+  const totalUnpaid = displayBills.reduce((sum, b) => sum + (!getBillStatus(b).isPaid ? (b.amount || 0) : 0), 0);
+  if ($('billsTotalLabel')) $('billsTotalLabel').textContent = `Tổng: ${fmtMoney(totalUnpaid)}`;
+
+  if (!displayBills.length) {
+    container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:13px; font-style:italic;">Chưa có khoản nào. Bấm "+ Thêm" để tạo nhắc nhở.</div>`;
+    return;
   }
 
-  function getNextDueDate(bill) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    let d = new Date(bill.dueDate); d.setHours(0,0,0,0);
-    if (bill.repeat === 'none') return bill.dueDate;
-    let guard = 0;
-    while (d < today && guard < 2000) {
-      if (bill.repeat === 'daily') d.setDate(d.getDate() + 1);
-      else if (bill.repeat === 'weekly') d.setDate(d.getDate() + 7);
-      else if (bill.repeat === 'monthly') d.setMonth(d.getMonth() + 1);
-      else if (bill.repeat === 'yearly') d.setFullYear(d.getFullYear() + 1);
-      guard++;
-    }
-    return toLocalDateStr(d); // <-- Đã sửa dòng này
-  }
+  const sorted = displayBills.sort((a, b) => {
+    const sa = getBillStatus(a), sb = getBillStatus(b);
+    const da = daysUntil(sa.nextDue), db = daysUntil(sb.nextDue);
+    if (sa.isPaid !== sb.isPaid) return sa.isPaid ? 1 : -1;
+    if (da !== db) return da - db;
+    return (b.amount || 0) - (a.amount || 0);
+  });
 
-  function daysUntil(dateStr) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    const target = new Date(dateStr); target.setHours(0,0,0,0);
-    return Math.round((target - today) / 86400000);
-  }
-
-  function getBillStatus(bill) {
-    const nextDue = getNextDueDate(bill);
-    const isPaid = bill.paidForDueDate === nextDue;
-    if (isPaid) return { cls:'paid', label:'✓ Đã trả', nextDue, isPaid };
-
-    const diff = daysUntil(nextDue);
-    if (diff < 0) return { cls:'overdue', label:`Quá hạn ${Math.abs(diff)} ngày`, nextDue, isPaid };
-    if (diff === 0) return { cls:'upcoming', label:'Hôm nay', nextDue, isPaid };
-    if (diff <= 3) return { cls:'upcoming', label:`Còn ${diff} ngày`, nextDue, isPaid };
-    if (diff <= 7) return { cls:'soon', label:`Còn ${diff} ngày`, nextDue, isPaid };
-    return { cls:'normal', label:`Còn ${diff} ngày`, nextDue, isPaid };
-  }
-
-  const REPEAT_LABEL = { none:'Không lặp', daily:'Hàng ngày', weekly:'Hàng tuần', monthly:'Hàng tháng', yearly:'Hàng năm' };
-
-  function renderBills() {
-    const container = $('billsListContainer');
-    if (!container) return;
-
-    // 1. Tính tổng tiền thẻ tín dụng
-    const fin = calcFinance();
-    const creditTotal = fin.creditTotal;
-
-    // 2. Tạo danh sách ảo: Bao gồm các khoản nợ thủ công + khoản nợ thẻ tín dụng (nếu có phát sinh)
-    let displayBills = bills.slice();
-    
-    if (creditTotal > 0) {
-      let ccBill = bills.find(b => b.id === 'bill_credit_card');
-      
-      if (!ccBill) {
-        ccBill = {
-          id: 'bill_credit_card',
-          name: 'Thẻ tín dụng',
-          amount: creditTotal,
-          dueDate: toLocalDateStr(new Date()), // Lấy ngày hôm nay
-          repeat: 'monthly',
-          isVirtual: true
-        };
-      } else {
-        ccBill.amount = creditTotal; // Cập nhật số tiền mới nhất
-      }
-      
-      const existingIdx = displayBills.findIndex(b => b.id === 'bill_credit_card');
-      if (existingIdx >= 0) {
-        displayBills[existingIdx] = ccBill;
-      } else {
-        displayBills.push(ccBill);
-      }
-    }
-
-    // 3. Tính tổng tiền các khoản CHƯA thanh toán (Dùng mảng displayBills để tính)
-    let totalUnpaid = 0;
-    displayBills.forEach(b => {
-      const st = getBillStatus(b);
-      if (!st.isPaid) {
-        totalUnpaid += (b.amount || 0);
-      }
-    });
-    
-    // Cập nhật số tổng lên Header
-    const totalEl = $('billsTotalLabel');
-    if (totalEl) totalEl.textContent = `Tổng: ${fmtMoney(totalUnpaid)}`;
-
-    // 4. Kiểm tra rỗng
-    if (displayBills.length === 0) {
-      container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:13px; font-style:italic;">Chưa có khoản nào. Bấm "+ Thêm" để tạo nhắc nhở.</div>`;
-      return;
-    }
-
-    // 5. Sắp xếp
-    const sorted = displayBills.sort((a,b) => {
-      const sa = getBillStatus(a), sb = getBillStatus(b);
-      const da = daysUntil(sa.nextDue), db = daysUntil(sb.nextDue);
-      if (sa.isPaid !== sb.isPaid) return sa.isPaid ? 1 : -1;
-      if (da !== db) return da - db;
-      return (b.amount || 0) - (a.amount || 0);
-    });
-
-    // 6. Render HTML
-    container.innerHTML = sorted.map(b => {
-      const st = getBillStatus(b);
-      return `
-        <div class="bill-row ${st.isPaid ? 'paid' : ''}" onclick="openBillModal('${b.id}')">
-          <div class="bill-info">
-            <div class="bill-name-row">
-              <div class="bill-name">${esc(b.name)}</div>
-              <span class="bill-tag ${st.cls}">${st.label}</span>
-            </div>
-            <div class="bill-meta">
-              <span class="bill-amount">${fmtMoney(b.amount)}</span>
-              · ${REPEAT_LABEL[b.repeat] || 'Không lặp'}
-              · ${fmtDate(st.nextDue)}
-            </div>
+  container.innerHTML = sorted.map(b => {
+    const st = getBillStatus(b);
+    return `
+      <div class="bill-row ${st.isPaid ? 'paid' : ''}" onclick="openBillModal('${b.id}')">
+        <div class="bill-info">
+          <div class="bill-name-row">
+            <div class="bill-name">${esc(b.name)}</div>
+            <span class="bill-tag ${st.cls}">${st.label}</span>
           </div>
-          <div class="bill-toggle-wrap" onclick="event.stopPropagation()">
-            <label class="switch">
-              <input type="checkbox" ${st.isPaid ? 'checked' : ''} onchange="toggleBillPaid('${b.id}', this.checked)">
-              <span class="slider"></span>
-            </label>
+          <div class="bill-meta">
+            <span class="bill-amount">${fmtMoney(b.amount)}</span>
+            · ${REPEAT_LABEL[b.repeat] || 'Không lặp'} · ${fmtDate(st.nextDue)}
           </div>
         </div>
-      `;
-    }).join('');
-  }
+        <div class="bill-toggle-wrap" onclick="event.stopPropagation()">
+          <label class="switch">
+            <input type="checkbox" ${st.isPaid ? 'checked' : ''} onchange="toggleBillPaid('${b.id}', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>`;
+  }).join('');
+}
 
-  window.toggleBillPaid = function(id, checked) {
-    // Xử lý riêng cho khoản thẻ tín dụng (nếu chưa có trong mảng bills thì phải tạo mới để lưu trạng thái)
-    if (id === 'bill_credit_card') {
-      let b = bills.find(x => x.id === id);
-      if (!b) {
-        const fin = calcFinance();
-        b = {
-          id: 'bill_credit_card',
-          name: 'Thẻ tín dụng',
-          amount: fin.creditTotal,
-          dueDate: new Date().toISOString().split('T')[0],
-          repeat: 'monthly',
-          isVirtual: true
-        };
-        bills.push(b);
-      }
-      const nextDue = getNextDueDate(b);
-      b.paidForDueDate = checked ? nextDue : null;
-    } else {
-      // Các khoản thường
-      const b = bills.find(x => x.id === id);
-      if (!b) return;
-      const nextDue = getNextDueDate(b);
-      b.paidForDueDate = checked ? nextDue : null;
-    }
-    
-    saveData();
-    renderFinance(); // Render lại toàn bộ tài chính để cập nhật số tổng
-    toast(checked ? '✅ Đã thanh toán' : '🔄 Đã bỏ thanh toán');
-  };
-// Xử lý nút mở rộng/thu gọn cho Dự tính lương
-  const salaryHeader = $('salaryHeader');
-  if (salaryHeader) {
-    salaryHeader.addEventListener('click', () => {
-      const body = $('salaryBody');
-      const chevron = $('salaryChevron');
-      const isOpen = body.style.display !== 'none';
-      
-      // Đổi trạng thái hiển thị
-      body.style.display = isOpen ? 'none' : 'block';
-      
-      // Xoay mũi tên
-      chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-    });
+window.toggleBillPaid = function(id, checked) {
+  let b = bills.find(x => x.id === id);
+  if (!b && id === 'bill_credit_card') {
+    const fin = calcFinance();
+    b = { id, name: 'Thẻ tín dụng', amount: fin.creditTotal, dueDate: toLocalDateStr(new Date()), repeat: 'monthly', isVirtual: true };
+    bills.push(b);
   }
- const newCashHeader = $('newCashHeader');
-if (newCashHeader) {
-  newCashHeader.addEventListener('click', () => {
-    const body = $('newCashBody');
-    const chevron = $('newCashChevron');
+  if (!b) return;
+
+  b.paidForDueDate = checked ? getNextDueDate(b) : null;
+  saveData();
+  renderFinance();
+  toast(checked ? '✅ Đã thanh toán' : '🔄 Đã bỏ thanh toán');
+};
+
+function bindAccordion(headerId, bodyId, chevronId) {
+  const header = $(headerId);
+  if (!header) return;
+  header.addEventListener('click', () => {
+    const body = $(bodyId);
+    const chevron = $(chevronId);
     const isOpen = body.style.display !== 'none';
     body.style.display = isOpen ? 'none' : 'block';
-    chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
   });
 }
-  window.openBillModal = function(id) {
-    editBillId = id || null;
-    const deleteBtn = $('deleteBillBtn');
-    const isCreditCardBill = (id === 'bill_credit_card');
-    
-    if (id) {
-      let b;
-      if (isCreditCardBill) {
-        const fin = calcFinance();
-        b = bills.find(x => x.id === id) || { dueDate: toLocalDateStr(new Date()), repeat: 'monthly', note: '' };
-        b.amount = fin.creditTotal;
-      } else {
-        b = bills.find(x => x.id === id);
-      }
-      
-      if (!b) return;
-      $('billModalTitle').textContent = isCreditCardBill ? 'Thanh toán Thẻ tín dụng' : 'Sửa khoản phải trả';
-      $('billName').value = b.name || (isCreditCardBill ? 'Thẻ tín dụng' : '');
-      $('billAmount').value = b.amount ? b.amount.toLocaleString('vi-VN') : '';
-      $('billDueDate').value = b.dueDate || '';
-      $('billNote').value = b.note || '';
-      setBillRepeat(b.repeat || 'none');
-      
-      $('billName').disabled = isCreditCardBill;
-      $('billAmount').disabled = isCreditCardBill;
-      deleteBtn.style.display = isCreditCardBill ? 'none' : 'flex';
-    } else {
-      $('billModalTitle').textContent = 'Thêm khoản phải trả';
-      $('billName').value = '';
-      $('billAmount').value = '';
-      $('billDueDate').value = toLocalDateStr(new Date());
-      $('billNote').value = '';
-      setBillRepeat('none');
-      $('billName').disabled = false;
-      $('billAmount').disabled = false;
-      deleteBtn.style.display = 'none';
+bindAccordion('salaryHeader', 'salaryBody', 'salaryChevron');
+bindAccordion('newCashHeader', 'newCashBody', 'newCashChevron');
+
+window.openBillModal = function(id) {
+  editBillId = id || null;
+  const isCC = id === 'bill_credit_card';
+  let b = id ? bills.find(x => x.id === id) : null;
+  if (isCC && !b) b = { name: 'Thẻ tín dụng', amount: calcFinance().creditTotal, dueDate: toLocalDateStr(new Date()), repeat: 'monthly', note: '' };
+  if (isCC && b) b.amount = calcFinance().creditTotal;
+  if (id && !b) return;
+
+  $('billModalTitle').textContent = isCC ? 'Thanh toán Thẻ tín dụng' : (id ? 'Sửa khoản phải trả' : 'Thêm khoản phải trả');
+  $('billName').value = b?.name || '';
+  $('billAmount').value = b?.amount ? b.amount.toLocaleString('vi-VN') : '';
+  $('billDueDate').value = b?.dueDate || toLocalDateStr(new Date());
+  $('billNote').value = b?.note || '';
+  setBillRepeat(b?.repeat || 'none');
+
+  $('billName').disabled = isCC;
+  $('billAmount').disabled = isCC;
+  $('deleteBillBtn').style.display = (!id || isCC) ? 'none' : 'flex';
+
+  $('billOverlay').classList.add('show');
+  if (!isCC) setTimeout(() => $('billName').focus(), 300);
+};
+
+window.setBillRepeat = function(val) {
+  formBillRepeat = val;
+  document.querySelectorAll('#billRepeatPicker .opt').forEach(o => o.classList.toggle('active', o.dataset.repeat === val));
+};
+
+$('btnAddBill')?.addEventListener('click', () => openBillModal(null));
+$('closeBillModal')?.addEventListener('click', () => {
+  $('billOverlay').classList.remove('show');
+  editBillId = null;
+});
+document.querySelectorAll('#billRepeatPicker .opt').forEach(o => o.addEventListener('click', () => setBillRepeat(o.dataset.repeat)));
+$('billAmount')?.addEventListener('input', (e) => {
+  const raw = parseCurrency(e.target.value);
+  e.target.value = raw ? raw.toLocaleString('vi-VN') : '';
+});
+
+$('saveBillBtn')?.addEventListener('click', () => {
+  const name = $('billName').value.trim();
+  const amount = parseCurrency($('billAmount').value);
+  const dueDate = $('billDueDate').value;
+  if (!name) { $('billName').focus(); return toast('Nhập tên khoản'); }
+  if (!amount || amount <= 0) { $('billAmount').focus(); return toast('Nhập số tiền hợp lệ'); }
+  if (!dueDate) { $('billDueDate').focus(); return toast('Chọn ngày đến hạn'); }
+
+  const data = { name, amount, dueDate, repeat: formBillRepeat, note: $('billNote').value.trim() };
+
+  if (editBillId) {
+    const b = bills.find(x => x.id === editBillId);
+    if (editBillId === 'bill_credit_card') {
+      if (b) Object.assign(b, { dueDate, repeat: formBillRepeat, note: data.note });
+      else bills.push({ id: 'bill_credit_card', ...data, isVirtual: true, paidForDueDate: null, createdAt: Date.now() });
+    } else if (b) {
+      Object.assign(b, data);
+      if (b.paidForDueDate && b.paidForDueDate !== getNextDueDate(b)) b.paidForDueDate = null;
     }
-    $('billOverlay').classList.add('show');
-    if (!isCreditCardBill) setTimeout(() => $('billName').focus(), 300);
-  };
-
-  window.setBillRepeat = function(val) {
-    formBillRepeat = val;
-    document.querySelectorAll('#billRepeatPicker .opt').forEach(o => {
-      o.classList.toggle('active', o.dataset.repeat === val);
-    });
-  };
-
-  const btnAddBill = $('btnAddBill');
-  if (btnAddBill) btnAddBill.addEventListener('click', () => openBillModal(null));
-  const closeBillBtn = $('closeBillModal');
-  if (closeBillBtn) closeBillBtn.addEventListener('click', () => {
-    $('billOverlay').classList.remove('show');
-    editBillId = null;
-  });
-
-  document.querySelectorAll('#billRepeatPicker .opt').forEach(o => {
-    o.addEventListener('click', () => setBillRepeat(o.dataset.repeat));
-  });
-
-  const billAmountEl = $('billAmount');
-  if (billAmountEl) {
-    billAmountEl.addEventListener('input', (e) => {
-      const raw = parseCurrency(e.target.value);
-      e.target.value = raw ? raw.toLocaleString('vi-VN') : '';
-    });
+  } else {
+    bills.push({ id: 'bill_' + Date.now(), ...data, paidForDueDate: null, createdAt: Date.now() });
   }
 
-  const saveBillBtn = $('saveBillBtn');
-  if (saveBillBtn) saveBillBtn.addEventListener('click', () => {
-    const name = $('billName').value.trim();
-    const amount = parseCurrency($('billAmount').value);
-    const dueDate = $('billDueDate').value;
-    if (!name) { $('billName').focus(); return toast('Nhập tên khoản'); }
-    if (!amount || amount <= 0) { $('billAmount').focus(); return toast('Nhập số tiền hợp lệ'); }
-    if (!dueDate) { $('billDueDate').focus(); return toast('Chọn ngày đến hạn'); }
+  saveData();
+  renderFinance();
+  $('billOverlay').classList.remove('show');
+  editBillId = null;
+  toast('✅ Đã lưu khoản phải trả');
+});
 
-    const data = { name, amount, dueDate, repeat: formBillRepeat, note: $('billNote').value.trim() };
+$('deleteBillBtn')?.addEventListener('click', () => {
+  if (!editBillId || editBillId === 'bill_credit_card' || !confirm('Xóa khoản này?')) return;
+  bills = bills.filter(b => b.id !== editBillId);
+  saveData();
+  renderFinance();
+  $('billOverlay').classList.remove('show');
+  editBillId = null;
+  toast('🗑️ Đã xóa khoản');
+});
 
-    if (editBillId) {
-      let b = bills.find(x => x.id === editBillId);
-      if (editBillId === 'bill_credit_card') {
-        if (b) {
-          b.dueDate = dueDate;
-          b.repeat = formBillRepeat;
-          b.note = $('billNote').value.trim();
-        } else {
-          bills.push({ id: 'bill_credit_card', ...data, isVirtual: true, paidForDueDate: null, createdAt: Date.now() });
-        }
-      } else {
-        if (b) {
-          Object.assign(b, data);
-          if (b.paidForDueDate && b.paidForDueDate !== getNextDueDate(b)) b.paidForDueDate = null;
-        }
-      }
-    } else {
-      bills.push({ id: 'bill_' + Date.now(), ...data, paidForDueDate: null, createdAt: Date.now() });
-    }
-    
-    saveData();
-    renderFinance();
-    $('billOverlay').classList.remove('show');
-    editBillId = null;
-    toast('✅ Đã lưu khoản phải trả');
-  });
+/* ==================== DỊCH ĐOẠN VĂN ==================== */
+let passageSentences = [];
 
-  const deleteBillBtn = $('deleteBillBtn');
-  if (deleteBillBtn) deleteBillBtn.addEventListener('click', () => {
-    if (!editBillId || editBillId === 'bill_credit_card') return; 
-    if (!confirm('Xóa khoản này?')) return;
-    bills = bills.filter(b => b.id !== editBillId);
-    saveData();
-    renderFinance();
-    $('billOverlay').classList.remove('show');
-    editBillId = null;
-    toast('🗑️ Đã xóa khoản');
-  });
-  function calculateDiaryStreak() {
-  const active = diaries.filter(d => !d.deletedAt);
-  if (active.length === 0) return { current: 0, best: 0 };
-  const dateSet = new Set(active.map(d => d.date));
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const todayStr = today.toLocaleDateString('sv').split(' ')[0];
-  let current = 0;
-  let check = new Date(today);
-  if (!dateSet.has(todayStr)) check.setDate(check.getDate() - 1);
-  while (true) {
-    const s = check.toLocaleDateString('sv').split(' ')[0];
-    if (dateSet.has(s)) { current++; check.setDate(check.getDate() - 1); } 
-    else break;
-  }
-  return { current: current, best: 0 }; 
-  // (Phần best có thể bỏ qua nếu không hiển thị ở đây)
-}
-  /* ==================== DỊCH ĐOẠN VĂN ==================== */
-let passageSentences = []; // Mảng lưu các câu tạm thời
-
-// Mở modal
 $('btnTranslatePassage').addEventListener('click', () => {
   $('translateStep1').style.display = 'block';
   $('translateStep2').style.display = 'none';
@@ -10050,160 +10407,108 @@ $('btnTranslatePassage').addEventListener('click', () => {
   setTimeout(() => $('passageViInput').focus(), 300);
 });
 
-$('closeTranslateModal').addEventListener('click', () => {
-  $('translatePassageOverlay').classList.remove('show');
-});
+$('closeTranslateModal').addEventListener('click', () => $('translatePassageOverlay').classList.remove('show'));
 
-// Tách câu
 $('btnSplitPassage').addEventListener('click', () => {
   const text = $('passageViInput').value.trim();
   if (!text) return toast('Vui lòng dán đoạn văn');
 
-  // Regex tách câu thông minh (tách theo dấu . ? ! và giữ lại dấu câu)
-  // Tránh tách các số thập phân (VD 3.14) bằng cách yêu cầu có khoảng trắng phía sau
   const rawSentences = text.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 0);
-  
-  if (rawSentences.length === 0) return toast('Không tìm thấy câu nào');
+  if (!rawSentences.length) return toast('Không tìm thấy câu nào');
 
-  passageSentences = rawSentences.map((s, idx) => ({
-    id: 'temp_' + idx,
-    vi: s.trim(),
-    en: '' // Sẽ nhập ở Bước 4
-  }));
-
+  passageSentences = rawSentences.map((s, idx) => ({ id: 'temp_' + idx, vi: s.trim(), en: '' }));
   renderPassageSentences();
   $('translateStep1').style.display = 'none';
   $('translateStep2').style.display = 'block';
 });
 
-// Hiển thị danh sách câu để duyệt/xóa
-// Hiển thị danh sách câu để duyệt/nhập bản dịch
 function renderPassageSentences() {
   const list = $('passageSentenceList');
   $('passageSentenceCount').textContent = passageSentences.length;
 
-  if (passageSentences.length === 0) {
+  if (!passageSentences.length) {
     list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">Không còn câu nào.</div>`;
     $('btnSavePassageCards').style.display = 'none';
     return;
   }
 
   $('btnSavePassageCards').style.display = 'flex';
-
   list.innerHTML = passageSentences.map(s => `
     <div style="background: var(--pink-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; position: relative;">
-      
-      <!-- Nút xóa câu -->
       <button onclick="removePassageSentence('${s.id}')" style="position: absolute; top: 8px; right: 8px; background: #fef2f2; border: none; color: #dc2626; cursor: pointer; padding: 6px; border-radius: 6px;">
         <svg class="hand-icon" style="width: 14px; height: 14px; stroke: currentColor;"><use href="#icon-trash"/></svg>
       </button>
-
-      <!-- Câu tiếng Việt -->
       <div style="font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; padding-right: 30px;">
         <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Tiếng Việt</span>
         ${esc(s.vi)}
       </div>
-
-      <!-- Ô nhập câu tiếng Anh -->
       <div>
         <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Bản dịch tiếng Anh</span>
         <input type="text" class="passage-en-input" data-id="${s.id}" value="${esc(s.en || '')}" placeholder="Nhập tiếng Anh (hoặc để trống)..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--pink-surface); color: var(--text); outline: none; font-family: inherit; font-size: 13.5px;">
       </div>
     </div>
   `).join('');
-  
-  // Lưu giá trị vào mảng passageSentences mỗi khi gõ
+
   list.querySelectorAll('.passage-en-input').forEach(input => {
     input.addEventListener('input', (e) => {
-      const id = e.target.dataset.id;
-      const item = passageSentences.find(x => x.id === id);
+      const item = passageSentences.find(x => x.id === e.target.dataset.id);
       if (item) item.en = e.target.value;
     });
   });
 }
+
 window.removePassageSentence = function(id) {
   passageSentences = passageSentences.filter(s => s.id !== id);
   renderPassageSentences();
 };
 
-// Lưu thành Flashcard
-  $('btnSavePassageCards').addEventListener('click', () => {
-    if (passageSentences.length === 0) return toast('Không có câu nào để lưu');
+$('btnSavePassageCards').addEventListener('click', () => {
+  if (!passageSentences.length) return toast('Không có câu nào để lưu');
 
-    // BƯỚC SỬA LỖI: Quét lại toàn bộ DOM các ô input để lấy dữ liệu mới nhất
-    document.querySelectorAll('.passage-en-input').forEach(input => {
-      const id = input.dataset.id;
-      const item = passageSentences.find(x => x.id === id);
-      if (item) {
-        item.en = input.value; // Cập nhật lại giá trị vào mảng
-      }
-    });
-
-    let addedCount = 0;
-    const now = Date.now();
-
-    passageSentences.forEach((s, idx) => {
-      flashcards.push({
-        id: 'fc_passage_' + now + '_' + idx,
-        vi: s.vi,
-        en: s.en.trim(), // Lưu bản dịch tiếng Anh (đã được quét mới nhất)
-        note: s.en.trim() ? '' : 'Dịch đoạn văn', // Nếu chưa có đáp án, đánh dấu để lúc học cho phép nhập
-        tag: 'Đoạn văn',
-        createdAt: now + idx,
-        sr: { interval: 0, ease: 2.5, due: Date.now(), reps: 0, lapses: 0, history: [] }
-      });
-      addedCount++;
-    });
-
-    saveFlashcards();
-    $('translatePassageOverlay').classList.remove('show');
-    toast(`✅ Đã thêm ${addedCount} câu vào bộ thẻ!`);
-    
-    // Chuyển sang tab Quản lý thẻ để người dùng thấy ngay
-    openManageView();
+  document.querySelectorAll('.passage-en-input').forEach(input => {
+    const item = passageSentences.find(x => x.id === input.dataset.id);
+    if (item) item.en = input.value;
   });
-  /* ============================================================
+
+  const now = Date.now();
+  passageSentences.forEach((s, idx) => {
+    const enTrim = s.en.trim();
+    flashcards.push({
+      id: 'fc_passage_' + now + '_' + idx,
+      vi: s.vi,
+      en: enTrim,
+      note: enTrim ? '' : 'Dịch đoạn văn',
+      tag: 'Đoạn văn',
+      createdAt: now + idx,
+      sr: { interval: 0, ease: 2.5, due: now, reps: 0, lapses: 0, history: [] }
+    });
+  });
+
+  saveFlashcards();
+  $('translatePassageOverlay').classList.remove('show');
+  toast(`✅ Đã thêm ${passageSentences.length} câu vào bộ thẻ!`);
+  openManageView();
+});
+
+/* ============================================================
    FIX LỖI MÚI GIỜ / QUA NGÀY MỚI KHÔNG TỰ CẬP NHẬT
    ============================================================ */
-let lastKnownDate = new Date().toLocaleDateString('sv').split(' ')[0];
+let lastKnownDate = toLocalDateStr(new Date());
 
 function checkDateChange() {
-  const currentDate = new Date().toLocaleDateString('sv').split(' ')[0];
-  
-  // Nếu ngày hiện tại khác với ngày đã lưu (tức là đã qua 12h đêm)
-  if (currentDate !== lastKnownDate) {
-    lastKnownDate = currentDate;
-    
-    // 1. Cập nhật lại giao diện Trang chủ (Streak, Việc hôm nay, v.v.)
-    if (typeof renderHome === 'function') renderHome();
-    
-    // 2. Cập nhật lại tab Nhật ký (nếu đang mở)
-    if (currentTab === 'diary' && typeof renderDiaries === 'function') {
-      renderDiaries();
-    }
-    
-    // 3. Cập nhật lại tab Tài chính (nhắc nhở thanh toán)
-    if (currentTab === 'finance' && typeof renderFinance === 'function') {
-      renderFinance();
-    }
+  const currentDate = toLocalDateStr(new Date());
+  if (currentDate === lastKnownDate) return;
+  lastKnownDate = currentDate;
 
-    // 4. Cập nhật lại phần Học (nếu đang mở)
-    if (currentTab === 'study' && typeof renderStudyMain === 'function') {
-      renderStudyMain();
-    }
-    
-    console.log('🌅 Đã qua ngày mới, tự động cập nhật giao diện!');
-  }
+  if (typeof renderHome === 'function') renderHome();
+  if (currentTab === 'diary' && typeof renderDiaries === 'function') renderDiaries();
+  if (currentTab === 'finance' && typeof renderFinance === 'function') renderFinance();
+  if (currentTab === 'study' && typeof renderStudyMain === 'function') renderStudyMain();
 }
 
-// Cứ mỗi 30 giây sẽ kiểm tra 1 lần (nhẹ nhàng, không tốn pin)
 setInterval(checkDateChange, 30000);
-
-// Kiểm tra ngay khi người dùng quay lại app (từ background trở về)
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    checkDateChange();
-  }
+  if (document.visibilityState === 'visible') checkDateChange();
 });
 })();
 </script>
