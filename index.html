@@ -1855,11 +1855,19 @@
     </div>
 
     <div class="finance-page" data-page="1">
-      <div class="compact-card">
-        <div class="compact-card-header">
-          <div class="compact-card-title"><svg class="hand-icon"><use href="#icon-chart"/></svg> Bảng kê doanh thu</div>
-          <div class="compact-card-total" id="revTotalVal">0 đ</div>
-        </div>
+  <div class="compact-card">
+    <div class="compact-card-header" style="flex-direction:column; align-items:stretch; gap:8px;">
+  <div class="compact-card-title" style="white-space:nowrap;">
+    <svg class="hand-icon"><use href="#icon-chart"/></svg> Bảng kê doanh thu
+  </div>
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+    <div class="compact-card-total" id="revTotalVal" style="white-space:nowrap;">0 đ</div>
+    <button type="button" id="btnResetRevenue" class="btn-outline" style="padding:5px 10px; font-size:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px;">
+      <svg class="hand-icon" style="width:13px; height:13px;"><use href="#icon-trash"/></svg>
+      Reset
+    </button>
+  </div>
+</div>
         <div class="revenue-table" id="revenueTable"></div>
       </div>
 
@@ -1904,13 +1912,21 @@
       </div>
 
       <div class="compact-card">
-        <div class="compact-card-header">
-          <div class="compact-card-title"><svg class="hand-icon"><use href="#icon-trending-down"/></svg> Chi tiêu Thẻ tín dụng</div>
-          <div class="compact-card-total" id="creditTotalLabel" style="color:#dc2626;">0 đ</div>
-        </div>
-        <div class="credit-list" id="creditListContainer"></div>
-        <button class="credit-add-btn" id="btnAddCredit">+ Thêm khoản chi</button>
-      </div>
+  <div class="compact-card-header" style="flex-direction:column; align-items:stretch; gap:8px;">
+  <div class="compact-card-title" style="white-space:nowrap;">
+    <svg class="hand-icon"><use href="#icon-trending-down"/></svg> Chi tiêu Thẻ tín dụng
+  </div>
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+    <div class="compact-card-total" id="creditTotalLabel" style="color:#dc2626; white-space:nowrap;">0 đ</div>
+    <button type="button" id="btnResetCredit" class="btn-outline" style="padding:5px 10px; font-size:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px;">
+      <svg class="hand-icon" style="width:13px; height:13px;"><use href="#icon-trash"/></svg>
+      Reset
+    </button>
+  </div>
+</div>
+  <div class="credit-list" id="creditListContainer"></div>
+  <button class="credit-add-btn" id="btnAddCredit">+ Thêm khoản chi</button>
+</div>
     </div>
   </div>
 </div>
@@ -6155,7 +6171,7 @@
     });
   });
 
-  /* ==================== XÓA ==================== */
+        /* ==================== XÓA ==================== */
   window.askDelete = function(id, type) {
     pendingDeleteId = id; pendingDeleteType = type;
     let name = 'Mục này';
@@ -6171,6 +6187,71 @@
     $('confirmOverlay').classList.add('show');
   };
 
+  function hasRevenueData() {
+    const revEl = $('revenueTable');
+    if (revEl) {
+      const inputs = revEl.querySelectorAll('input');
+      for (const inp of inputs) {
+        const val = typeof parseCurrency === 'function' ? parseCurrency(inp.value) : Number(String(inp.value || '').replace(/\D/g, ''));
+        if (val > 0) return true;
+      }
+      const items = revEl.querySelectorAll('.revenue-row, .revenue-item, tr, [data-amount], [data-value]');
+      for (const item of items) {
+        const raw = item.dataset.amount || item.dataset.value || item.textContent || '';
+        const nums = raw.match(/\d[\d.,]*/g);
+        if (nums && nums.some(n => Number(n.replace(/[.,]/g, '')) > 0)) return true;
+      }
+    }
+    const revTotal = typeof parseCurrency === 'function'
+      ? parseCurrency($('revTotalVal')?.textContent || '0')
+      : Number(String($('revTotalVal')?.textContent || '0').replace(/\D/g, ''));
+    return revTotal > 0;
+  }
+
+  function clearRevenueData() {
+    const revEl = $('revenueTable');
+    if (revEl) {
+      revEl.querySelectorAll('input').forEach(inp => {
+        inp.value = inp.type === 'number' ? '0' : '';
+        inp.dispatchEvent(new Event('input', { bubbles: true }));
+        inp.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    }
+    if (finances && typeof finances === 'object') {
+      Object.keys(finances).forEach(k => {
+        if (Array.isArray(finances[k]) && !['other_assets', 'credit_expenses'].includes(k)) {
+          finances[k] = [];
+        }
+      });
+    }
+  }
+
+  const btnResetCredit = $('btnResetCredit');
+  if (btnResetCredit) {
+    btnResetCredit.addEventListener('click', () => {
+      if (!finances.credit_expenses || finances.credit_expenses.length === 0) {
+        return toast('Bảng chi tiêu thẻ tín dụng đang trống');
+      }
+      pendingDeleteId = 'all_credit';
+      pendingDeleteType = 'reset_credit';
+      $('confirmMsg').textContent = 'Bạn có chắc chắn muốn reset không?';
+      $('confirmOverlay').classList.add('show');
+    });
+  }
+
+  const btnResetRevenue = $('btnResetRevenue');
+  if (btnResetRevenue) {
+    btnResetRevenue.addEventListener('click', () => {
+      if (!hasRevenueData()) {
+        return toast('Bảng kê doanh thu đang trống');
+      }
+      pendingDeleteId = 'all_revenue';
+      pendingDeleteType = 'reset_revenue';
+      $('confirmMsg').textContent = 'Bạn có chắc chắn muốn reset không?';
+      $('confirmOverlay').classList.add('show');
+    });
+  }
+
   $('confirmCancel').addEventListener('click', () => { pendingDeleteId = null; $('confirmOverlay').classList.remove('show'); });
   $('confirmOk').addEventListener('click', () => {
     if (pendingDeleteId) {
@@ -6180,12 +6261,31 @@
       else if (pendingDeleteType === 'braces') braces = braces.filter(b => b.id !== pendingDeleteId);
       else if (pendingDeleteType === 'asset') finances.other_assets = finances.other_assets.filter(a => a.id !== pendingDeleteId);
       else if (pendingDeleteType === 'credit') finances.credit_expenses = finances.credit_expenses.filter(c => c.id !== pendingDeleteId);
+      else if (pendingDeleteType === 'reset_credit') {
+        finances.credit_expenses = [];
+        const ccBill = bills.find(b => b.id === 'bill_credit_card');
+        if (ccBill) {
+          ccBill.amount = 0;
+          ccBill.paidForDueDate = null;
+        }
+      }
+      else if (pendingDeleteType === 'reset_revenue') {
+        clearRevenueData();
+      }
       else if (pendingDeleteType === 'event') events = events.filter(e => e.id !== pendingDeleteId);
 
-      saveData(); switchTab(currentTab); toast('🗑️ Đã xóa');
+      saveData(); switchTab(currentTab);
+      toast(
+        pendingDeleteType === 'reset_credit'
+          ? '🔄 Đã reset bảng chi tiêu thẻ tín dụng'
+          : pendingDeleteType === 'reset_revenue'
+            ? '🔄 Đã reset bảng kê doanh thu'
+            : '🗑️ Đã xóa'
+      );
     }
     pendingDeleteId = null; $('confirmOverlay').classList.remove('show');
   });
+
 
   window.openPlaceCardPopup = function(id) {
     const p = places.find(x => x.id === id);
